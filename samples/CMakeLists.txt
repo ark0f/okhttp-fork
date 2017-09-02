@@ -1,0 +1,14 @@
+# ohf::Headers
+add_executable(headers headers.cpp)
+# ohf::MediaType
+add_executable(media_type media_type.cpp)
+# ohf::RequestBody
+add_executable(request_body request_body.cpp)
+# ohf::ResponseBody
+add_executable(response_body response_body.cpp)
+# ohf::Socket
+add_executable(socket socket.cpp)
+# ohf::SSLSocket
+add_executable(ssl_socket ssl_socket.cpp)
+# ohf::HttpURL
+add_executable(http_url http_url.cpp)
