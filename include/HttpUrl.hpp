@@ -102,7 +102,7 @@ namespace ohf {
 
         int port();
 
-        std::string query(); // TODO: Handle empty parameter
+        std::string query();
         std::string queryParameter(const std::string &name);
 
         std::string queryParameterName(int index);
@@ -129,7 +129,7 @@ namespace ohf {
         std::map<std::string, std::string> queryParameters;
         std::string fragment_str;
         std::string host_str;
-        int port_num = -1;
+        int port_num;
         std::string scheme_str;
     };
 }

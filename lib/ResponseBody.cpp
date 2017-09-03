@@ -3,6 +3,7 @@
 //
 
 #include <sstream>
+#include <cstring>
 #include "../include/ResponseBody.hpp"
 
 using namespace ohf;

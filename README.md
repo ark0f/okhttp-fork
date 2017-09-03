@@ -1,12 +1,12 @@
 # OkHttp fork for C++
 ##### Using libraries:
-* [OpenSSL](/openssl/openssl)
+* [OpenSSL](https://github.com/openssl/openssl)
 
- - ##### Implemented components:
+##### Implemented components:
     - Headers
     - HttpURL
     - MediaType
     - RequestBody
     - ResponseBody
-    - Socket (Windows for now)
-    - SSLSocket (Windows for now)
+    - Socket (Windows, POSIX for now)
+    - SSLSocket (Windows, POSIX for now)

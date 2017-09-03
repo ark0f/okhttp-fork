@@ -5,13 +5,7 @@
 #ifndef OKHTTPFORK_SOCKET_HPP
 #define OKHTTPFORK_SOCKET_HPP
 
-#if _WIN32
-
-#include <winsock.h>
-
-#pragma comment(lib, "Wsock32.lib")
-#endif
-
+#include <streambuf>
 #include <string>
 #include <memory>
 
@@ -55,9 +49,7 @@ namespace ohf {
         void cleanup();
 
         std::shared_ptr<std::iostream> ios;
-#if _WIN32
-        SOCKET s;
-#endif
+        int s;
     };
 }
 

@@ -11,7 +11,7 @@
 
 using namespace ohf;
 
-//-----------Headers::Builder-----------
+// ohf::Headers::Builder
 void Headers::Builder::add(const std::string &line) {
     std::vector<std::string> nameValue = util::string::split(line, ": ");
     if (nameValue.size() > 1) {

@@ -5,16 +5,24 @@
 #ifndef OKHTTPFORK_EXCEPTION_HPP
 #define OKHTTPFORK_EXCEPTION_HPP
 
+#include <string>
 #include "../util/include/string.hpp"
 
 namespace ohf {
     class Exception {
     public:
-        static enum Code {
+        enum Code {
             HEADER_NOT_EXISTS,
             INVALID_HEADER_LINE,
             INVALID_MIME_TYPE,
             FAILED_TO_READ_STREAM,
+            FAILED_TO_CREATE_SOCKET,
+            NO_SUCH_HOST,
+            FAILED_TO_CREATE_CONNECTION,
+            FAILED_TO_SEND_DATA,
+            FAILED_TO_RECEIVE_DATA,
+            FAILED_TO_DISCONNECT_SOCKET,
+            FAILED_TO_CLEANUP_SOCKET,
             OPENSSL_INIT_ERROR,
             OPENSSL_CREATE_CONTEXT_ERROR,
             FAILED_TO_CREATE_SSL_CONNECTION,

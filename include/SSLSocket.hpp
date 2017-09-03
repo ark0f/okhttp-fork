@@ -5,13 +5,6 @@
 #ifndef OKHTTPFORK_SSLSOCKET_HPP
 #define OKHTTPFORK_SSLSOCKET_HPP
 
-#if _WIN32
-
-#include <winsock.h>
-
-#pragma comment(lib, "Wsock32.lib")
-#endif
-
 #include "Socket.hpp"
 #include <openssl/ssl.h>
 #include <string>

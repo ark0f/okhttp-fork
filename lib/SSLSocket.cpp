@@ -4,7 +4,6 @@
 
 #include "../include/SSLSocket.hpp"
 #include "../include/Exception.hpp"
-#include "../util/include/util.hpp"
 #include <sstream>
 #include <openssl/err.h>
 
@@ -82,6 +81,10 @@ std::string SSLSocket::receive(size_t size) {
 
 #if _WIN32
 
+#include <winsock.h>
+
+#pragma comment(lib, "Wsock32.lib")
+
 std::iostream &SSLSocket::connect(const std::string &address, const int &port) {
     // Address setup
     sockaddr_in addr;
@@ -105,6 +108,40 @@ std::iostream &SSLSocket::connect(const std::string &address, const int &port) {
     buf = std::make_shared<StreamBuf>(this);
     ios = std::make_shared<std::iostream>(buf.get());
     return *ios;
+}
+
+#elif __unix__
+
+#include <netinet/in.h>
+#include <netdb.h>
+
+std::iostream &SSLSocket::connect(const std::string &address, const int &port) {
+    // Address setup
+    sockaddr_in addr;
+    bzero(&addr, sizeof(addr));
+    addr.sin_family = AF_INET;// TCP/IP
+    hostent *hosts = gethostbyname(address.c_str());
+    if (!hosts)
+        throw Exception(Exception::Code::NO_SUCH_HOST, "No such host: " + address);
+    //addr.sin_addr.S_un.S_addr = inet_addr(inet_ntoa(**(in_addr **) hosts->h_addr_list)); // Get IP from DNS
+    bcopy(hosts->h_addr,
+          (char *) &addr.sin_addr.s_addr,
+          hosts->h_length);
+    addr.sin_port = htons(port); // Port
+    // Connect
+    if (::connect(s, (sockaddr *) &addr, sizeof(addr)) < 0)
+        throw Exception(Exception::Code::FAILED_TO_CREATE_CONNECTION, "Failed to create connection: " +
+                                                                      std::string(strerror(errno)));
+    SSL_set_fd(ssl, s);
+    if (SSL_connect(ssl) < 0)
+        throw Exception(Exception::Code::FAILED_TO_CREATE_SSL_CONNECTION,
+                        "Failed to create SSL connection: " + getOpenSSLError());
+
+    // Init IO stream
+    buf = std::make_shared<StreamBuf>(this);
+    ios = std::make_shared<std::iostream>(buf.get());
+    return *ios;
+
 }
 
 #endif

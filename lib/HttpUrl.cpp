@@ -5,7 +5,6 @@
 #include <sstream>
 #include <iomanip>
 #include <iostream>
-#include <regex>
 #include "../include/HttpUrl.hpp"
 #include "../util/include/string.hpp"
 #include "../include/Exception.hpp"

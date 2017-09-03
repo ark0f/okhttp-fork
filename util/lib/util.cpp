@@ -2,8 +2,10 @@
 // Created by Good_Pudge.
 //
 
+
+#if _WIN32
+
 #include <winsock.h>
-#include "../include/util.hpp"
 
 std::string util::getWSAError() {
     char *error;
@@ -13,3 +15,5 @@ std::string util::getWSAError() {
                   (LPSTR) &error, 0, nullptr);
     return std::string(error);
 }
+
+#endif

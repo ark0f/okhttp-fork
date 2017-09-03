@@ -41,7 +41,7 @@ set(LIB_SOURCE_FILES ${LIB_SOURCE_FILES}
         util/lib/string.cpp util/include/string.hpp
         util/lib/util.cpp util/include/util.hpp
         )
-add_library(ohf STATIC ${LIB_SOURCE_FILES})
+add_library(ohf SHARED ${LIB_SOURCE_FILES})
 
 #OpenSSL
 find_package(OpenSSL)

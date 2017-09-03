@@ -9,7 +9,9 @@
 #include <string>
 
 namespace util {
+#if _WIN32
     std::string getWSAError();
+#endif
 }
 
 #endif //OKHTTPFORK_UTIL_HPP
