@@ -6,6 +6,7 @@
 #if _WIN32
 
 #include <winsock.h>
+#include "../include/util.hpp"
 
 std::string util::getWSAError() {
     char *error;

@@ -81,7 +81,7 @@ std::string SSLSocket::receive(size_t size) {
 
 #if _WIN32
 
-#include <winsock.h>
+#include "../util/include/util.hpp"
 
 #pragma comment(lib, "Wsock32.lib")
 
@@ -91,13 +91,14 @@ std::iostream &SSLSocket::connect(const std::string &address, const int &port) {
     ZeroMemory(&addr, sizeof(addr));
     addr.sin_family = AF_INET; // TCP/IP
     hostent *hosts = gethostbyname(address.c_str());
-    if (hosts) { // found host
-        addr.sin_addr.S_un.S_addr = inet_addr(inet_ntoa(**(in_addr **) hosts->h_addr_list)); // Get IP from DNS
-    } else throw Exception(WSAGetLastError(), "Socket error: " + util::getWSAError());
+    if (!hosts) // found host
+        throw Exception(Exception::Code::NO_SUCH_HOST, "No such host: " + address);
+    addr.sin_addr.S_un.S_addr = inet_addr(inet_ntoa(**(in_addr **) hosts->h_addr_list)); // Get IP from DNS
     addr.sin_port = htons(port); // Port
     // Connect
     if (::connect(s, (sockaddr *) &addr, sizeof(addr)) == SOCKET_ERROR)
-        throw Exception(WSAGetLastError(), "Socket error: " + util::getWSAError());
+        throw Exception(Exception::Code::FAILED_TO_CREATE_CONNECTION, "Failed to create connection: " +
+                                                                      util::getWSAError());
 
     SSL_set_fd(ssl, s);
     if (SSL_connect(ssl) < 1)

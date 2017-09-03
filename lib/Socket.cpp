@@ -32,6 +32,7 @@ Socket::~Socket() {
 
 #if _WIN32
 
+#include "../util/include/util.hpp"
 #include <winsock.h>
 #pragma comment(lib, "Wsock32.lib")
 
@@ -42,7 +43,7 @@ Socket::Socket() {
         throw Exception(WSAGetLastError(), "Socket error: " + util::getWSAError());
     //Init socket
     if ((s = socket(AF_INET, SOCK_STREAM, 0)) == INVALID_SOCKET)
-        throw Exception(WSAGetLastError(), "Socket error: " + util::getWSAError());
+        throw Exception(Exception::Code::FAILED_TO_CREATE_SOCKET, "Failed to create socket: " + util::getWSAError());
 
 }
 
@@ -57,13 +58,14 @@ std::iostream &Socket::connect(const std::string &address, const int &port) {
     ZeroMemory(&addr, sizeof(addr));
     addr.sin_family = AF_INET; // TCP/IP
     hostent *hosts = gethostbyname(address.c_str());
-    if (!hosts) { // found not host
-        throw Exception(WSAGetLastError(), "Socket error: " + util::getWSAError());
+    if (!hosts) // found not host
+        throw Exception(Exception::Code::NO_SUCH_HOST, "No such host: " + address);
     addr.sin_addr.S_un.S_addr = inet_addr(inet_ntoa(**(in_addr **) hosts->h_addr_list)); // Get IP from DNS
     addr.sin_port = htons(port); // Port
     // Connect
     if (::connect(s, (sockaddr *) &addr, sizeof(addr)) == SOCKET_ERROR)
-        throw Exception(WSAGetLastError(), "Socket error: " + util::getWSAError());
+        throw Exception(Exception::Code::FAILED_TO_CREATE_CONNECTION, "Failed to create connection: " +
+                                                                      util::getWSAError());
 
     // Init IO stream
     buf = std::make_shared<StreamBuf>(this);
@@ -74,7 +76,7 @@ std::iostream &Socket::connect(const std::string &address, const int &port) {
 void Socket::send(const char *data, int size) {
     if (::send(s, data, size, 0) == SOCKET_ERROR) {
         cleanup();
-        throw Exception(WSAGetLastError(), "Socket error: " + util::getWSAError());
+        throw Exception(Exception::Code::FAILED_TO_SEND_DATA, "Failed to send data: " + util::getWSAError());
     }
 }
 
@@ -87,14 +89,15 @@ std::string Socket::receive(size_t size) {
         do {
             if ((len = recv(s, buffer, size, 0)) == SOCKET_ERROR) {
                 cleanup();
-                throw Exception(WSAGetLastError(), "Socket error: " + util::getWSAError());
+                throw Exception(Exception::Code::FAILED_TO_RECEIVE_DATA,
+                                "Failed to receive data: " + util::getWSAError());
             } else
                 storage.append(buffer, len);
         } while (len != 0);
     } else {
         if ((len = recv(s, buffer, size, 0)) == SOCKET_ERROR) {
             cleanup();
-            throw Exception(WSAGetLastError(), "Socket error: " + util::getWSAError());
+            throw Exception(Exception::Code::FAILED_TO_RECEIVE_DATA, "Failed to receive data: " + util::getWSAError());
         }
         storage.append(buffer, len);
     }
@@ -104,7 +107,7 @@ std::string Socket::receive(size_t size) {
 void Socket::disconnect() {
     if (::shutdown(s, 2) == SOCKET_ERROR) { // 2 - SD_BOTH
         cleanup();
-        throw Exception(WSAGetLastError(), "Socket error: " + util::getWSAError());
+        throw Exception(Exception::FAILED_TO_DISCONNECT_SOCKET, "Failed to disconnect socket: " + util::getWSAError());
     }
 }
 
