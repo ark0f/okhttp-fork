@@ -6,48 +6,14 @@
 #include <iomanip>
 #include <sstream>
 #include "../include/Headers.hpp"
-#include "../util/include/string.hpp"
 #include "../include/Exception.hpp"
 
 using namespace ohf;
 
-// ohf::Headers::Builder
-void Headers::Builder::add(const std::string &line) {
-    std::vector<std::string> nameValue = util::string::split(line, ": ");
-    if (nameValue.size() > 1) {
-        this->add(nameValue[0], nameValue[1]);
-        return;
-    }
-    throw Exception(Exception::Code::INVALID_HEADER_LINE, "Invalid header line: " + line);
+Headers::Headers(const std::map<std::string, std::string> &headers) {
+    this->headers = headers;
 }
 
-void Headers::Builder::add(const std::string &name, const std::string &value) {
-    headers[name] = value;
-}
-
-Headers Headers::Builder::build() {
-    Headers ohfHeaders;
-    ohfHeaders.headers = headers;
-    return ohfHeaders;
-}
-
-std::string Headers::Builder::get(const std::string &name) {
-    if (headers.count(name) == 1u)
-        return headers[name];
-    throw Exception(Exception::Code::HEADER_NOT_EXISTS, "Header not exists: " + name);
-}
-
-void Headers::Builder::set(const std::string &name, const std::string &value) {
-    this->add(name, value);
-}
-
-std::string &Headers::Builder::operator[](const std::string &name) {
-    if (headers.count(name) == 0u)
-        headers[name] = "";
-    return headers[name];
-}
-
-//-----------Headers-----------
 bool Headers::operator==(const Headers &headers) {
     return this == &headers;
 }
@@ -90,12 +56,6 @@ Headers::Builder Headers::newBuilder() {
     Headers::Builder builder;
     builder.headers = headers;
     return builder;
-}
-
-Headers Headers::of(const std::map<std::string, std::string> &headers) {
-    Headers ohfHeaders;
-    ohfHeaders.headers = headers;
-    return ohfHeaders;
 }
 
 int Headers::size() {

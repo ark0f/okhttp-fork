@@ -12,7 +12,7 @@ set(LIB_SOURCE_FILES
         lib/CacheControl.cpp include/CacheControl.hpp
         lib/Challenge.cpp include/Challenge.hpp
         lib/Handshake.cpp include/Handshake.hpp
-        lib/Headers.cpp include/Headers.hpp
+        lib/Headers.cpp lib/Headers.Builder.cpp include/Headers.hpp
         lib/Protocol.cpp include/Protocol.hpp
         lib/CipherSuite.cpp include/CipherSuite.hpp
         lib/TLSVersion.cpp include/TLSVersion.hpp
@@ -31,16 +31,15 @@ set(LIB_SOURCE_FILES
         lib/Proxy.cpp include/Proxy.hpp
         lib/ProxySelector.cpp include/ProxySelector.hpp
         lib/RequestBody.cpp include/RequestBody.hpp
-        lib/HttpUrl.cpp include/HttpUrl.hpp
+        lib/HttpURL.cpp lib/HttpURL.Builder.cpp include/HttpURL.hpp
         lib/MediaType.cpp include/MediaType.hpp
         lib/Exception.cpp include/Exception.hpp
-        lib/Socket.cpp include/Socket.hpp
-        lib/SSLSocket.cpp include/SSLSocket.hpp
+        lib/Socket.cpp lib/Socket.StreamBuf.cpp include/Socket.hpp
+        lib/SSLSocket.cpp lib/SSLSocket.StreamBuf.cpp include/SSLSocket.hpp
         lib/Cookie.cpp include/Cookie.hpp)
 set(LIB_SOURCE_FILES ${LIB_SOURCE_FILES}
         util/lib/string.cpp util/include/string.hpp
-        util/lib/util.cpp util/include/util.hpp
-        )
+        util/lib/util.cpp util/include/util.hpp)
 add_library(ohf SHARED ${LIB_SOURCE_FILES})
 
 #OpenSSL

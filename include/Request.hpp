@@ -7,7 +7,7 @@
 
 #include "RequestBody.hpp"
 #include "CacheControl.hpp"
-#include "HttpUrl.hpp"
+#include "HttpURL.hpp"
 
 namespace ohf {
     class Request {

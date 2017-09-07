@@ -91,7 +91,7 @@ std::iostream &SSLSocket::connect(const std::string &address, const int &port) {
     ZeroMemory(&addr, sizeof(addr));
     addr.sin_family = AF_INET; // TCP/IP
     hostent *hosts = gethostbyname(address.c_str());
-    if (!hosts) // found host
+    if (!hosts) // host not found
         throw Exception(Exception::Code::NO_SUCH_HOST, "No such host: " + address);
     addr.sin_addr.S_un.S_addr = inet_addr(inet_ntoa(**(in_addr **) hosts->h_addr_list)); // Get IP from DNS
     addr.sin_port = htons(port); // Port
@@ -146,33 +146,3 @@ std::iostream &SSLSocket::connect(const std::string &address, const int &port) {
 }
 
 #endif
-
-// ohf::SSLSocket::StreamBuf
-int SSLSocket::StreamBuf::overflow(int c) {
-    if (c == traits_type::eof())
-        return traits_type::eof();
-
-    char ch = (char) c;
-    sock->send(&ch, 1);
-
-    return c;
-}
-
-int SSLSocket::StreamBuf::uflow() {
-    int c = underflow();
-    cur = traits_type::eof();
-    return c;
-}
-
-int SSLSocket::StreamBuf::underflow() {
-    if (cur != traits_type::eof())
-        return cur;
-
-    std::string data = sock->receive(1);
-    if (data.empty())
-        return traits_type::eof();
-
-    cur = data[0];
-
-    return cur;
-}

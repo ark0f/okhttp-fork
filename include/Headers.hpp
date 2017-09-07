@@ -32,6 +32,8 @@ namespace ohf {
             friend class Headers;
         };
 
+        Headers(const std::map<std::string, std::string> &headers);
+
         bool operator==(const Headers &headers); // TODO: Compare values
         std::string get(const std::string &name);
 
@@ -44,7 +46,7 @@ namespace ohf {
 
         Builder newBuilder();
 
-        static Headers of(const std::map<std::string, std::string> &headers);
+        // static Headers of(const std::map<std::string, std::string> &headers);
 
         // typedef Headers of(...);
         int size();

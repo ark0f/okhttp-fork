@@ -5,30 +5,30 @@
 #include <iostream>
 #include <string>
 #include "../include/Exception.hpp"
-#include "../include/HttpUrl.hpp"
+#include "../include/HttpURL.hpp"
 
 int main() {
     try {
         //encode / decode
         std::cout << "Decoded string \"%D0%9F%D1%80%D0%B8%D0%B2%D0%B5%D1%82\": " // Привет is Hello in russian language
-                  << ohf::HttpUrl::decode("%D0%9F%D1%80%D0%B8%D0%B2%D0%B5%D1%82") << std::endl;
+                  << ohf::HttpURL::decode("%D0%9F%D1%80%D0%B8%D0%B2%D0%B5%D1%82") << std::endl;
         std::cout << "Encoded string \"Привет\":                               "
-                  << ohf::HttpUrl::encode("Привет") << std::endl;
+                  << ohf::HttpURL::encode("Привет") << std::endl;
         std::cout << "Encoded string \"Hello, world\":                         "
-                  << ohf::HttpUrl::encode("Hello, world") << std::endl;
+                  << ohf::HttpURL::encode("Hello, world") << std::endl;
         //default ports
-        std::cout << "HTTPS: " << ohf::HttpUrl::defaultPort("https") << std::endl;
-        std::cout << "HTTP:  " << ohf::HttpUrl::defaultPort("http") << std::endl;
-        std::cout << "FTP:   " << ohf::HttpUrl::defaultPort("ftp") << std::endl; // FTP is unsupported protocol
+        std::cout << "HTTPS: " << ohf::HttpURL::defaultPort("https") << std::endl;
+        std::cout << "HTTP:  " << ohf::HttpURL::defaultPort("http") << std::endl;
+        std::cout << "FTP:   " << ohf::HttpURL::defaultPort("ftp") << std::endl; // FTP is unsupported protocol
 
-        ohf::HttpUrl url = "https://www.google.com/search?q=123#TEST";
+        ohf::HttpURL url = "https://www.google.com/search?q=123#TEST";
         std::cout << "Encoded fragment:      " << url.encodedFragment() << std::endl;
         std::cout << "Fragment:              " << url.fragment() << std::endl;
         std::cout << "Encoded path:          " << url.encodedPath() << std::endl;
         //std::cout << "Encoded path segment from vector: " << url.encodedPathSegments()[0] << std::endl;
         std::cout << "Encoded query:         " << url.encodedQuery() << std::endl;
         std::cout << "Query:                 " << url.query() << std::endl;
-        ohf::HttpUrl copyUrl = url;
+        ohf::HttpURL copyUrl = url;
         std::cout << "Self equals self copy: " << (url == copyUrl) << std::endl;
         std::cout << "Host:                  " << url.host() << std::endl;
         std::cout << "Is HTTPS:              " << url.isHttps() << std::endl;
@@ -42,7 +42,7 @@ int main() {
         std::cout << "Query size:            " << url.querySize() << std::endl;
         std::cout << "Scheme:                " << url.scheme() << std::endl;
 
-        ohf::HttpUrl::Builder builder;
+        ohf::HttpURL::Builder builder;
         builder.addPathSegments("/path/search/google/");
         builder.fragment("GOOGLE");
         builder.host("www.google.com");
