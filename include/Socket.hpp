@@ -24,14 +24,15 @@ namespace ohf {
 
         void send(std::istream &stream);
 
-        virtual std::string receive(size_t size = 0);
+        virtual std::string receive(size_t size);
 
-        void disconnect();
+        std::string receiveAll();
 
+        void shutdown(int how = 2);
     private:
         class StreamBuf : public std::streambuf {
         public:
-            StreamBuf(Socket *socket) : sock(socket) {};
+            StreamBuf(Socket *socket) : sock(socket), cur(traits_type::eof()) {};
         protected:
             int overflow(int c) override;
 
@@ -46,10 +47,8 @@ namespace ohf {
 
         std::shared_ptr<StreamBuf> buf;
     protected:
-        void cleanup();
-
         std::shared_ptr<std::iostream> ios;
-        int s;
+        int socket_fd;
     };
 }
 

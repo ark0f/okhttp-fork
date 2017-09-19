@@ -42,7 +42,7 @@ void string::toLower(std::string &s) {
         s[i] = tolower(s[i]);
 }
 
-std::string::size_type string::first_index_of(const std::string &str, const std::string &find) {
+std::string::size_type string::firstIndexOf(const std::string &str, const std::string &find) {
     return str.find(find);
 }
 

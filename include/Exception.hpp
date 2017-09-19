@@ -6,7 +6,6 @@
 #define OKHTTPFORK_EXCEPTION_HPP
 
 #include <string>
-#include "../util/include/string.hpp"
 
 namespace ohf {
     class Exception {
@@ -21,21 +20,21 @@ namespace ohf {
             FAILED_TO_CREATE_CONNECTION,
             FAILED_TO_SEND_DATA,
             FAILED_TO_RECEIVE_DATA,
-            FAILED_TO_DISCONNECT_SOCKET,
-            FAILED_TO_CLEANUP_SOCKET,
+            FAILED_TO_SHUTDOWN_SOCKET,
             OPENSSL_INIT_ERROR,
             OPENSSL_CREATE_CONTEXT_ERROR,
             FAILED_TO_CREATE_SSL_CONNECTION,
             OPENSSL_ERROR,
             INVALID_QUERY_PARAMETER,
-            UNSUPPORTED_PROTOCOL,
             INVALID_URI,
-            AUTHORITY_PASSWORD_IS_EMPTY,
-            AUTHORITY_USERNAME_IS_EMPTY,
             INVALID_PORT,
             INVALID_HOST,
             INVALID_URI_HEX_CODE,
-            HOST_IS_EMPTY
+            HOST_IS_EMPTY,
+            OUT_OF_RANGE,
+            INVALID_COOKIE_LINE,
+            INVALID_COOKIE_PARAMETER,
+            INVALID_MAX_AGE
         };
 
         Exception(const int &code, const std::string &what);

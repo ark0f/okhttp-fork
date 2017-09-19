@@ -11,7 +11,7 @@
 
 using namespace ohf;
 
-std::string HttpUrl::encode(const std::string &str) {
+std::string HttpURL::encode(const std::string &str) {
     std::ostringstream oss;
     oss.fill('0');
     oss << std::hex;
@@ -28,7 +28,7 @@ std::string HttpUrl::encode(const std::string &str) {
     return oss.str();
 }
 
-std::string HttpUrl::decode(const std::string &str) {
+std::string HttpURL::decode(const std::string &str) {
     std::string encoded;
     // oss.fill('0');
     // oss << std::hex;
@@ -48,17 +48,17 @@ std::string HttpUrl::decode(const std::string &str) {
     return encoded;
 }
 
-HttpUrl::HttpUrl(const std::string &url) {
+HttpURL::HttpURL(const std::string &url) {
     std::string tempUrl = url;
 
-    std::string::size_type offset = util::string::first_index_of(tempUrl, "://");
+    std::string::size_type offset = util::string::firstIndexOf(tempUrl, "://");
     // scheme
     if (offset == std::string::npos) { // if protocol not exists
         scheme_str = "http";
         port_num = 80;
     } else { // check protocol
         std::string protocol = tempUrl.substr(0, offset);
-        port_num = HttpUrl::defaultPort(protocol);
+        port_num = HttpURL::defaultPort(protocol);
         //if(port_num == -1)
         //    throw Exception(Exception::Code::UNSUPPORTED_PROTOCOL, "Unsupported protocol: " + protocol);
         scheme_str = protocol;
@@ -137,7 +137,7 @@ HttpUrl::HttpUrl(const std::string &url) {
         for (const auto &parameter : query) {
             std::vector<std::string> nameValue = util::string::split(parameter, "=");
             if (nameValue.size() == 2)
-                queryParameters[nameValue[0]] = HttpUrl::decode(nameValue[1]);
+                queryParameters[nameValue[0]] = HttpURL::decode(nameValue[1]);
             else if (nameValue.size() == 1)
                 queryParameters[nameValue[0]] = "";
             else
@@ -150,11 +150,11 @@ HttpUrl::HttpUrl(const std::string &url) {
         fragment_str = tempUrl;
 }
 
-HttpUrl::HttpUrl(const char *url) {
-    *this = HttpUrl(std::string(url));
+HttpURL::HttpURL(const char *url) {
+    *this = HttpURL(std::string(url));
 }
 
-int HttpUrl::defaultPort(std::string scheme) {
+int HttpURL::defaultPort(std::string scheme) {
     util::string::toLower(scheme);
     if (scheme == "https")
         return 443;
@@ -175,33 +175,33 @@ int HttpUrl::defaultPort(std::string scheme) {
     return -1;
 }
 
-std::string HttpUrl::encodedFragment() {
-    return HttpUrl::encode(fragment_str);
+std::string HttpURL::encodedFragment() {
+    return HttpURL::encode(fragment_str);
 }
 
-std::string HttpUrl::encodedPath() {
+std::string HttpURL::encodedPath() {
     if (pathSegments_vec.empty())
         return std::string();
 
     std::ostringstream oss;
     for (int i = 0; i < pathSegments_vec.size() - 1; i++) {
         std::string pathSegment = pathSegments_vec[i];
-        oss << HttpUrl::encode(pathSegment) << "/";
+        oss << HttpURL::encode(pathSegment) << "/";
     }
-    oss << HttpUrl::encode(pathSegments_vec[pathSegments_vec.size() - 1]);
+    oss << HttpURL::encode(pathSegments_vec[pathSegments_vec.size() - 1]);
     if (pathEndsWithSlash)
         oss << '/';
     return oss.str();
 }
 
-std::vector<std::string> HttpUrl::encodedPathSegments() {
+std::vector<std::string> HttpURL::encodedPathSegments() {
     std::vector<std::string> path_segments;
     for (const auto &pathSegment : pathSegments_vec)
-        path_segments.push_back(HttpUrl::encode(pathSegment));
+        path_segments.push_back(HttpURL::encode(pathSegment));
     return path_segments;
 }
 
-std::string HttpUrl::encodedQuery() {
+std::string HttpURL::encodedQuery() {
     if (queryParameters.empty())
         return std::string();
 
@@ -211,34 +211,34 @@ std::string HttpUrl::encodedQuery() {
         if (entry->second.empty())
             oss << entry->first << '&';
         else
-            oss << entry->first << '=' << HttpUrl::encode(entry->second) << '&';
+            oss << entry->first << '=' << HttpURL::encode(entry->second) << '&';
     }
     auto entry = std::next(queryParameters.begin(), queryParameters.size() - 1);
     if (entry->second.empty())
         oss << entry->first;
     else
-        oss << entry->first << '=' << HttpUrl::encode(entry->second);
+        oss << entry->first << '=' << HttpURL::encode(entry->second);
     return oss.str();
 }
 
-bool HttpUrl::operator==(const HttpUrl &url) {
+bool HttpURL::operator==(const HttpURL &url) {
     return this == &url;
 }
 
-std::string HttpUrl::fragment() {
+std::string HttpURL::fragment() {
     return fragment_str;
 }
 
-std::string HttpUrl::host() {
+std::string HttpURL::host() {
     return host_str;
 }
 
-bool HttpUrl::isHttps() {
+bool HttpURL::isHttps() {
     return scheme_str == "https";
 }
 
-HttpUrl::Builder HttpUrl::newBuilder() {
-    HttpUrl::Builder builder;
+HttpURL::Builder HttpURL::newBuilder() {
+    HttpURL::Builder builder;
     builder.pathSegments = pathSegments_vec;
     builder.queryParameters = queryParameters;
     builder.fragment_str = fragment_str;
@@ -249,27 +249,27 @@ HttpUrl::Builder HttpUrl::newBuilder() {
     return builder;
 }
 
-std::vector<std::string> HttpUrl::pathSegments() {
+std::vector<std::string> HttpURL::pathSegments() {
     return pathSegments_vec;
 }
 
-int HttpUrl::pathSize() {
+int HttpURL::pathSize() {
     if (pathSegments_vec.empty())
         return 0;
     std::ostringstream oss;
     for (int i = 0; i < pathSegments_vec.size() - 1; i++) {
         std::string pathSegment = pathSegments_vec[i];
-        oss << HttpUrl::encode(pathSegment) << "/";
+        oss << HttpURL::encode(pathSegment) << "/";
     }
-    oss << HttpUrl::encode(pathSegments_vec[pathSegments_vec.size() - 1]);
+    oss << HttpURL::encode(pathSegments_vec[pathSegments_vec.size() - 1]);
     return oss.str().length();
 }
 
-int HttpUrl::port() {
+int HttpURL::port() {
     return port_num;
 }
 
-std::string HttpUrl::query() {
+std::string HttpURL::query() {
     if (queryParameters.empty())
         return std::string();
 
@@ -289,34 +289,34 @@ std::string HttpUrl::query() {
     return oss.str();
 }
 
-std::string HttpUrl::queryParameter(const std::string &name) {
+std::string HttpURL::queryParameter(const std::string &name) {
     return queryParameters.find(name) != queryParameters.end() ? queryParameters.at(name) : std::string();
 }
 
-std::string HttpUrl::queryParameterName(int index) {
+std::string HttpURL::queryParameterName(int index) {
     return std::next(queryParameters.begin(), index)->first;
 }
 
-std::vector<std::string> HttpUrl::queryParameterNames() {
+std::vector<std::string> HttpURL::queryParameterNames() {
     std::vector<std::string> names;
     for (const auto &nameValue : queryParameters)
         names.push_back(nameValue.first);
     return names;
 }
 
-std::string HttpUrl::queryParameterValue(int index) {
+std::string HttpURL::queryParameterValue(int index) {
     return std::next(queryParameters.begin(), index)->second;
 }
 
-int HttpUrl::querySize() {
+int HttpURL::querySize() {
     return encodedQuery().length();
 }
 
-std::string HttpUrl::scheme() {
+std::string HttpURL::scheme() {
     return scheme_str;
 }
 
-std::string HttpUrl::url() {
+std::string HttpURL::url() {
     std::ostringstream oss;
 
     oss << scheme_str << "://" << host_str;

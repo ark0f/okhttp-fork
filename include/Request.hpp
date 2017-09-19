@@ -43,7 +43,7 @@ namespace ohf {
             void removeHeader(const char *name);
 
             // Builder tag(const Object &obj);
-            void url(const HttpUrl &url);
+            void url(const HttpURL &url);
 
             void url(const char *url);
         };
@@ -64,7 +64,7 @@ namespace ohf {
         Builder newBuilder();
 
         // Object tag();
-        HttpUrl url();
+        HttpURL url();
     };
 }
 

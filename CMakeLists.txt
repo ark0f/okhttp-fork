@@ -1,8 +1,9 @@
-cmake_minimum_required(VERSION 2.4)
+cmake_minimum_required(VERSION 2.8)
 project(OkHttpFork)
 
 set(CMAKE_CXX_STANDARD 11)
 
+# Cross-platform files
 set(LIB_SOURCE_FILES
         lib/Client.cpp include/Client.hpp
         lib/Call.cpp include/Call.hpp
@@ -23,7 +24,7 @@ set(LIB_SOURCE_FILES
         lib/CertificatePinner.cpp include/CertificatePinner.hpp
         lib/ConnectionPool.cpp include/ConnectionPool.hpp
         lib/ConnectionSpec.cpp include/ConnectionSpec.hpp
-        lib/CookieJar.cpp include/CookieJar.hpp
+        include/CookieJar.hpp # Interface
         lib/Dispatcher.cpp include/Dispatcher.hpp
         lib/Dns.cpp include/Dns.hpp
         lib/HostnameVerifier.cpp include/HostnameVerifier.hpp
@@ -36,17 +37,52 @@ set(LIB_SOURCE_FILES
         lib/Exception.cpp include/Exception.hpp
         lib/Socket.cpp lib/Socket.StreamBuf.cpp include/Socket.hpp
         lib/SSLSocket.cpp lib/SSLSocket.StreamBuf.cpp include/SSLSocket.hpp
-        lib/Cookie.cpp include/Cookie.hpp)
+        lib/Cookie.cpp lib/Cookie.Builder.cpp include/Cookie.hpp)
+
+# Files for different platforms
+if (WIN32)
+    set(SYSTEM_LIB_PATH lib/Win32)
+elseif (UNIX)
+    set(SYSTEM_LIB_PATH lib/UNIX)
+endif ()
+
+set(LIB_SOURCE_FILES ${LIB_SOURCE_FILES}
+        ${SYSTEM_LIB_PATH}/Socket.cpp
+        ${SYSTEM_LIB_PATH}/SSLSocket.cpp)
+
+# Util files
 set(LIB_SOURCE_FILES ${LIB_SOURCE_FILES}
         util/lib/string.cpp util/include/string.hpp
         util/lib/util.cpp util/include/util.hpp)
+
 add_library(ohf SHARED ${LIB_SOURCE_FILES})
 
-#OpenSSL
-find_package(OpenSSL)
+# Libraries
+# OpenSSL
+find_package(OpenSSL REQUIRED)
 if (OPENSSL_FOUND)
     include_directories(${OPENSSL_INCLUDE_DIR})
     target_link_libraries(ohf ${OPENSSL_LIBRARIES})
-else ()
-    message(FATAL_ERROR "OpenSSL not found")
 endif ()
+
+# Socket
+if (WIN32)
+    target_link_libraries(ohf wsock32)
+endif ()
+
+# Install
+if (WIN32)
+    set(INCLUDE_INSTALL_PATH ${CMAKE_CURRENT_SOURCE_DIR}/ohf/include/ohf)
+    set(LIB_INSTALL_PATH ${CMAKE_CURRENT_SOURCE_DIR}/ohf/lib)
+elseif (UNIX)
+    set(INCLUDE_INSTALL_PATH /usr/include/ohf)
+    set(LIB_INSTALL_PATH /usr/lib)
+endif ()
+
+foreach (file ${LIB_SOURCE_FILES})
+    string(REGEX MATCH ^include found ${file})
+    if (found)
+        install(FILES ${file} DESTINATION ${INCLUDE_INSTALL_PATH})
+    endif ()
+endforeach ()
+install(TARGETS ohf DESTINATION ${LIB_INSTALL_PATH})

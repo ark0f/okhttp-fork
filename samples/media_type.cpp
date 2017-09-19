@@ -3,8 +3,8 @@
 //
 
 #include <iostream>
-#include "../include/Exception.hpp"
-#include "../include/MediaType.hpp"
+#include "include/Exception.hpp"
+#include "include/MediaType.hpp"
 
 int main() {
     try {
@@ -13,10 +13,8 @@ int main() {
         std::cout << "Subtype: " << mediaType.subtype() << std::endl;
         std::cout << "Charset: " << mediaType.charset() << std::endl;
         std::cout << "Charset with default value: " << mediaType.charset("utf8") << std::endl;
-        std::cout << "Has charset: " << mediaType.hasCharset() << std::endl;
         std::cout << "Boundary: " << mediaType.boundary() << std::endl;
         std::cout << "Boundary with default value: " << mediaType.boundary("----123123") << std::endl;
-        std::cout << "Has boundary: " << mediaType.hasBoundary() << std::endl;
         std::cout << "Self equals self: " << (mediaType == mediaType) << std::endl;
     } catch (ohf::Exception &e) {
         std::cout << e.what() << std::endl << "\tCode: " << e.code() << std::endl;

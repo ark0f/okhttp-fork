@@ -9,7 +9,7 @@
 #include <map>
 
 namespace ohf {
-    class HttpUrl {
+    class HttpURL {
     public:
         class Builder {
         public:
@@ -20,7 +20,7 @@ namespace ohf {
             void addPathSegments(const std::string &pathSegments);
 
             // void addQueryParameter(const std::string &name, const std::string &value);
-            HttpUrl build();
+            HttpURL build();
 
             // void encodedFragment(const std::string &encodedFragment);
             // void encodedPassword(const std::string &encodedPassword);
@@ -60,7 +60,7 @@ namespace ohf {
             int port_num = 80;
             std::string scheme_str = "http";
 
-            friend class HttpUrl;
+            friend class HttpURL;
         };
 
         static std::string encode(const std::string &str);
@@ -69,11 +69,11 @@ namespace ohf {
 
         static int defaultPort(std::string scheme);
 
-        HttpUrl() = default;
+        HttpURL() = default;
 
-        HttpUrl(const std::string &tempUrl);
+        HttpURL(const std::string &tempUrl);
 
-        HttpUrl(const char *url);
+        HttpURL(const char *url);
 
         std::string encodedFragment();
 
@@ -83,12 +83,12 @@ namespace ohf {
 
         std::string encodedQuery();
 
-        bool operator==(const HttpUrl &url); // TODO: Compare values
+        bool operator==(const HttpURL &url); // TODO: Compare values
         std::string fragment();
 
-        // static HttpUrl get(const URI &uri);
-        // static HttpUrl get(const URL &url);
-        // static HttpUrl get(const std::string &url);
+        // static HttpURL get(const URI &uri);
+        // static HttpURL get(const URL &url);
+        // static HttpURL get(const std::string &url);
         std::string host();
 
         bool isHttps();
@@ -115,7 +115,7 @@ namespace ohf {
         int querySize();
 
         // std::string redact();
-        // HttpUrl resolve(const std::string &link);
+        // HttpURL resolve(const std::string &link);
         std::string scheme();
 
         // std::string topPrivateDomain();

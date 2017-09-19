@@ -19,45 +19,43 @@ namespace ohf {
 
             Headers build();
 
-            std::string get(const std::string &name);
+            std::string get(std::string name);
 
-            // void removeAll(const char *name);
+            void removeAll(std::string name);
+
             void set(const std::string &name, const std::string &value);
 
-            std::string &operator[](const std::string &name);
+            friend class Headers;
 
         private:
-            std::map<std::string, std::string> headers;
+            // std::map<std::string, std::vector<std::string>> headers;
+            std::vector<std::string> namesAndValues;
 
-            friend class Headers;
         };
 
+        Headers() = default;
         Headers(const std::map<std::string, std::string> &headers);
 
         bool operator==(const Headers &headers); // TODO: Compare values
-        std::string get(const std::string &name);
+        std::string get(std::string name);
 
-        std::string &operator[](const std::string &name);
-
-        time_t getDate(); // TODO: Check working capacity
+        time_t getDate();
         std::string name(int i);
 
         std::vector<std::string> names();
 
         Builder newBuilder();
 
-        // static Headers of(const std::map<std::string, std::string> &headers);
-
-        // typedef Headers of(...);
+        // static Headers of(...);
         int size();
 
         // std::map<const char *, std::vector<const char *>> toMultimap();
         std::string value(int index);
 
-        std::vector<std::string> values();
+        std::vector<std::string> values(const std::string &name);
 
     private:
-        std::map<std::string, std::string> headers;
+        std::vector<std::string> namesAndValues;
     };
 }
 

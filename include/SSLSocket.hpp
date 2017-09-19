@@ -13,7 +13,7 @@
 namespace ohf {
     class SSLSocket : public Socket {
     public:
-        SSLSocket();
+        SSLSocket(const SSL_METHOD *method = SSLv23_method());
 
         ~SSLSocket();
 
@@ -23,12 +23,12 @@ namespace ohf {
 
         void send(const char *data, int size);
 
-        std::string receive(size_t size = 0);
+        std::string receive(size_t size);
 
     private:
         class StreamBuf : public std::streambuf {
         public:
-            StreamBuf(SSLSocket *socket) : sock(socket) {};
+            StreamBuf(SSLSocket *socket) : sock(socket), cur(traits_type::eof()) {};
         protected:
             int overflow(int c) override;
 

@@ -53,14 +53,6 @@ bool MediaType::operator==(const MediaType &mediaType) {
     return this == &mediaType;
 }
 
-bool MediaType::hasBoundary() {
-    return !boundary_.empty();
-}
-
-bool MediaType::hasCharset() {
-    return !charset_.empty();
-}
-
 std::string MediaType::subtype() {
     return subtype_;
 }

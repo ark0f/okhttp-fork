@@ -2,11 +2,12 @@
 // Created by Good_Pudge.
 //
 
+#include "../include/util.hpp"
+#include <openssl/err.h>
 
 #if _WIN32
 
 #include <winsock.h>
-#include "../include/util.hpp"
 
 std::string util::getWSAError() {
     char *error;
@@ -18,3 +19,15 @@ std::string util::getWSAError() {
 }
 
 #endif
+
+std::string util::getOpenSSLError() {
+    std::string error;
+    unsigned long error_code;
+    while (error_code = ERR_get_error()) {
+        char *str = ERR_error_string(error_code, nullptr);
+        if (!str)
+            return error;
+        error += str;
+    }
+    return error;
+}

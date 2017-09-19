@@ -12,7 +12,7 @@ namespace ohf {
     public:
         MediaType() = default;
 
-        MediaType(const std::string &str);
+        explicit MediaType(const std::string &str);
 
         MediaType(const char *str);
 
@@ -25,9 +25,6 @@ namespace ohf {
         std::string charset(const std::string &defaultValue);
 
         bool operator==(const MediaType &mediaType); // TODO: Compare values
-        bool hasBoundary();
-
-        bool hasCharset();
 
         std::string subtype();
 

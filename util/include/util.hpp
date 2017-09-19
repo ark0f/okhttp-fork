@@ -12,6 +12,8 @@ namespace util {
 #if _WIN32
     std::string getWSAError();
 #endif
+
+    std::string getOpenSSLError();
 }
 
 #endif //OKHTTPFORK_UTIL_HPP

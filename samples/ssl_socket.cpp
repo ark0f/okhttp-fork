@@ -16,6 +16,8 @@ int main() {
         ios << "Connection: close\r\n\r\n";
 
         std::cout << ios.rdbuf() << std::endl;
+
+        sslSocket.shutdown();
     } catch (ohf::Exception &e) {
         std::cout << e.what() << std::endl << "\tCode: " << e.code() << std::endl;
     }
