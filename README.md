@@ -13,11 +13,12 @@ Second step for different systems:
 * ##### Windows:
     MSVC:
     ````bash
-    cmake --build . --target INSTALL --configure Release
+    cmake --build . --target INSTALL --config Release
     ````
     MinGW:
     ````bash
     mingw32-make -j2
+    mingw32-make install
     ````
 * ##### UNIX-like:
     ````bash
