@@ -11,11 +11,11 @@ cmake .
 ````
 Second step for different systems:
 * ##### Windows:
-    MSVC:
+    * MSVC:
     ````bash
     cmake --build . --target INSTALL --config Release
     ````
-    MinGW:
+    * MinGW:
     ````bash
     mingw32-make -j2
     mingw32-make install

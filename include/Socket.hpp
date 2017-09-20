@@ -29,7 +29,8 @@ namespace ohf {
         std::string receiveAll();
 
         void shutdown(int how = 2);
-    private:
+
+    protected:
         class StreamBuf : public std::streambuf {
         public:
             StreamBuf(Socket *socket) : sock(socket), cur(traits_type::eof()) {};
@@ -46,7 +47,6 @@ namespace ohf {
         };
 
         std::shared_ptr<StreamBuf> buf;
-    protected:
         std::shared_ptr<std::iostream> ios;
         int socket_fd;
     };

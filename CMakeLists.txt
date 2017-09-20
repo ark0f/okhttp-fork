@@ -35,8 +35,8 @@ set(LIB_SOURCE_FILES
         lib/HttpURL.cpp lib/HttpURL.Builder.cpp include/HttpURL.hpp
         lib/MediaType.cpp include/MediaType.hpp
         lib/Exception.cpp include/Exception.hpp
-        lib/Socket.cpp lib/Socket.StreamBuf.cpp include/Socket.hpp
-        lib/SSLSocket.cpp lib/SSLSocket.StreamBuf.cpp include/SSLSocket.hpp
+        lib/Socket.cpp lib/SocketStreamBuf.cpp include/Socket.hpp
+        lib/SSLSocket.cpp include/SSLSocket.hpp
         lib/Cookie.cpp lib/Cookie.Builder.cpp include/Cookie.hpp)
 
 # Files for different platforms
@@ -47,8 +47,7 @@ elseif (UNIX)
 endif ()
 
 set(LIB_SOURCE_FILES ${LIB_SOURCE_FILES}
-        ${SYSTEM_LIB_PATH}/Socket.cpp
-        ${SYSTEM_LIB_PATH}/SSLSocket.cpp)
+        ${SYSTEM_LIB_PATH}/Socket.cpp)
 
 # Util files
 set(LIB_SOURCE_FILES ${LIB_SOURCE_FILES}
@@ -86,3 +85,6 @@ foreach (file ${LIB_SOURCE_FILES})
     endif ()
 endforeach ()
 install(TARGETS ohf DESTINATION ${LIB_INSTALL_PATH})
+
+add_executable(ohf_test main.cpp)
+target_link_libraries(ohf_test ohf)
