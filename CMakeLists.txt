@@ -85,6 +85,3 @@ foreach (file ${LIB_SOURCE_FILES})
     endif ()
 endforeach ()
 install(TARGETS ohf DESTINATION ${LIB_INSTALL_PATH})
-
-add_executable(ohf_test main.cpp)
-target_link_libraries(ohf_test ohf)
