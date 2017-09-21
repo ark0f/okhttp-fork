@@ -8,7 +8,7 @@
 #include <string>
 
 namespace ohf {
-    class Exception {
+    class Exception : public std::exception {
     public:
         enum Code {
             HEADER_NOT_EXISTS,
@@ -37,15 +37,15 @@ namespace ohf {
             INVALID_MAX_AGE
         };
 
-        Exception(const int &code, const std::string &what);
+        Exception(const int &code, const std::string &what) noexcept;
 
-        int code();
+        int code() const noexcept;
 
-        std::string what();
+        const char *what() const noexcept override;
 
     private:
-        int code_;
-        std::string what_;
+        int m_code;
+        std::string m_what;
     };
 }
 

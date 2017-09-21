@@ -6,15 +6,12 @@
 
 using namespace ohf;
 
-Exception::Exception(const int &code, const std::string &what) {
-    this->code_ = code;
-    this->what_ = what;
+Exception::Exception(const int &code, const std::string &what) noexcept : m_code(code), m_what(what) {}
+
+int Exception::code() const noexcept {
+    return m_code;
 }
 
-int Exception::code() {
-    return code_;
-}
-
-std::string Exception::what() {
-    return what_;
+const char *Exception::what() const noexcept {
+    return m_what.c_str();
 }

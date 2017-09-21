@@ -34,12 +34,10 @@ namespace ohf {
     SSLSocket::~SSLSocket() {
         SSL_CTX_free(ssl_context);
         SSL_free(ssl);
-
-        ((Socket *) this)->~Socket();
     }
 
     std::iostream &SSLSocket::connect(const std::string &address, const int &port) {
-        std::iostream &ios = ((Socket *) this)->connect(address, port);
+        std::iostream &ios = Socket::connect(address, port);
         SSL_set_fd(ssl, socket_fd);
         if (SSL_connect(ssl) < 1)
             throw Exception(Exception::Code::FAILED_TO_CREATE_SSL_CONNECTION,
