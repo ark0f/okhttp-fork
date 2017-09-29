@@ -22,7 +22,7 @@ namespace ohf {
 
         void send(const std::string &data);
 
-        void send(std::istream &stream);
+        void send(std::istream *stream);
 
         virtual std::string receive(size_t size);
 

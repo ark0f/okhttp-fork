@@ -16,7 +16,7 @@ namespace ohf {
             INVALID_MIME_TYPE,
             FAILED_TO_READ_STREAM,
             FAILED_TO_CREATE_SOCKET,
-            NO_SUCH_HOST,
+            UNKNOWN_HOST,
             FAILED_TO_CREATE_CONNECTION,
             FAILED_TO_SEND_DATA,
             FAILED_TO_RECEIVE_DATA,
@@ -34,12 +34,15 @@ namespace ohf {
             OUT_OF_RANGE,
             INVALID_COOKIE_LINE,
             INVALID_COOKIE_PARAMETER,
-            INVALID_MAX_AGE
+            INVALID_MAX_AGE,
+            INVALID_IP
         };
 
-        Exception(const int &code, const std::string &what) noexcept;
+        Exception(Code code, const std::string &what) noexcept;
 
         int code() const noexcept;
+
+        std::string message() const noexcept;
 
         const char *what() const noexcept override;
 

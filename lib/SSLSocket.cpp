@@ -4,7 +4,7 @@
 
 #include "../include/SSLSocket.hpp"
 #include "../include/Exception.hpp"
-#include "../util/include/util.hpp"
+#include "../util/util.hpp"
 
 namespace ohf {
     namespace priv {

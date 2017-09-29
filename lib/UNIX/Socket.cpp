@@ -2,7 +2,7 @@
 // Created by Good_Pudge.
 //
 
-#include "../../util/include/util.hpp"
+#include "../../util/util.hpp"
 #include "../../include/Exception.hpp"
 #include "../../include/Socket.hpp"
 #include <sys/socket.h>
@@ -30,7 +30,7 @@ namespace ohf {
         addr.sin_family = AF_INET;// TCP/IP
         hostent *hosts = gethostbyname(address.c_str());
         if (!hosts)
-            throw Exception(Exception::Code::NO_SUCH_HOST, "No such host: " + address);
+            throw Exception(Exception::Code::UNKNOWN_HOST, "Unknown host: " + address);
         bcopy(hosts->h_addr,
               (char *) &addr.sin_addr.s_addr,
               hosts->h_length);

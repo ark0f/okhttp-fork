@@ -8,6 +8,7 @@
 #include <vector>
 #include "../include/RequestBody.hpp"
 #include "../include/Exception.hpp"
+#include "../util/util.hpp"
 
 using namespace ohf;
 
@@ -36,16 +37,11 @@ RequestBody::RequestBody(const MediaType &contentType, const std::string &conten
     this->content = content;
 }
 
-RequestBody::RequestBody(const MediaType &contentType, std::istream &stream) {
+RequestBody::RequestBody(const MediaType &contentType, std::istream *stream) {
     this->mediaType = contentType;
 
-    //Read, check and put
-    std::string buffer = [&stream]() {
-        std::ostringstream oss;
-        oss << stream.rdbuf();
-        return oss.str();
-    }();
-    if (stream.bad())
+    std::string buffer = util::readStream(stream);
+    if (stream->bad())
         throw Exception(Exception::Code::FAILED_TO_READ_STREAM, "Failed to read stream: ");
     this->content = buffer;
 }

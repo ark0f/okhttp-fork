@@ -123,14 +123,15 @@ namespace ohf {
         // URL url();
         std::string url();
 
+        friend std::ostream &operator<<(std::ostream &stream, HttpURL &httpURL);
     private:
         bool pathEndsWithSlash;
-        std::vector<std::string> pathSegments_vec;
+        std::vector<std::string> mPathSegments;
         std::map<std::string, std::string> queryParameters;
-        std::string fragment_str;
-        std::string host_str;
-        int port_num;
-        std::string scheme_str;
+        std::string mFragment;
+        std::string mHost;
+        int mPort;
+        std::string mScheme;
     };
 }
 

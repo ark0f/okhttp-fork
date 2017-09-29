@@ -11,15 +11,17 @@
 namespace ohf {
     class Call {
     public:
-        void cancel();
+        Call(Request &request) {};
 
-        Response execute();
+        virtual Response execute() = 0;
 
-        bool isCanceled();
+        virtual Request request() = 0;
 
-        bool isExecuted();
+        virtual void cancel() = 0;
 
-        Request request();
+        virtual bool isCanceled() = 0;
+
+        virtual bool isExecuted() = 0;
     };
 }
 

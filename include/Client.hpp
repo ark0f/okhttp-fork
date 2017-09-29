@@ -13,7 +13,7 @@
 #include "ConnectionSpec.hpp"
 #include "CookieJar.hpp"
 #include "Dispatcher.hpp"
-#include "Dns.hpp"
+#include "DNS.hpp"
 #include "HostnameVerifier.hpp"
 #include "Interceptor.hpp"
 #include "Protocol.hpp"
@@ -47,7 +47,7 @@ namespace ohf {
 
             Builder dispatcher(const Dispatcher &dispatcher);
 
-            Builder dns(const Dns &dns);
+            Builder dns(const DNS &dns);
 
             Builder followRedirects(bool follorRedirects);
 
@@ -95,7 +95,7 @@ namespace ohf {
 
         Dispatcher dispatcher();
 
-        Dns dns();
+        DNS dns();
 
         bool followRedirects();
 

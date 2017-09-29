@@ -36,3 +36,5 @@ Second step for different systems:
 * SSLSocket (Windows, POSIX for now)
 * Cookie
 * CookieJar
+* Call
+* DNS

@@ -5,7 +5,7 @@
 #include <sstream>
 #include <algorithm>
 #include <iostream>
-#include "../include/string.hpp"
+#include "string.hpp"
 
 using namespace util;
 

@@ -5,20 +5,16 @@
 #include <sstream>
 #include "../include/Socket.hpp"
 #include "../include/Exception.hpp"
+#include "../util/util.hpp"
 
 namespace ohf {
     void Socket::send(const std::string &data) {
         this->send(data.c_str(), data.length());
     }
 
-    void Socket::send(std::istream &stream) {
-        //Read, check and put
-        std::string buffer = [&stream]() {
-            std::ostringstream oss;
-            oss << stream.rdbuf();
-            return oss.str();
-        }();
-        if (stream.bad())
+    void Socket::send(std::istream *stream) {
+        std::string buffer = util::readStream(stream);
+        if (stream->bad())
             throw Exception(Exception::Code::FAILED_TO_READ_STREAM, "Failed to read stream: ");
         this->send(buffer);
     }

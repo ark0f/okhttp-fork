@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD 11)
 # Cross-platform files
 set(LIB_SOURCE_FILES
         lib/Client.cpp include/Client.hpp
-        lib/Call.cpp include/Call.hpp
+        include/Call.hpp # Interface
         lib/Response.cpp include/Response.hpp
         lib/Request.cpp include/Request.hpp
         lib/ResponseBody.cpp include/ResponseBody.hpp
@@ -24,9 +24,9 @@ set(LIB_SOURCE_FILES
         lib/CertificatePinner.cpp include/CertificatePinner.hpp
         lib/ConnectionPool.cpp include/ConnectionPool.hpp
         lib/ConnectionSpec.cpp include/ConnectionSpec.hpp
-        include/CookieJar.hpp # Interface
+        lib/CookieJar.cpp include/CookieJar.hpp # Interface
         lib/Dispatcher.cpp include/Dispatcher.hpp
-        lib/Dns.cpp include/Dns.hpp
+        lib/DNS.cpp include/DNS.hpp # Interface
         lib/HostnameVerifier.cpp include/HostnameVerifier.hpp
         lib/Interceptor.cpp include/Interceptor.hpp
         lib/Proxy.cpp include/Proxy.hpp
@@ -37,22 +37,25 @@ set(LIB_SOURCE_FILES
         lib/Exception.cpp include/Exception.hpp
         lib/Socket.cpp lib/SocketStreamBuf.cpp include/Socket.hpp
         lib/SSLSocket.cpp include/SSLSocket.hpp
-        lib/Cookie.cpp lib/Cookie.Builder.cpp include/Cookie.hpp)
+        lib/Cookie.cpp lib/Cookie.Builder.cpp include/Cookie.hpp
+        lib/InetAddress.cpp include/InetAddress.hpp)
 
 # Files for different platforms
 if (WIN32)
-    set(SYSTEM_LIB_PATH lib/Win32)
+    set(LIB_SOURCE_FILES ${LIB_SOURCE_FILES}
+            lib/Win32/Socket.cpp
+            lib/Win32/WSAInit.hpp
+            lib/Win32/InetAddress.cpp)
 elseif (UNIX)
-    set(SYSTEM_LIB_PATH lib/UNIX)
+    set(LIB_SOURCE_FILES ${LIB_SOURCE_FILES}
+            lib/UNIX/Socket.cpp
+            lib/UNIX/InetAddress.cpp)
 endif ()
-
-set(LIB_SOURCE_FILES ${LIB_SOURCE_FILES}
-        ${SYSTEM_LIB_PATH}/Socket.cpp)
 
 # Util files
 set(LIB_SOURCE_FILES ${LIB_SOURCE_FILES}
-        util/lib/string.cpp util/include/string.hpp
-        util/lib/util.cpp util/include/util.hpp)
+        util/string.cpp util/string.hpp
+        util/util.cpp util/util.hpp)
 
 add_library(ohf SHARED ${LIB_SOURCE_FILES})
 

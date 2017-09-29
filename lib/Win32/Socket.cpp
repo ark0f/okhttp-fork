@@ -2,28 +2,14 @@
 // Created by Good_Pudge.
 //
 
-#include "../../util/include/util.hpp"
+#include "../../util/util.hpp"
 #include "../../include/Exception.hpp"
 #include "../../include/Socket.hpp"
+#include "WSAInit.hpp"
+#include "../../include/InetAddress.hpp"
 #include <iostream>
-#include <winsock.h>
 
 namespace ohf {
-    namespace priv {
-        struct WSAInit {
-            WSAInit() {
-                WSAData ws;
-                WSAStartup(MAKEWORD(1, 1), &ws);
-            }
-
-            ~WSAInit() {
-                WSACleanup();
-            }
-        };
-
-        WSAInit globalInitWSA;
-    };
-
     Socket::Socket() {
         if ((socket_fd = socket(AF_INET, SOCK_STREAM, 0)) == INVALID_SOCKET)
             throw Exception(Exception::Code::FAILED_TO_CREATE_SOCKET,
@@ -39,10 +25,7 @@ namespace ohf {
         sockaddr_in addr;
         ZeroMemory(&addr, sizeof(addr));
         addr.sin_family = AF_INET; // TCP/IP
-        hostent *hosts = gethostbyname(address.c_str());
-        if (!hosts) // host not found
-            throw Exception(Exception::Code::NO_SUCH_HOST, "No such host: " + address);
-        addr.sin_addr.S_un.S_addr = inet_addr(inet_ntoa(**(in_addr **) hosts->h_addr_list)); // Get IP from DNS
+        addr.sin_addr.S_un.S_addr = inet_addr(InetAddress(address).hostAddress().c_str());
         addr.sin_port = htons(port); // Port
         // Connect
         if (::connect(socket_fd, (sockaddr *) &addr, sizeof(addr)) == SOCKET_ERROR)

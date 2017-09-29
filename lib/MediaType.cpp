@@ -4,7 +4,7 @@
 
 #include <vector>
 #include "../include/MediaType.hpp"
-#include "../util/include/string.hpp"
+#include "../util/string.hpp"
 #include "../include/Exception.hpp"
 
 using namespace ohf;
@@ -14,39 +14,38 @@ MediaType::MediaType(const std::string &str) {
     // type / subtype
     std::vector<std::string> typeSubtype = util::string::split(values[0], "/");
     if (typeSubtype.size() == 2) {
-        this->subtype_ = typeSubtype[1];
-        this->type_ = typeSubtype[0];
+        this->mSubType = typeSubtype[1];
+        this->mType = typeSubtype[0];
     } else throw Exception(Exception::Code::INVALID_MIME_TYPE, "Invalid MIME type: " + values[0]);
     // boundary / charset
-    this->boundary_ = "";
-    this->charset_ = "";
+    this->mBoundary = "";
+    this->mCharset = "";
     for (int i = 1; i < values.size(); i++) {
         std::string value = values[i];
         if (util::string::startsWith(value, "charset="))
-            this->charset_ = value.substr(8, value.length());
+            this->mCharset = value.substr(8, value.length());
         else if (util::string::startsWith(value, "boundary="))
-            this->boundary_ = value.substr(9, value.length());
+            this->mBoundary = value.substr(9, value.length());
     }
 }
 
-MediaType::MediaType(const char *str) {
-    *this = MediaType(std::string(str));
+MediaType::MediaType(const char *str) : MediaType(std::string(str)) {
 }
 
 std::string MediaType::boundary() {
-    return boundary_;
+    return mBoundary;
 }
 
 std::string MediaType::boundary(const std::string &defaultValue) {
-    return boundary_.empty() ? defaultValue : boundary_;
+    return mBoundary.empty() ? defaultValue : mBoundary;
 }
 
 std::string MediaType::charset() {
-    return charset_;
+    return mCharset;
 }
 
 std::string MediaType::charset(const std::string &defaultValue) {
-    return charset_.empty() ? defaultValue : charset_;
+    return mCharset.empty() ? defaultValue : mCharset;
 }
 
 bool MediaType::operator==(const MediaType &mediaType) {
@@ -54,9 +53,9 @@ bool MediaType::operator==(const MediaType &mediaType) {
 }
 
 std::string MediaType::subtype() {
-    return subtype_;
+    return mSubType;
 }
 
 std::string MediaType::type() {
-    return type_;
+    return mType;
 }

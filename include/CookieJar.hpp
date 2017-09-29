@@ -13,7 +13,16 @@ namespace ohf {
     public:
         virtual std::vector<Cookie> loadFromRequest(HttpURL &httpURL) = 0;
 
-        virtual void saveFromResponse(HttpURL &httpURL, std::vector<Cookie> cookies) = 0;
+        virtual void saveFromResponse(HttpURL &httpURL, std::vector<Cookie> &cookies) = 0;
+
+        class NO_COOKIES;
+    };
+
+    class CookieJar::NO_COOKIES : public CookieJar {
+    public:
+        std::vector<Cookie> loadFromRequest(HttpURL &httpURL);
+
+        void saveFromResponse(HttpURL &httpURL, std::vector<Cookie> &cookies);
     };
 }
 

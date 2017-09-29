@@ -5,7 +5,7 @@
 #include <iomanip>
 #include <sstream>
 #include "../include/Cookie.hpp"
-#include "../util/include/string.hpp"
+#include "../util/string.hpp"
 #include "../include/Exception.hpp"
 
 namespace ohf {

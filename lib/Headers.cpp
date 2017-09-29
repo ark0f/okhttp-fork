@@ -7,7 +7,7 @@
 #include <sstream>
 #include "../include/Headers.hpp"
 #include "../include/Exception.hpp"
-#include "../util/include/string.hpp"
+#include "../util/string.hpp"
 
 using namespace ohf;
 

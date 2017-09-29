@@ -12,7 +12,7 @@ namespace ohf {
     public:
         MediaType() = default;
 
-        explicit MediaType(const std::string &str);
+        MediaType(const std::string &str);
 
         MediaType(const char *str);
 
@@ -31,10 +31,10 @@ namespace ohf {
         std::string type();
 
     private:
-        std::string boundary_;
-        std::string charset_;
-        std::string subtype_;
-        std::string type_;
+        std::string mBoundary;
+        std::string mCharset;
+        std::string mSubType;
+        std::string mType;
     };
 }
 

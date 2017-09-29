@@ -3,7 +3,7 @@
 //
 
 #include "../include/Headers.hpp"
-#include "../util/include/string.hpp"
+#include "../util/string.hpp"
 #include "../include/Exception.hpp"
 
 using namespace ohf;

@@ -7,12 +7,16 @@
 
 
 #include <string>
+#include <vector>
 
 namespace util {
 #if _WIN32
     std::string getWSAError();
 #endif
 
+    std::string readStream(const std::istream *stream);
+
+    std::string ip2s(const std::vector<unsigned char> &ip);
     std::string getOpenSSLError();
 }
 

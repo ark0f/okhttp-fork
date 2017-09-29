@@ -3,7 +3,7 @@
 //
 
 #include "../include/HttpURL.hpp"
-#include "../util/include/string.hpp"
+#include "../util/string.hpp"
 #include "../include/Exception.hpp"
 
 using namespace ohf;
@@ -19,14 +19,14 @@ void HttpURL::Builder::addPathSegments(const std::string &pathSegments) {
 
 HttpURL HttpURL::Builder::build() {
     HttpURL url;
-    url.pathSegments_vec = pathSegments;
+    url.mPathSegments = pathSegments;
     url.queryParameters = queryParameters;
-    url.fragment_str = fragment_str;
+    url.mFragment = fragment_str;
     if (host_str.empty())
         throw Exception(Exception::Code::HOST_IS_EMPTY, "Host is empty: ");
-    url.host_str = host_str;
-    url.port_num = port_num;
-    url.scheme_str = scheme_str;
+    url.mHost = host_str;
+    url.mPort = port_num;
+    url.mScheme = scheme_str;
     url.pathEndsWithSlash = pathEndsWithSlash_bool;
     return url;
 }
