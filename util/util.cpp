@@ -3,7 +3,6 @@
 //
 
 #include "util.hpp"
-#include "../include/Exception.hpp"
 #include <openssl/err.h>
 #include <sstream>
 
@@ -29,16 +28,9 @@ std::string util::readStream(const std::istream *stream) {
 }
 
 std::string util::ip2s(const std::vector<unsigned char> &ip) {
-    if (ip.size() != 4)
-        throw ohf::Exception(ohf::Exception::Code::INVALID_IP, "Invalid IP: ");
-
     std::string readyIP;
     for (auto it = ip.begin(); it != ip.end() - 1; it++) {
-        try {
-            readyIP += std::to_string(*it);
-        } catch (std::invalid_argument) {
-            throw ohf::Exception(ohf::Exception::Code::INVALID_IP, "Invalid IP: " + readyIP);
-        }
+        readyIP += std::to_string(*it);
         readyIP.push_back('.');
     }
     readyIP += std::to_string(*(ip.end() - 1));

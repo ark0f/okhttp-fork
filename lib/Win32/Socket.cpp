@@ -53,6 +53,7 @@ namespace ohf {
 
     void Socket::shutdown(int how) {
         if (::shutdown(socket_fd, how) == SOCKET_ERROR)
-            throw Exception(Exception::FAILED_TO_SHUTDOWN_SOCKET, "Failed to shutdown socket: " + util::getWSAError());
+            throw Exception(Exception::Code::FAILED_TO_SHUTDOWN_SOCKET,
+                            "Failed to shutdown socket: " + util::getWSAError());
     }
 }

@@ -6,14 +6,22 @@
 #define OKHTTPFORK_SSLSOCKET_HPP
 
 #include "Socket.hpp"
-#include <openssl/ssl.h>
 #include <string>
 #include <memory>
 
 namespace ohf {
     class SSLSocket : public Socket {
     public:
-        SSLSocket(const SSL_METHOD *method = SSLv23_method());
+        enum class Protocol {
+            SSLv23,
+            SSLv2,
+            SSLv3,
+            TLSv1,
+            TLSv1_1,
+            TLSv1_2
+        };
+
+        SSLSocket(const Protocol &protocol = Protocol::SSLv23);
 
         ~SSLSocket();
 
@@ -26,8 +34,8 @@ namespace ohf {
         std::string receive(size_t size);
 
     private:
-        SSL *ssl;
-        SSL_CTX *ssl_context;
+        struct impl;
+        impl *pImpl;
     };
 }
 

@@ -10,7 +10,7 @@
 namespace ohf {
     class Exception : public std::exception {
     public:
-        enum Code {
+        enum class Code {
             HEADER_NOT_EXISTS,
             INVALID_HEADER_LINE,
             INVALID_MIME_TYPE,
@@ -40,14 +40,14 @@ namespace ohf {
 
         Exception(Code code, const std::string &what) noexcept;
 
-        int code() const noexcept;
+        Code code() const noexcept;
 
         std::string message() const noexcept;
 
         const char *what() const noexcept override;
 
     private:
-        int m_code;
+        Code m_code;
         std::string m_what;
     };
 }

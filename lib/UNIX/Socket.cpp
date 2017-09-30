@@ -5,12 +5,14 @@
 #include "../../util/util.hpp"
 #include "../../include/Exception.hpp"
 #include "../../include/Socket.hpp"
+#include "../../include/InetAddress.hpp"
 #include <sys/socket.h>
 #include <cstring>
 #include <netinet/in.h>
 #include <netdb.h>
 #include <unistd.h>
 #include <iostream>
+#include <arpa/inet.h>
 
 namespace ohf {
     Socket::Socket() {
@@ -28,12 +30,7 @@ namespace ohf {
         sockaddr_in addr;
         bzero(&addr, sizeof(addr));
         addr.sin_family = AF_INET;// TCP/IP
-        hostent *hosts = gethostbyname(address.c_str());
-        if (!hosts)
-            throw Exception(Exception::Code::UNKNOWN_HOST, "Unknown host: " + address);
-        bcopy(hosts->h_addr,
-              (char *) &addr.sin_addr.s_addr,
-              hosts->h_length);
+        addr.sin_addr.s_addr = inet_addr(InetAddress(address).hostAddress().c_str());
         addr.sin_port = htons(port); // Port
         // Connect
         if (::connect(socket_fd, (sockaddr * ) & addr, sizeof(addr)) < 0)

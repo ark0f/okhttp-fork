@@ -8,7 +8,7 @@ using namespace ohf;
 
 Exception::Exception(Code code, const std::string &what) noexcept : m_code(code), m_what(what) {}
 
-int Exception::code() const noexcept {
+Exception::Code Exception::code() const noexcept {
     return m_code;
 }
 

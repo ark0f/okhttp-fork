@@ -24,9 +24,6 @@ namespace ohf {
         mIP.push_back((addr & 0xFF000000) >> 24);
     }
 
-    InetAddress::InetAddress(const std::vector<unsigned char> &ip) : InetAddress(util::ip2s(ip)) {
-    }
-
     std::vector<InetAddress> InetAddress::getAllByName(const std::string &host) {
         hostent *ips = gethostbyname(host.c_str());
         if (!ips)
@@ -47,9 +44,5 @@ namespace ohf {
         }
 
         return inets;
-    }
-
-    std::string InetAddress::hostAddress() {
-        return util::ip2s(mIP);
     }
 }
