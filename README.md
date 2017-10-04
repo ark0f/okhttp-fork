@@ -38,3 +38,4 @@ Second step for different systems:
 * CookieJar
 * Call
 * DNS
+* CacheControl

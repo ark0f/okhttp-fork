@@ -21,10 +21,10 @@ namespace ohf {
             FAILED_TO_SEND_DATA,
             FAILED_TO_RECEIVE_DATA,
             FAILED_TO_SHUTDOWN_SOCKET,
-            OPENSSL_INIT_ERROR,
-            OPENSSL_CREATE_CONTEXT_ERROR,
-            FAILED_TO_CREATE_SSL_CONNECTION,
-            OPENSSL_ERROR,
+            SSL_CREATE_ERROR,
+            SSL_CONTEXT_CREATE_ERROR,
+            SSL_CONNECTION_CREATE_ERROR,
+            SSL_ERROR,
             INVALID_QUERY_PARAMETER,
             INVALID_URI,
             INVALID_PORT,
@@ -35,7 +35,10 @@ namespace ohf {
             INVALID_COOKIE_LINE,
             INVALID_COOKIE_PARAMETER,
             INVALID_MAX_AGE,
-            INVALID_IP
+            INVALID_S_MAX_AGE,
+            INVALID_IP,
+            INVALID_MAX_STALE,
+            INVALID_MIN_FRESH
         };
 
         Exception(Code code, const std::string &what) noexcept;

@@ -50,13 +50,13 @@ namespace ohf {
                             "Failed to send data: " + std::string(strerror(errno)));
     }
 
-    std::string Socket::receive(size_t size) {
+    std::vector<char> Socket::receive(size_t size) {
         int len = 0;
-        char *buffer = new char[size];
-        if ((len = read(socket_fd, buffer, size)) < 0)
+        std::vector<char> buffer(size);
+        if ((len = read(socket_fd, &buffer.at(0), size)) < 0)
             throw Exception(Exception::Code::FAILED_TO_RECEIVE_DATA, "Failed to receive data: " +
                                                                      std::string(strerror(errno)));
-        return std::string(buffer, len);
+        return std::vector<char>(buffer.begin(), buffer.begin() + len);
     }
 
     void Socket::shutdown(int how) {

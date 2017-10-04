@@ -8,6 +8,7 @@
 #include <streambuf>
 #include <string>
 #include <memory>
+#include <vector>
 
 namespace ohf {
     class Socket {
@@ -20,13 +21,15 @@ namespace ohf {
 
         virtual void send(const char *data, int size);
 
+        void send(const std::vector<char> &data);
+
         void send(const std::string &data);
 
-        void send(std::istream *stream);
+        void send(std::istream &stream);
 
-        virtual std::string receive(size_t size);
+        virtual std::vector<char> receive(size_t size);
 
-        std::string receiveAll();
+        std::vector<char> receiveAll();
 
         void shutdown(int how = 2);
 

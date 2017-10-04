@@ -26,7 +26,7 @@ int Socket::StreamBuf::underflow() {
     if (cur != traits_type::eof())
         return cur;
 
-    std::string data = sock->receive(1);
+    std::vector<char> data = sock->receive(1);
     if (data.empty())
         return traits_type::eof();
 

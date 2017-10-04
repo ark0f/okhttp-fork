@@ -10,13 +10,12 @@ set(LIB_SOURCE_FILES
         lib/Response.cpp include/Response.hpp
         lib/Request.cpp include/Request.hpp
         lib/ResponseBody.cpp include/ResponseBody.hpp
-        lib/CacheControl.cpp include/CacheControl.hpp
+        lib/CacheControl.cpp lib/CacheControl.Builder.cpp include/CacheControl.hpp
         lib/Challenge.cpp include/Challenge.hpp
         lib/Handshake.cpp include/Handshake.hpp
         lib/Headers.cpp lib/Headers.Builder.cpp include/Headers.hpp
         lib/Protocol.cpp include/Protocol.hpp
         lib/CipherSuite.cpp include/CipherSuite.hpp
-        lib/TLSVersion.cpp include/TLSVersion.hpp
         lib/Certificate.cpp include/Certificate.hpp
         lib/Principal.cpp include/Principal.hpp
         lib/Authenticator.cpp include/Authenticator.hpp

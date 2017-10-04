@@ -8,42 +8,50 @@
 
 using namespace ohf;
 
-void HttpURL::Builder::addPathSegments(const std::string &pathSegments) {
+HttpURL::Builder::Builder() :
+        port_num(80),
+        scheme_str("http") {}
+
+HttpURL::Builder &HttpURL::Builder::addPathSegments(const std::string &pathSegments) {
     pathEndsWithSlash_bool = util::string::endsWith(pathSegments, "/");
     std::vector<std::string> segments = util::string::split(pathSegments, "/");
     if (!segments.empty()) {
         for (const auto &segment : segments)
             this->pathSegments.push_back(HttpURL::decode(segment));
     }
+    return *this;
 }
 
 HttpURL HttpURL::Builder::build() {
-    HttpURL url;
-    url.mPathSegments = pathSegments;
-    url.queryParameters = queryParameters;
-    url.mFragment = fragment_str;
+    HttpURL *url = (HttpURL *) std::malloc(sizeof(HttpURL));
+    url->mPathSegments = pathSegments;
+    url->queryParameters = queryParameters;
+    url->mFragment = fragment_str;
     if (host_str.empty())
         throw Exception(Exception::Code::HOST_IS_EMPTY, "Host is empty: ");
-    url.mHost = host_str;
-    url.mPort = port_num;
-    url.mScheme = scheme_str;
-    url.pathEndsWithSlash = pathEndsWithSlash_bool;
-    return url;
+    url->mHost = host_str;
+    url->mPort = port_num;
+    url->mScheme = scheme_str;
+    url->pathEndsWithSlash = pathEndsWithSlash_bool;
+    return *url;
 }
 
-void HttpURL::Builder::fragment(const std::string &fragment) {
+HttpURL::Builder &HttpURL::Builder::fragment(const std::string &fragment) {
     fragment_str = HttpURL::decode(fragment);
+    return *this;
 }
 
-void HttpURL::Builder::host(const std::string &host) {
+HttpURL::Builder &HttpURL::Builder::host(const std::string &host) {
     host_str = HttpURL::decode(host);
+    return *this;
 }
 
-void HttpURL::Builder::port(const int &port) {
+HttpURL::Builder &HttpURL::Builder::port(const int &port) {
     port_num = port;
+    return *this;
 }
 
-void HttpURL::Builder::query(const std::string &query) {
+HttpURL::Builder &HttpURL::Builder::query(const std::string &query) {
     std::vector<std::string> queries = util::string::split(query, "&");
     for (const auto &parameter : queries) {
         std::vector<std::string> nameValue = util::string::split(parameter, "=");
@@ -54,27 +62,31 @@ void HttpURL::Builder::query(const std::string &query) {
         else
             throw Exception(Exception::Code::INVALID_QUERY_PARAMETER, "Invalid query parameter: " + parameter);
     }
+    return *this;
 }
 
-void HttpURL::Builder::removeQueryParameter(const std::string &name) {
+HttpURL::Builder &HttpURL::Builder::removeQueryParameter(const std::string &name) {
     auto it = queryParameters.find(name);
     if (queryParameters.find(name) != queryParameters.end()) // found
         queryParameters.erase(it);
+    return *this;
 }
 
-void HttpURL::Builder::removePathSegment(const int &index) {
+HttpURL::Builder &HttpURL::Builder::removePathSegment(const int &index) {
     if (index < this->pathSegments.size()) { // check out of range
         pathEndsWithSlash_bool = index != this->pathSegments.size() - 1;
         auto path_segment = std::next(this->pathSegments.begin(), index);
         this->pathSegments.erase(path_segment);
     }
+    return *this;
 }
 
-void HttpURL::Builder::scheme(const std::string &scheme) {
+HttpURL::Builder &HttpURL::Builder::scheme(const std::string &scheme) {
     scheme_str = scheme;
+    return *this;
 }
 
-void HttpURL::Builder::setPathSegment(const int &index, std::string pathSegment) {
+HttpURL::Builder &HttpURL::Builder::setPathSegment(const int &index, std::string pathSegment) {
     if (index < pathSegments.size()) {
         if (util::string::endsWith(pathSegment, "/")) {
             pathSegment = pathSegment.substr(0, pathSegment.length() - 1);
@@ -82,12 +94,15 @@ void HttpURL::Builder::setPathSegment(const int &index, std::string pathSegment)
         }
         pathSegments[index] = HttpURL::decode(pathSegment);
     }
+    return *this;
 }
 
-void HttpURL::Builder::setQueryParameter(const std::string &name, const std::string &value) {
+HttpURL::Builder &HttpURL::Builder::setQueryParameter(const std::string &name, const std::string &value) {
     queryParameters[name] = HttpURL::decode(value);
+    return *this;
 }
 
-void HttpURL::Builder::pathEndsWithSlash(bool b) {
+HttpURL::Builder &HttpURL::Builder::pathEndsWithSlash(bool b) {
     pathEndsWithSlash_bool = b;
+    return *this;
 }

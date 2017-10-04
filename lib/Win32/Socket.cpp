@@ -40,15 +40,17 @@ namespace ohf {
 
     void Socket::send(const char *data, int size) {
         if (::send(socket_fd, data, size, 0) == SOCKET_ERROR)
-            throw Exception(Exception::Code::FAILED_TO_SEND_DATA, "Failed to send data: " + util::getWSAError());
+            throw Exception(Exception::Code::FAILED_TO_SEND_DATA, "Failed to send data: " +
+                                                                  util::getWSAError());
     }
 
-    std::string Socket::receive(size_t size) {
+    std::vector<char> Socket::receive(size_t size) {
         int len = 0;
-        char *buffer = new char[size];
-        if ((len = recv(socket_fd, buffer, size, 0)) == SOCKET_ERROR)
-            throw Exception(Exception::Code::FAILED_TO_RECEIVE_DATA, "Failed to receive data: " + util::getWSAError());
-        return std::string(buffer, len);
+        std::vector<char> buffer(size);
+        if ((len = recv(socket_fd, &buffer.at(0), size, 0)) == SOCKET_ERROR)
+            throw Exception(Exception::Code::FAILED_TO_RECEIVE_DATA, "Failed to receive data: " +
+                                                                     util::getWSAError());
+        return std::vector<char>(buffer.begin(), buffer.begin() + len);
     }
 
     void Socket::shutdown(int how) {

@@ -10,31 +10,80 @@
 namespace ohf {
     class CacheControl {
     public:
-        bool immutable();
+        class Builder {
+        public:
+            Builder();
 
-        bool isPrivate();
+            CacheControl &build();
 
-        bool isPublic();
+            Builder &immutable();
 
-        int maxAgeSeconds();
+            Builder &noCache();
 
-        int maxStaleSeconds();
+            Builder &noStore();
 
-        int minFreshSeconds();
+            Builder &noTransform();
 
-        bool mustRevalidate();
+            Builder &onlyIfCached();
 
-        bool noCache();
+            Builder &maxAge(time_t seconds);
 
-        bool noStore();
+            Builder &maxStale(time_t seconds);
 
-        bool noTransform();
+            Builder &minFresh(time_t seconds);
 
-        bool onlyIfCached();
+        private:
+            bool mImmutable;
+            bool mNoCache;
+            bool mNoStore;
+            bool mNoTransform;
+            bool mOnlyIfCached;
+            time_t mMaxAge;
+            time_t mMaxStale;
+            time_t mMinFresh;
 
-        static CacheControl parse(Headers headers);
+        };
 
-        int sMaxAgeSeconds();
+        CacheControl(Headers &headers);
+
+        bool isPrivate() const;
+
+        bool isPublic() const;
+
+        bool immutable() const;
+
+        bool mustRevalidate() const;
+
+        bool noCache() const;
+
+        bool noStore() const;
+
+        bool noTransform() const;
+
+        bool onlyIfCached() const;
+
+        time_t maxAgeSeconds() const;
+
+        time_t maxStaleSeconds() const;
+
+        time_t minFreshSeconds() const;
+
+        time_t sMaxAgeSeconds() const;
+
+    private:
+        bool mPublic;
+        bool mPrivate;
+        bool mNoCache;
+        bool mOnlyIfCached;
+        bool mMustRevalidate;
+        bool mImmutable;
+        bool mNoStore;
+        bool mNoTransform;
+        time_t mMaxAge;
+        time_t mSMaxAge;
+        time_t mMaxStale;
+        time_t mMinFresh;
+        //bool
     };
 }
 

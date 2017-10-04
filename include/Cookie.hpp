@@ -13,25 +13,25 @@ namespace ohf {
     public:
         class Builder {
         public:
-            Builder() : m_expiresAt(-1), m_hostOnly(false), m_httpOnly(false), m_secure(false), m_persistent(false) {};
+            Builder();
 
             Cookie build();
 
-            void name(const std::string &name);
+            Builder &name(const std::string &name);
 
-            void value(const std::string &value);
+            Builder &value(const std::string &value);
 
-            void path(const std::string &path);
+            Builder &path(const std::string &path);
 
-            void domain(const std::string &domain);
+            Builder &domain(const std::string &domain);
 
-            void hostOnlyDomain(const std::string &domain);
+            Builder &hostOnlyDomain(const std::string &domain);
 
-            void expiresAt(time_t expiresAt);
+            Builder &expiresAt(time_t expiresAt);
 
-            void httpOnly();
+            Builder &httpOnly();
 
-            void secure();
+            Builder &secure();
 
             friend class Cookie;
 
@@ -47,33 +47,31 @@ namespace ohf {
             std::string m_domain;
         };
 
-        Cookie() = default;
-
         Cookie(HttpURL &httpURL, const std::string &setCookie);
 
         static std::vector<Cookie> parseAll(HttpURL &httpUrl, Headers &headers);
 
-        time_t expiresAt();
+        time_t expiresAt() const;
 
-        bool hostOnly();
+        bool hostOnly() const;
 
-        bool httpOnly();
+        bool httpOnly() const;
 
-        bool persistent();
+        bool persistent() const;
 
-        bool secure();
+        bool secure() const;
 
-        bool matches(HttpURL &httpURL);
+        bool matches(HttpURL &httpURL) const;
 
-        std::string name();
+        std::string name() const;
 
-        std::string value();
+        std::string value() const;
 
-        std::string path();
+        std::string path() const;
 
-        std::string domain();
+        std::string domain() const;
 
-        bool operator==(const Cookie &cookie);
+        bool operator==(const Cookie &cookie) const;
 
         friend std::ostream &operator<<(std::ostream &stream, Cookie &cookie);
 

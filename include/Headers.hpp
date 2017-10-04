@@ -13,17 +13,17 @@ namespace ohf {
     public:
         class Builder {
         public:
-            void add(const std::string &line);
+            Builder &add(const std::string &line);
 
-            void add(const std::string &name, const std::string &value);
+            Builder &add(const std::string &name, const std::string &value);
 
             Headers build();
 
-            std::string get(std::string name);
+            std::string get(std::string name) const;
 
-            void removeAll(std::string name);
+            Builder &removeAll(std::string name);
 
-            void set(const std::string &name, const std::string &value);
+            Builder &set(const std::string &name, const std::string &value);
 
             friend class Headers;
 
@@ -33,26 +33,26 @@ namespace ohf {
 
         };
 
-        Headers() = default;
         Headers(const std::map<std::string, std::string> &headers);
 
         bool operator==(const Headers &headers); // TODO: Compare values
-        std::string get(std::string name);
+        std::string get(std::string name) const;
 
-        time_t getDate();
-        std::string name(int i);
+        time_t getDate() const;
 
-        std::vector<std::string> names();
+        std::string name(int i) const;
 
-        Builder newBuilder();
+        std::vector<std::string> names() const;
+
+        Builder newBuilder() const;
 
         // static Headers of(...);
-        int size();
+        int size() const;
 
         // std::map<const char *, std::vector<const char *>> toMultimap();
-        std::string value(int index);
+        std::string value(int index) const;
 
-        std::vector<std::string> values(const std::string &name);
+        std::vector<std::string> values(const std::string &name) const;
 
     private:
         std::vector<std::string> namesAndValues;

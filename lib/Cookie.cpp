@@ -7,10 +7,15 @@
 #include "../include/Cookie.hpp"
 #include "../util/string.hpp"
 #include "../include/Exception.hpp"
+#include "../util/util.hpp"
 
 namespace ohf {
     Cookie::Cookie(HttpURL &httpURL, const std::string &setCookie) :
-            m_expiresAt(-1), m_hostOnly(false), m_httpOnly(false), m_persistent(false), m_secure(false) {
+            m_expiresAt(-1),
+            m_hostOnly(false),
+            m_httpOnly(false),
+            m_persistent(false),
+            m_secure(false) {
         std::vector<std::string> parameters = util::string::split(setCookie, "; ");
         if (parameters.empty())
             throw Exception(Exception::Code::INVALID_COOKIE_LINE, "Invalid cookie line: " + setCookie);
@@ -36,10 +41,7 @@ namespace ohf {
                 util::string::toLower(name);
                 std::string value = parameter[1];
                 if (name == "expires") {
-                    std::tm t{};
-                    std::istringstream iss(value);
-                    iss >> std::get_time(&t, "%a, %d %b %Y %H:%M:%S GMT");
-                    m_expiresAt = std::mktime(&t);
+                    m_expiresAt = util::parseDate(value, "%a, %d %b %Y %H:%M:%S GMT");
                     m_persistent = true;
                 } else if (name == "max-age") {
                     try {
@@ -67,27 +69,27 @@ namespace ohf {
         return cookies;
     }
 
-    std::string Cookie::domain() {
+    std::string Cookie::domain() const {
         return m_domain;
     }
 
-    bool Cookie::operator==(const Cookie &cookie) {
+    bool Cookie::operator==(const Cookie &cookie) const {
         return this == &cookie;
     }
 
-    time_t Cookie::expiresAt() {
+    time_t Cookie::expiresAt() const {
         return m_expiresAt;
     }
 
-    bool Cookie::hostOnly() {
+    bool Cookie::hostOnly() const {
         return m_hostOnly;
     }
 
-    bool Cookie::httpOnly() {
+    bool Cookie::httpOnly() const {
         return m_httpOnly;
     }
 
-    bool Cookie::matches(HttpURL &httpURL) {
+    bool Cookie::matches(HttpURL &httpURL) const {
         if (!util::string::contains(httpURL.url(), m_domain)) return false;
 
         if (m_secure && !httpURL.isHttps())
@@ -96,19 +98,23 @@ namespace ohf {
         return m_path == httpURL.encodedPath();
     }
 
-    std::string Cookie::name() {
+    std::string Cookie::name() const {
         return m_name;
     }
 
-    std::string Cookie::path() {
+    std::string Cookie::value() const {
+        return m_value;
+    }
+
+    std::string Cookie::path() const {
         return m_path;
     }
 
-    bool Cookie::persistent() {
+    bool Cookie::persistent() const {
         return m_persistent;
     }
 
-    bool Cookie::secure() {
+    bool Cookie::secure() const {
         return m_secure;
     }
 
@@ -140,9 +146,5 @@ namespace ohf {
             stream << "; Secure";
 
         return stream;
-    }
-
-    std::string Cookie::value() {
-        return m_value;
     }
 }

@@ -3,8 +3,10 @@
 //
 
 #include "util.hpp"
+#include "../include/Exception.hpp"
 #include <openssl/err.h>
 #include <sstream>
+#include <iomanip>
 
 #if _WIN32
 
@@ -21,10 +23,22 @@ std::string util::getWSAError() {
 
 #endif
 
-std::string util::readStream(const std::istream *stream) {
-    std::ostringstream oss;
-    oss << stream->rdbuf();
-    return oss.str();
+std::vector<char> util::readStream(std::istream &stream) {
+    std::vector<char> buffer;
+    std::copy(
+            std::istreambuf_iterator<char>(stream),
+            std::istreambuf_iterator<char>(),
+            std::back_inserter(buffer));
+    if (stream.bad())
+        throw ohf::Exception(ohf::Exception::Code::FAILED_TO_READ_STREAM, "Failed to read stream: ");
+    return buffer;
+}
+
+std::time_t util::parseDate(const std::string &what, const std::string &format) {
+    std::tm t{};
+    std::istringstream iss(what);
+    iss >> std::get_time(&t, format.c_str());
+    return std::mktime(&t);
 }
 
 std::string util::ip2s(const std::vector<unsigned char> &ip) {

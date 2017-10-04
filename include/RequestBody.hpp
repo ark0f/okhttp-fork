@@ -17,7 +17,7 @@ namespace ohf {
 
         RequestBody(const MediaType &contentType, const std::string &content);
 
-        RequestBody(const MediaType &contentType, std::istream *stream);
+        RequestBody(const MediaType &contentType, std::istream &stream);
 
         unsigned int contentLength();
 

@@ -4,26 +4,27 @@
 
 #include <sstream>
 #include "../include/Socket.hpp"
-#include "../include/Exception.hpp"
 #include "../util/util.hpp"
 
 namespace ohf {
+    void Socket::send(const std::vector<char> &data) {
+        this->send(data.data(), data.size());
+    }
+
     void Socket::send(const std::string &data) {
         this->send(data.c_str(), data.length());
     }
 
-    void Socket::send(std::istream *stream) {
-        std::string buffer = util::readStream(stream);
-        if (stream->bad())
-            throw Exception(Exception::Code::FAILED_TO_READ_STREAM, "Failed to read stream: ");
-        this->send(buffer);
+    void Socket::send(std::istream &stream) {
+        std::vector<char> buffer = util::readStream(stream);
+        this->send(std::string(buffer.begin(), buffer.end()));
     }
 
-    std::string Socket::receiveAll() {
-        std::string storage;
-        std::string buffer;
+    std::vector<char> Socket::receiveAll() {
+        std::vector<char> storage;
+        std::vector<char> buffer;
         while (!(buffer = receive(512)).empty())
-            storage.append(buffer);
+            storage.insert(storage.end(), buffer.begin(), buffer.end());
         return storage;
     }
 }

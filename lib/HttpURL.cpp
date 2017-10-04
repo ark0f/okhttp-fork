@@ -171,11 +171,11 @@ namespace ohf {
         return -1;
     }
 
-    std::string HttpURL::encodedFragment() {
+    std::string HttpURL::encodedFragment() const {
         return HttpURL::encode(mFragment);
     }
 
-    std::string HttpURL::encodedPath() {
+    std::string HttpURL::encodedPath() const {
         if (mPathSegments.empty())
             return std::string();
 
@@ -190,14 +190,14 @@ namespace ohf {
         return oss.str();
     }
 
-    std::vector<std::string> HttpURL::encodedPathSegments() {
+    std::vector<std::string> HttpURL::encodedPathSegments() const {
         std::vector<std::string> path_segments;
         for (const auto &pathSegment : mPathSegments)
             path_segments.push_back(HttpURL::encode(pathSegment));
         return path_segments;
     }
 
-    std::string HttpURL::encodedQuery() {
+    std::string HttpURL::encodedQuery() const {
         if (queryParameters.empty())
             return std::string();
 
@@ -221,19 +221,19 @@ namespace ohf {
         return this == &url;
     }
 
-    std::string HttpURL::fragment() {
+    std::string HttpURL::fragment() const {
         return mFragment;
     }
 
-    std::string HttpURL::host() {
+    std::string HttpURL::host() const {
         return mHost;
     }
 
-    bool HttpURL::isHttps() {
+    bool HttpURL::isHttps() const {
         return mScheme == "https";
     }
 
-    HttpURL::Builder HttpURL::newBuilder() {
+    HttpURL::Builder HttpURL::newBuilder() const {
         HttpURL::Builder builder;
         builder.pathSegments = mPathSegments;
         builder.queryParameters = queryParameters;
@@ -245,11 +245,11 @@ namespace ohf {
         return builder;
     }
 
-    std::vector<std::string> HttpURL::pathSegments() {
+    std::vector<std::string> HttpURL::pathSegments() const {
         return mPathSegments;
     }
 
-    int HttpURL::pathSize() {
+    int HttpURL::pathSize() const {
         if (mPathSegments.empty())
             return 0;
         std::ostringstream oss;
@@ -261,11 +261,11 @@ namespace ohf {
         return oss.str().length();
     }
 
-    int HttpURL::port() {
+    int HttpURL::port() const {
         return mPort;
     }
 
-    std::string HttpURL::query() {
+    std::string HttpURL::query() const {
         if (queryParameters.empty())
             return std::string();
 
@@ -285,34 +285,34 @@ namespace ohf {
         return oss.str();
     }
 
-    std::string HttpURL::queryParameter(const std::string &name) {
+    std::string HttpURL::queryParameter(const std::string &name) const {
         return queryParameters.find(name) != queryParameters.end() ? queryParameters.at(name) : std::string();
     }
 
-    std::string HttpURL::queryParameterName(int index) {
+    std::string HttpURL::queryParameterName(int index) const {
         return std::next(queryParameters.begin(), index)->first;
     }
 
-    std::vector<std::string> HttpURL::queryParameterNames() {
+    std::vector<std::string> HttpURL::queryParameterNames() const {
         std::vector<std::string> names;
         for (const auto &nameValue : queryParameters)
             names.push_back(nameValue.first);
         return names;
     }
 
-    std::string HttpURL::queryParameterValue(int index) {
+    std::string HttpURL::queryParameterValue(int index) const {
         return std::next(queryParameters.begin(), index)->second;
     }
 
-    int HttpURL::querySize() {
+    int HttpURL::querySize() const {
         return encodedQuery().length();
     }
 
-    std::string HttpURL::scheme() {
+    std::string HttpURL::scheme() const {
         return mScheme;
     }
 
-    std::string HttpURL::url() {
+    std::string HttpURL::url() const {
         std::ostringstream oss;
 
         oss << mScheme << "://" << mHost;

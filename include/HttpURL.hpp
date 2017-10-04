@@ -13,11 +13,13 @@ namespace ohf {
     public:
         class Builder {
         public:
+            Builder();
+
             // void addEncodedPathSegment(const std::string &encodedPathSegment);
             // void addEncodedPathSegments(const std::string &encodedPathSegments);
             // void addEncodedQueryParameter(const std::string &encodedName, const std::string &encodedValue);
             // void addPathSegment(const std::string &pathSegment);
-            void addPathSegments(const std::string &pathSegments);
+            Builder &addPathSegments(const std::string &pathSegments);
 
             // void addQueryParameter(const std::string &name, const std::string &value);
             HttpURL build();
@@ -27,29 +29,29 @@ namespace ohf {
             // void encodedPath(const std::string &encodedPath);
             // void encodedQuery(const std::string &encodedQuery);
             // void encodedUsername(const std::string &encodedUsername);
-            void fragment(const std::string &fragment);
+            Builder &fragment(const std::string &fragment);
 
-            void host(const std::string &host);
+            Builder &host(const std::string &host);
 
-            void port(const int &port);
+            Builder &port(const int &port);
 
-            void query(const std::string &query);
+            Builder &query(const std::string &query);
 
             // void removeAllEncodedQueryParameters(const std::string &encodedName);
             // void removeAllQueryParameters(const std::string &name);
-            void removeQueryParameter(const std::string &name);
+            Builder &removeQueryParameter(const std::string &name);
 
-            void removePathSegment(const int &index);
+            Builder &removePathSegment(const int &index);
 
-            void scheme(const std::string &scheme);
+            Builder &scheme(const std::string &scheme);
 
             // void setEncodedPathSegment(const int &index, const std::string &encodedPathSegment);
             // void setEncodedQueryParameter(const std::string &encodedName, const std::string &encodedValue);
-            void setPathSegment(const int &index, std::string pathSegment);
+            Builder &setPathSegment(const int &index, std::string pathSegment);
 
-            void setQueryParameter(const std::string &name, const std::string &value);
+            Builder &setQueryParameter(const std::string &name, const std::string &value);
 
-            void pathEndsWithSlash(bool b);
+            Builder &pathEndsWithSlash(bool b);
 
         private:
             std::map<std::string, std::string> queryParameters;
@@ -57,8 +59,8 @@ namespace ohf {
             std::vector<std::string> pathSegments;
             std::string fragment_str;
             std::string host_str;
-            int port_num = 80;
-            std::string scheme_str = "http";
+            int port_num;
+            std::string scheme_str;
 
             friend class HttpURL;
         };
@@ -69,59 +71,58 @@ namespace ohf {
 
         static int defaultPort(std::string scheme);
 
-        HttpURL() = default;
-
         HttpURL(const std::string &tempUrl);
 
         HttpURL(const char *url);
 
-        std::string encodedFragment();
+        std::string encodedFragment() const;
 
-        std::string encodedPath();
+        std::string encodedPath() const;
 
-        std::vector<std::string> encodedPathSegments();
+        std::vector<std::string> encodedPathSegments() const;
 
-        std::string encodedQuery();
+        std::string encodedQuery() const;
 
         bool operator==(const HttpURL &url); // TODO: Compare values
-        std::string fragment();
+        std::string fragment() const;
 
         // static HttpURL get(const URI &uri);
         // static HttpURL get(const URL &url);
         // static HttpURL get(const std::string &url);
-        std::string host();
+        std::string host() const;
 
-        bool isHttps();
+        bool isHttps() const;
 
-        Builder newBuilder();
+        Builder newBuilder() const;
 
         // Builder newBuilder(const std::string &link);
-        std::vector<std::string> pathSegments();
+        std::vector<std::string> pathSegments() const;
 
-        int pathSize();
+        int pathSize() const;
 
-        int port();
+        int port() const;
 
-        std::string query();
-        std::string queryParameter(const std::string &name);
+        std::string query() const;
 
-        std::string queryParameterName(int index);
+        std::string queryParameter(const std::string &name) const;
 
-        std::vector<std::string> queryParameterNames();
+        std::string queryParameterName(int index) const;
 
-        std::string queryParameterValue(int index);
+        std::vector<std::string> queryParameterNames() const;
+
+        std::string queryParameterValue(int index) const;
 
         // std::vector<std::string> queryParameterValues(const std::string &name);
-        int querySize();
+        int querySize() const;
 
         // std::string redact();
         // HttpURL resolve(const std::string &link);
-        std::string scheme();
+        std::string scheme() const;
 
         // std::string topPrivateDomain();
         // URI uri();
         // URL url();
-        std::string url();
+        std::string url() const;
 
         friend std::ostream &operator<<(std::ostream &stream, HttpURL &httpURL);
     private:

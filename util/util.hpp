@@ -8,14 +8,16 @@
 
 #include <string>
 #include <vector>
+#include <ctime>
 
 namespace util {
 #if _WIN32
     std::string getWSAError();
 #endif
 
-    std::string readStream(const std::istream *stream);
+    std::vector<char> readStream(std::istream &stream);
 
+    std::time_t parseDate(const std::string &what, const std::string &format);
     std::string ip2s(const std::vector<unsigned char> &ip);
     std::string getOpenSSLError();
 }

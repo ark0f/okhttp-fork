@@ -6,6 +6,7 @@
 #include "../include/Exception.hpp"
 #include "../util/util.hpp"
 #include <openssl/ssl.h>
+#include <cstring>
 
 namespace ohf {
     struct OpenSSLInit {
@@ -29,9 +30,6 @@ namespace ohf {
             case Protocol::SSLv23:
                 method = SSLv23_method();
                 break;
-            case Protocol::SSLv2:
-                method = SSLv2_method();
-                break;
             case Protocol::SSLv3:
                 method = SSLv3_method();
                 break;
@@ -48,13 +46,13 @@ namespace ohf {
 
         pImpl->ssl_context = SSL_CTX_new(method);
         if (!pImpl->ssl_context)
-            throw Exception(Exception::Code::OPENSSL_CREATE_CONTEXT_ERROR, "OpenSSL create context error:" +
-                                                                           util::getOpenSSLError());
+            throw Exception(Exception::Code::SSL_CONTEXT_CREATE_ERROR, "SSL context create error:" +
+                                                                       util::getOpenSSLError());
 
         pImpl->ssl = SSL_new(pImpl->ssl_context);
         if (!pImpl->ssl)
-            throw Exception(Exception::Code::OPENSSL_INIT_ERROR, "OpenSSL init error: " +
-                                                                 util::getOpenSSLError());
+            throw Exception(Exception::Code::SSL_CREATE_ERROR, "SSL create error: " +
+                                                               util::getOpenSSLError());
     }
 
     SSLSocket::~SSLSocket() {
@@ -63,12 +61,17 @@ namespace ohf {
         delete pImpl;
     }
 
+    void SSLSocket::sni(const std::string &name) {
+        SSL_set_tlsext_host_name(pImpl->ssl, name.c_str());
+    }
+
     std::iostream &SSLSocket::connect(const std::string &address, const int &port) {
         std::iostream &ios = Socket::connect(address, port);
+
         SSL_set_fd(pImpl->ssl, socket_fd);
         if (SSL_connect(pImpl->ssl) < 1)
-            throw Exception(Exception::Code::FAILED_TO_CREATE_SSL_CONNECTION,
-                            "Failed to create SSL connection: " + util::getOpenSSLError());
+            throw Exception(Exception::Code::SSL_CONNECTION_CREATE_ERROR,
+                            "SSL connection create error: " + util::getOpenSSLError());
 
         return ios;
     }
@@ -79,19 +82,19 @@ namespace ohf {
             int error = SSL_get_error(pImpl->ssl, len);
             if (error == SSL_ERROR_WANT_WRITE || error == SSL_ERROR_WANT_READ)
                 return;
-            throw Exception(Exception::Code::OPENSSL_ERROR, util::getOpenSSLError());
+            throw Exception(Exception::Code::SSL_ERROR, "SSL error: " + util::getOpenSSLError());
         }
     }
 
-    std::string SSLSocket::receive(size_t size) {
-        char *buffer = new char[size];
-        int len = SSL_read(pImpl->ssl, buffer, size);
+    std::vector<char> SSLSocket::receive(size_t size) {
+        std::vector<char> buffer(size);
+        int len = SSL_read(pImpl->ssl, &buffer.at(0), size);
         if (len < 0) {
             int error = SSL_get_error(pImpl->ssl, len);
             if (error == SSL_ERROR_WANT_WRITE || error == SSL_ERROR_WANT_READ)
-                return std::string(buffer, len);
-            throw Exception(Exception::Code::OPENSSL_ERROR, util::getOpenSSLError());
+                return buffer;
+            throw Exception(Exception::Code::SSL_ERROR, "SSL error: " + util::getOpenSSLError());
         }
-        return std::string(buffer, len);
+        return std::vector<char>(buffer.begin(), buffer.begin() + len);
     }
 }
