@@ -49,6 +49,7 @@ namespace ohf {
 
         const char *what() const noexcept override;
 
+        friend std::ostream &operator<<(std::ostream &stream, const Exception &e);
     private:
         Code m_code;
         std::string m_what;

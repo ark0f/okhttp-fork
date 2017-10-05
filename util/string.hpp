@@ -20,8 +20,6 @@ namespace util {
         void toLower(std::string &s); // TODO: Unicode support
 
         std::string::size_type firstIndexOf(const std::string &str, const std::string &find);
-
-        int containsCount(std::string s, const std::string &what);
     }
 }
 

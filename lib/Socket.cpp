@@ -7,6 +7,10 @@
 #include "../util/util.hpp"
 
 namespace ohf {
+    int Socket::fd() const {
+        return socket_fd;
+    }
+
     void Socket::send(const std::vector<char> &data) {
         this->send(data.data(), data.size());
     }

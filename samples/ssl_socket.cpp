@@ -3,8 +3,8 @@
 //
 
 #include <iostream>
-#include "../include/Exception.hpp"
-#include "../include/SSLSocket.hpp"
+#include <ohf/Exception.hpp>
+#include <ohf/SSLSocket.hpp>
 
 int main() {
     try {

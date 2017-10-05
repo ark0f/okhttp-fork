@@ -5,6 +5,7 @@
 #include <sstream>
 #include <iomanip>
 #include <iostream>
+#include <algorithm>
 #include "../include/HttpURL.hpp"
 #include "../util/string.hpp"
 #include "../include/Exception.hpp"
@@ -47,7 +48,8 @@ namespace ohf {
         return encoded;
     }
 
-    HttpURL::HttpURL(const std::string &url) {
+    HttpURL::HttpURL(const std::string &url) :
+            pathEndsWithSlash(false) {
         std::string tempUrl = url;
 
         std::string::size_type offset = util::string::firstIndexOf(tempUrl, "://");
@@ -63,19 +65,14 @@ namespace ohf {
             tempUrl.erase(0, offset);
         }
 
-        bool portExists = true;
-        offset = tempUrl.find_first_of(':'); // find port pos
-        if (offset == std::string::npos) { // if port not found
-            offset = tempUrl.find_first_of('/'); // find path pos
-            portExists = false;
-        }
-
+        offset = tempUrl.find_first_of('/');
         // check query
         if (offset == std::string::npos) { // if path not found
             offset = tempUrl.find_first_of('?');
             if (offset != std::string::npos) // but found query, url is invalid
                 throw Exception(Exception::Code::INVALID_URI, "Invalid url: " + url);
         }
+
         // check fragment
         if (offset == std::string::npos) { // if path not found
             offset = tempUrl.find_first_of('#');
@@ -83,20 +80,18 @@ namespace ohf {
                 throw Exception(Exception::Code::INVALID_URI, "Invalid url: " + url);
         }
 
+        bool portExists = true;
+        offset = tempUrl.find_first_of(':'); // find port pos
+        if (offset == std::string::npos) { // if port not found
+            offset = tempUrl.find_first_of('/'); // find path pos
+            portExists = false;
+        }
+
         // host
         if (offset == std::string::npos) { // if port and path not found
             mHost = tempUrl;
-
-            int dotsCount = util::string::containsCount(mHost, ".");
-            if (dotsCount < 1 || dotsCount > 3)
-                throw Exception(Exception::Code::INVALID_HOST, "Invalid host: " + mHost);
         } else {
             mHost = tempUrl.substr(0, offset);
-
-            int dotsCount = util::string::containsCount(mHost, ".");
-            if (dotsCount < 1 || dotsCount > 3)
-                throw Exception(Exception::Code::INVALID_HOST, "Invalid host: " + mHost);
-
             tempUrl.erase(0, ++offset);
         }
 
@@ -143,7 +138,7 @@ namespace ohf {
             tempUrl.erase(0, ++offset);
         }
 
-        if (offset != 0) // if fragment exists
+        if (offset != std::string::npos && offset != 0) // if fragment exists
             mFragment = tempUrl;
     }
 
@@ -217,10 +212,6 @@ namespace ohf {
         return oss.str();
     }
 
-    bool HttpURL::operator==(const HttpURL &url) {
-        return this == &url;
-    }
-
     std::string HttpURL::fragment() const {
         return mFragment;
     }
@@ -236,12 +227,12 @@ namespace ohf {
     HttpURL::Builder HttpURL::newBuilder() const {
         HttpURL::Builder builder;
         builder.pathSegments = mPathSegments;
-        builder.queryParameters = queryParameters;
-        builder.fragment_str = mFragment;
-        builder.host_str = mHost;
-        builder.port_num = mPort;
-        builder.scheme_str = mScheme;
-        builder.pathEndsWithSlash_bool = pathEndsWithSlash;
+        builder.mQueryParameters = queryParameters;
+        builder.mFragment = mFragment;
+        builder.mHost = mHost;
+        builder.mPort = mPort;
+        builder.mScheme = mScheme;
+        builder.mPathEndsWithFlash = pathEndsWithSlash;
         return builder;
     }
 
@@ -316,20 +307,52 @@ namespace ohf {
         std::ostringstream oss;
 
         oss << mScheme << "://" << mHost;
-        if (mPort != -1 && defaultPort(mScheme) != -1) // if port specified but it is not default
+        if (mPort != -1 && defaultPort(mScheme) == -1) // if port specified but it is not default
             oss << ':' << mPort;
-        oss << '/' << encodedPath();
+
+        oss << '/';
+        std::string path = encodedPath();
+        if (!path.empty())
+            oss << path;
+
         std::string query = encodedQuery();
         if (!query.empty())
-            oss << '?' << encodedQuery();
-        if (!mFragment.empty())
-            oss << '#' << encodedFragment();
+            oss << '?' << query;
+
+        std::string fragment = encodedFragment();
+        if (!fragment.empty())
+            oss << '#' << fragment;
 
         return oss.str();
     }
 
     std::ostream &operator<<(std::ostream &stream, HttpURL &httpURL) {
-        stream << httpURL.url() << std::endl;
+        stream << httpURL.url();
         return stream;
+    }
+
+    bool HttpURL::operator==(const HttpURL &url) {
+        auto ps1 = url.mPathSegments;
+        std::sort(ps1.begin(), ps1.end());
+        auto ps2 = std::move(this->mPathSegments);
+        std::sort(ps2.begin(), ps2.end());
+
+        return url.pathEndsWithSlash == this->pathEndsWithSlash
+               && url.mScheme == this->mScheme
+               && url.mHost == this->mHost
+               && url.mFragment == this->mFragment
+               && url.mPort == this->mPort
+               && url.queryParameters == this->queryParameters
+               && ps1 == ps2;
+    }
+
+    HttpURL::HttpURL(const Builder *builder) {
+        mPort = builder->mPort;
+        pathEndsWithSlash = builder->mPathEndsWithFlash;
+        mPathSegments = builder->pathSegments;
+        queryParameters = builder->mQueryParameters;
+        mFragment = builder->mFragment;
+        mHost = builder->mHost;
+        mScheme = builder->mScheme;
     }
 }

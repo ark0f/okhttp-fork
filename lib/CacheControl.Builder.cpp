@@ -15,24 +15,8 @@ namespace ohf {
             mMaxStale(-1),
             mMinFresh(-1) {}
 
-    CacheControl &CacheControl::Builder::build() {
-        CacheControl *cacheControl = (CacheControl *) std::malloc(sizeof(CacheControl));
-
-        cacheControl->mImmutable = mImmutable;
-        cacheControl->mNoCache = mNoCache;
-        cacheControl->mNoStore = mNoStore;
-        cacheControl->mNoTransform = mNoTransform;
-        cacheControl->mOnlyIfCached = mOnlyIfCached;
-        cacheControl->mMaxAge = mMaxAge;
-        cacheControl->mMaxStale = mMaxStale;
-        cacheControl->mMinFresh = mMinFresh;
-
-        cacheControl->mPublic = false;
-        cacheControl->mPrivate = false;
-        cacheControl->mMustRevalidate = false;
-        cacheControl->mSMaxAge = -1;
-
-        return *cacheControl;
+    CacheControl CacheControl::Builder::build() {
+        return {this};
     }
 
     CacheControl::Builder &CacheControl::Builder::immutable() {

@@ -38,20 +38,10 @@ bool string::contains(const std::string &s, const std::string &data) {
 }
 
 void string::toLower(std::string &s) {
-    for (unsigned int i = 0; i < s.length(); i++)
-        s[i] = tolower(s[i]);
+    for (char &i : s)
+        i = tolower(i);
 }
 
 std::string::size_type string::firstIndexOf(const std::string &str, const std::string &find) {
     return str.find(find);
-}
-
-int string::containsCount(std::string s, const std::string &what) {
-    int count = 0;
-    std::string::size_type pos;
-    while ((pos = s.find(what)) != std::string::npos) {
-        count += 1;
-        s.erase(0, ++pos);
-    }
-    return count;
 }

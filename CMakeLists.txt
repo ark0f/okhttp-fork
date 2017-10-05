@@ -56,7 +56,12 @@ set(LIB_SOURCE_FILES ${LIB_SOURCE_FILES}
         util/string.cpp util/string.hpp
         util/util.cpp util/util.hpp)
 
-add_library(ohf SHARED ${LIB_SOURCE_FILES})
+option(BUILD_SHARED OFF)
+if (BUILD_SHARED)
+    add_library(ohf SHARED ${LIB_SOURCE_FILES})
+else ()
+    add_library(ohf STATIC ${LIB_SOURCE_FILES})
+endif ()
 
 # Libraries
 # OpenSSL

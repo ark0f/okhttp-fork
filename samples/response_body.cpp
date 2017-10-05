@@ -3,8 +3,8 @@
 //
 
 #include <iostream>
-#include "../include/Exception.hpp"
-#include "../include/ResponseBody.hpp"
+#include <ohf/Exception.hpp>
+#include <ohf/ResponseBody.hpp>
 
 int main() {
     try {

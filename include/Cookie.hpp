@@ -76,6 +76,8 @@ namespace ohf {
         friend std::ostream &operator<<(std::ostream &stream, Cookie &cookie);
 
     private:
+        Cookie(const Builder *builder);
+
         time_t m_expiresAt;
         bool m_hostOnly;
         bool m_httpOnly;

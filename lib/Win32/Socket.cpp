@@ -10,7 +10,8 @@
 #include <iostream>
 
 namespace ohf {
-    Socket::Socket() {
+    Socket::Socket() :
+            ios(std::make_shared<std::iostream>(new StreamBuf(this))) {
         if ((socket_fd = socket(AF_INET, SOCK_STREAM, 0)) == INVALID_SOCKET)
             throw Exception(Exception::Code::FAILED_TO_CREATE_SOCKET,
                             "Failed to create socket: " + util::getWSAError());
@@ -32,9 +33,6 @@ namespace ohf {
             throw Exception(Exception::Code::FAILED_TO_CREATE_CONNECTION, "Failed to create connection: " +
                                                                           util::getWSAError());
 
-        // Init IO stream
-        buf = std::make_shared<StreamBuf>(this);
-        ios = std::make_shared<std::iostream>(buf.get());
         return *ios;
     }
 

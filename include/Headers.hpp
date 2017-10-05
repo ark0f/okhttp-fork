@@ -35,7 +35,6 @@ namespace ohf {
 
         Headers(const std::map<std::string, std::string> &headers);
 
-        bool operator==(const Headers &headers); // TODO: Compare values
         std::string get(std::string name) const;
 
         time_t getDate() const;
@@ -54,7 +53,12 @@ namespace ohf {
 
         std::vector<std::string> values(const std::string &name) const;
 
+        bool operator==(const Headers &headers);
+
+        friend std::ostream &operator<<(std::ostream &stream, const Headers &headers);
     private:
+        Headers(const Builder *builder);
+
         std::vector<std::string> namesAndValues;
     };
 }

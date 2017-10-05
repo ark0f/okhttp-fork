@@ -10,26 +10,25 @@
 namespace ohf {
     class MediaType {
     public:
-        MediaType() = default;
-
         MediaType(const std::string &str);
 
         MediaType(const char *str);
 
-        std::string boundary();
+        std::string boundary() const;
 
-        std::string boundary(const std::string &defaultValue);
+        std::string boundary(const std::string &defaultValue) const;
 
-        std::string charset();
+        std::string charset() const;
 
-        std::string charset(const std::string &defaultValue);
+        std::string charset(const std::string &defaultValue) const;
 
-        bool operator==(const MediaType &mediaType); // TODO: Compare values
+        std::string subtype() const;
 
-        std::string subtype();
+        std::string type() const;
 
-        std::string type();
+        bool operator==(const MediaType &mediaType);
 
+        friend std::ostream &operator<<(std::ostream &stream, const MediaType &mediaType);
     private:
         std::string mBoundary;
         std::string mCharset;

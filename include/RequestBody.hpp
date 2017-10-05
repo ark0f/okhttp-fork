@@ -6,16 +6,17 @@
 #define OKHTTPFORK_REQUESTBODY_HPP
 
 #include <cstdio>
+#include <vector>
 #include "MediaType.hpp"
 
 namespace ohf {
     class RequestBody {
     public:
-        RequestBody(const MediaType &contentType, const char *content);
-
-        RequestBody(const MediaType &contentType, const char *content, int offset, int byteCount);
+        RequestBody(const MediaType &contentType, const char *content, size_t count);
 
         RequestBody(const MediaType &contentType, const std::string &content);
+
+        RequestBody(const MediaType &contentType, const std::vector<char> &content);
 
         RequestBody(const MediaType &contentType, std::istream &stream);
 
@@ -24,7 +25,7 @@ namespace ohf {
         MediaType contentType();
 
     private:
-        std::string content;
+        std::vector<char> content;
         MediaType mediaType;
     };
 }

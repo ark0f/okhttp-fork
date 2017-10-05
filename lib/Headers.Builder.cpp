@@ -23,9 +23,7 @@ Headers::Builder &Headers::Builder::add(const std::string &name, const std::stri
 }
 
 Headers Headers::Builder::build() {
-    Headers *headers = (Headers *) std::malloc(sizeof(Headers));
-    headers->namesAndValues = namesAndValues;
-    return *headers;
+    return Headers(this);
 }
 
 std::string Headers::Builder::get(std::string name) const {

@@ -3,8 +3,8 @@
 //
 
 #include <iostream>
-#include "include/Exception.hpp"
-#include "include/MediaType.hpp"
+#include <ohf/Exception.hpp>
+#include <ohf/MediaType.hpp>
 
 int main() {
     try {

@@ -2,6 +2,7 @@
 // Created by Good_Pudge.
 //
 
+#include <sstream>
 #include "../include/CacheControl.hpp"
 #include "../util/util.hpp"
 #include "../util/string.hpp"
@@ -24,7 +25,18 @@ namespace ohf {
             mSMaxAge(-1),
             mMaxStale(-1),
             mMinFresh(-1) {
-        std::vector<std::string> cache_control = split(std::move(headers.get("cache-control")), ", ");
+        // split by "," and ", "
+        std::vector<std::string> temp = split(std::move(headers.get("cache-control")), ", ");
+        std::vector<std::string> cache_control;
+        for (const auto &e : temp) {
+            std::vector<std::string> v = split(e, ",");
+            if (v.size() == 1)
+                cache_control.push_back(v[0]);
+            else
+                for (const auto &element : v)
+                    cache_control.push_back(element);
+        }
+
         for (auto &element : cache_control) {
             util::string::toLower(element);
             std::vector<std::string> keyValue = split(element, "=");
@@ -127,5 +139,57 @@ namespace ohf {
 
     time_t CacheControl::sMaxAgeSeconds() const {
         return mSMaxAge;
+    }
+
+    CacheControl::CacheControl(const Builder *builder) :
+            mPublic(false),
+            mPrivate(false),
+            mMustRevalidate(false),
+            mSMaxAge(-1) {
+        mNoCache = builder->mNoCache;
+        mOnlyIfCached = builder->mOnlyIfCached;
+        mImmutable = builder->mImmutable;
+        mNoStore = builder->mNoStore;
+        mNoTransform = builder->mNoTransform;
+        mMaxAge = builder->mMaxAge;
+        mMaxStale = builder->mMaxStale;
+        mMinFresh = builder->mMinFresh;
+    }
+
+    bool CacheControl::operator==(const CacheControl &cc) {
+        return this->mPublic == cc.mPublic
+               || this->mPrivate == cc.mPrivate
+               || this->mNoCache == cc.mNoCache
+               || this->mOnlyIfCached == cc.mOnlyIfCached
+               || this->mMustRevalidate == cc.mMustRevalidate
+               || this->mImmutable == cc.mImmutable
+               || this->mNoStore == cc.mNoStore
+               || this->mNoTransform == cc.mNoTransform
+               || this->mMaxAge == cc.mMaxAge
+               || this->mSMaxAge == cc.mSMaxAge
+               || this->mMaxStale == cc.mMaxStale
+               || this->mMinFresh == cc.mMinFresh;
+    }
+
+    std::ostream &operator<<(std::ostream &stream, const CacheControl &cc) {
+        std::stringstream ss;
+        if (cc.mPublic) ss << "public, ";
+        if (cc.mPrivate) ss << "private, ";
+        if (cc.mNoCache) ss << "no-cache, ";
+        if (cc.mOnlyIfCached) ss << "only-if-cached, ";
+        if (cc.mMustRevalidate) ss << "must-revalidate, ";
+        if (cc.mImmutable) ss << "immutable, ";
+        if (cc.mNoStore) ss << "no-store, ";
+        if (cc.mNoTransform) ss << "no-transform, ";
+        if (cc.mMaxAge > -1) ss << "max-age=" << cc.mMaxAge << ", ";
+        if (cc.mSMaxAge > -1) ss << "s-maxage" << cc.mSMaxAge << ", ";
+        if (cc.mMaxStale > -1) ss << "max-stale=" << cc.mMaxStale << ", ";
+        if (cc.mMinFresh > -1) ss << "min-fresh=" << cc.mMinFresh << ", ";
+        std::string str = ss.str();
+        str.erase(str.length() - 2, 2);
+
+        stream << "Cache-Control: " << str;
+
+        return stream;
     }
 }

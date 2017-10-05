@@ -54,13 +54,13 @@ namespace ohf {
             Builder &pathEndsWithSlash(bool b);
 
         private:
-            std::map<std::string, std::string> queryParameters;
-            bool pathEndsWithSlash_bool;
+            int mPort;
+            std::map<std::string, std::string> mQueryParameters;
+            bool mPathEndsWithFlash;
             std::vector<std::string> pathSegments;
-            std::string fragment_str;
-            std::string host_str;
-            int port_num;
-            std::string scheme_str;
+            std::string mFragment;
+            std::string mHost;
+            std::string mScheme;
 
             friend class HttpURL;
         };
@@ -83,7 +83,6 @@ namespace ohf {
 
         std::string encodedQuery() const;
 
-        bool operator==(const HttpURL &url); // TODO: Compare values
         std::string fragment() const;
 
         // static HttpURL get(const URI &uri);
@@ -125,13 +124,17 @@ namespace ohf {
         std::string url() const;
 
         friend std::ostream &operator<<(std::ostream &stream, HttpURL &httpURL);
+
+        bool operator==(const HttpURL &url);
     private:
+        HttpURL(const Builder *builder);
+
+        int mPort;
         bool pathEndsWithSlash;
         std::vector<std::string> mPathSegments;
         std::map<std::string, std::string> queryParameters;
         std::string mFragment;
         std::string mHost;
-        int mPort;
         std::string mScheme;
     };
 }

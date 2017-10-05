@@ -13,17 +13,7 @@ namespace ohf {
             m_persistent(false) {};
 
     Cookie Cookie::Builder::build() {
-        Cookie *cookie = (Cookie *) std::malloc(sizeof(Cookie));
-        cookie->m_expiresAt = m_expiresAt;
-        cookie->m_hostOnly = m_hostOnly;
-        cookie->m_httpOnly = m_httpOnly;
-        cookie->m_secure = m_secure;
-        cookie->m_persistent = m_persistent;
-        cookie->m_name = m_name;
-        cookie->m_value = m_value;
-        cookie->m_path = m_path;
-        cookie->m_domain = m_domain;
-        return *cookie;
+        return {this};
     }
 
     Cookie::Builder &Cookie::Builder::domain(const std::string &domain) {

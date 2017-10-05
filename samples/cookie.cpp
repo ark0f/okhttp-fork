@@ -3,9 +3,9 @@
 //
 
 #include <iostream>
-#include "../include/Exception.hpp"
-#include "../include/Cookie.hpp"
-#include "../include/HttpURL.hpp"
+#include <ohf/Exception.hpp>
+#include <ohf/Cookie.hpp>
+#include <ohf/HttpURL.hpp>
 
 int main() {
     try {

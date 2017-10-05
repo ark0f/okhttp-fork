@@ -17,6 +17,8 @@ namespace ohf {
 
         virtual ~Socket();
 
+        int fd() const;
+
         virtual std::iostream &connect(const std::string &address, const int &port);
 
         virtual void send(const char *data, int size);
@@ -36,7 +38,7 @@ namespace ohf {
     protected:
         class StreamBuf : public std::streambuf {
         public:
-            StreamBuf(Socket *socket) : sock(socket), cur(traits_type::eof()) {};
+            StreamBuf(Socket *socket);
         protected:
             int overflow(int c) override;
 
@@ -49,7 +51,6 @@ namespace ohf {
             int cur;
         };
 
-        std::shared_ptr<StreamBuf> buf;
         std::shared_ptr<std::iostream> ios;
         int socket_fd;
     };

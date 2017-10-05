@@ -15,7 +15,8 @@
 #include <arpa/inet.h>
 
 namespace ohf {
-    Socket::Socket() {
+    Socket::Socket() :
+            ios(std::make_shared<std::iostream>(new StreamBuf(this))) {
         if ((socket_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
             throw Exception(Exception::Code::FAILED_TO_CREATE_SOCKET, "Failed to create socket: " +
                                                                       std::string(strerror(errno)));
@@ -36,10 +37,6 @@ namespace ohf {
         if (::connect(socket_fd, (sockaddr * ) & addr, sizeof(addr)) < 0)
             throw Exception(Exception::Code::FAILED_TO_CREATE_CONNECTION, "Failed to create connection: " +
                                                                           std::string(strerror(errno)));
-
-        // Init IO stream
-        buf = std::make_shared<StreamBuf>(this);
-        ios = std::make_shared<std::iostream>(buf.get());
 
         return *ios;
     }

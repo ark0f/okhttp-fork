@@ -4,8 +4,8 @@
 
 #include <iostream>
 #include <string>
-#include "../include/Exception.hpp"
-#include "../include/HttpURL.hpp"
+#include <ohf/Exception.hpp>
+#include <ohf/HttpURL.hpp>
 
 int main() {
     try {

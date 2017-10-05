@@ -4,8 +4,8 @@
 
 #include <fstream>
 #include <iostream>
-#include "../include/RequestBody.hpp"
-#include "../include/Exception.hpp"
+#include <ohf/RequestBody.hpp>
+#include <ohf/Exception.hpp>
 
 int main() {
     try {

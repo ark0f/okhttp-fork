@@ -14,7 +14,7 @@ namespace ohf {
         public:
             Builder();
 
-            CacheControl &build();
+            CacheControl build();
 
             Builder &immutable();
 
@@ -32,6 +32,7 @@ namespace ohf {
 
             Builder &minFresh(time_t seconds);
 
+            friend class CacheControl;
         private:
             bool mImmutable;
             bool mNoCache;
@@ -70,7 +71,12 @@ namespace ohf {
 
         time_t sMaxAgeSeconds() const;
 
+        bool operator==(const CacheControl &cc);
+
+        friend std::ostream &operator<<(std::ostream &stream, const CacheControl &cacheControl);
     private:
+        CacheControl(const Builder *builder);
+
         bool mPublic;
         bool mPrivate;
         bool mNoCache;
@@ -83,7 +89,6 @@ namespace ohf {
         time_t mSMaxAge;
         time_t mMaxStale;
         time_t mMinFresh;
-        //bool
     };
 }
 

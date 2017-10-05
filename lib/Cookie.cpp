@@ -20,11 +20,12 @@ namespace ohf {
         if (parameters.empty())
             throw Exception(Exception::Code::INVALID_COOKIE_LINE, "Invalid cookie line: " + setCookie);
 
-        std::vector<std::string> nameValue = util::string::split(parameters[0], "=");
-        if (nameValue.size() != 2)
+        std::string nameValue = parameters[0];
+        unsigned int offset = nameValue.find_first_of('=');
+        if (offset == std::string::npos)
             throw Exception(Exception::Code::INVALID_COOKIE_PARAMETER, "Invalid cookie parameter: " + parameters[0]);
-        m_name = nameValue[0];
-        m_value = nameValue[1];
+        m_name = nameValue.substr(0, offset);
+        m_value = nameValue.substr(++offset, nameValue.length());
 
         for (auto it = parameters.begin() + 1; it != parameters.end(); it++) {
             std::vector<std::string> parameter = util::string::split(*it, "=");
@@ -120,31 +121,43 @@ namespace ohf {
 
     std::ostream &operator<<(std::ostream &stream, Cookie &cookie) {
         // name = value
-        stream << "Set-Cookie: " << cookie.name() << "=" << cookie.value();
+        stream << "Set-Cookie: " << cookie.m_name << "=" << cookie.m_value;
 
         // path
-        std::string path = cookie.path();
+        std::string path = cookie.m_path;
         if (!path.empty())
-            stream << "; " << "Path=" << path;
+            stream << "; Path=" << path;
 
         // domain
-        std::string domain = cookie.domain();
+        std::string domain = cookie.m_domain;
         if (!domain.empty())
-            stream << "; " << "Domain=" << domain;
+            stream << "; Domain=" << domain;
 
         // expires
-        std::time_t expiresAt = cookie.expiresAt();
+        std::time_t expiresAt = cookie.m_expiresAt;
         if (expiresAt != -1)
             stream << "; Max-Age=" << expiresAt;
 
         // http only
-        if (cookie.httpOnly())
+        if (cookie.m_httpOnly)
             stream << "; HttpOnly";
 
         // secure
-        if (cookie.secure())
+        if (cookie.m_secure)
             stream << "; Secure";
 
         return stream;
+    }
+
+    Cookie::Cookie(const Builder *builder) {
+        m_expiresAt = builder->m_expiresAt;
+        m_hostOnly = builder->m_hostOnly;
+        m_httpOnly = builder->m_httpOnly;
+        m_persistent = builder->m_persistent;
+        m_secure = builder->m_secure;
+        m_name = builder->m_name;
+        m_value = builder->m_value;
+        m_path = builder->m_path;
+        m_domain = builder->m_domain;
     }
 }

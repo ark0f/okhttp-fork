@@ -2,36 +2,51 @@
 // Created by Good_Pudge.
 //
 
-#include <sstream>
+#include <iostream>
 #include <cstring>
 #include "../include/ResponseBody.hpp"
+#include "../util/util.hpp"
 
-using namespace ohf;
+namespace ohf {
+    ResponseBody::ResponseBody(const MediaType &mediaType, const char *content, size_t count) :
+            mediaType(mediaType),
+            is(std::make_shared<std::istream>(new StreamBuf(this))) {
+        for (size_t i = 0; i < count; i++)
+            this->content.push_back(content[i]);
+    }
 
-ResponseBody::ResponseBody(const MediaType &mediaType, const char *content) {
-    this->mediaType = mediaType;
-    this->content = std::string(content);
-}
+    ResponseBody::ResponseBody(const MediaType &mediaType, const std::vector<char> &content) :
+            mediaType(mediaType),
+            content(content),
+            is(std::make_shared<std::istream>(new StreamBuf(this))) {}
 
-ResponseBody::ResponseBody(const MediaType &mediaType, const std::string &content) {
-    this->mediaType = mediaType;
-    this->content = content;
-}
+    ResponseBody::ResponseBody(const MediaType &mediaType, const std::string &content) :
+            mediaType(mediaType),
+            is(std::make_shared<std::istream>(new StreamBuf(this))),
+            content(content.begin(), content.end()) {}
 
-char *ResponseBody::bytes() {
-    char *chars = new char[content.length() + 1];
-    strcpy(chars, content.c_str());
-    return chars;
-}
+    ResponseBody::ResponseBody(const MediaType &mediaType, std::istream &stream) :
+            mediaType(mediaType),
+            is(std::make_shared<std::istream>(new StreamBuf(this))),
+            content(util::readStream(stream)) {}
 
-unsigned int ResponseBody::contentLength() {
-    return content.length();
-}
+    std::vector<char> ResponseBody::bytes() {
+        return content;
+    }
 
-MediaType ResponseBody::contentType() {
-    return mediaType;
-}
+    std::istream &ResponseBody::stream() {
+        return *is;
+    }
 
-std::string ResponseBody::string() {
-    return content;
+    unsigned int ResponseBody::contentLength() {
+        return content.size();
+    }
+
+    MediaType ResponseBody::contentType() {
+        return mediaType;
+    }
+
+    std::string ResponseBody::string() {
+        return std::string(content.begin(), content.end());
+    }
 }
