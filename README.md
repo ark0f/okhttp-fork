@@ -1,4 +1,4 @@
-# OkHttp fork for C++
+## OkHttp fork for C++ [![Build Status](https://travis-ci.org/Good-Pudge/okhttp-fork.svg?branch=master)](https://travis-ci.org/Good-Pudge/okhttp-fork)
 #### Required libraries:
 * [OpenSSL](https://github.com/openssl/openssl)
 
