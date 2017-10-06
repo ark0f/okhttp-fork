@@ -7,6 +7,7 @@
 #include <openssl/err.h>
 #include <sstream>
 #include <iomanip>
+#include <iterator>
 
 #if _WIN32
 

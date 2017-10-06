@@ -6,6 +6,9 @@ init:
 clone_folder: c:\projects\okhttp-fork
 shallow_clone: true
 
+build:
+  parallel: true
+
 matrix:
   fast_finish: false
 
