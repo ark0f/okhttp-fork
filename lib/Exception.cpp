@@ -21,5 +21,6 @@ namespace ohf {
 
     std::ostream &operator<<(std::ostream &stream, const Exception &e) {
         stream << e.m_what;
+        return stream;
     }
 }
