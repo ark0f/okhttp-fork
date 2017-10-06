@@ -1,0 +1,32 @@
+dist: trusty
+sudo: required
+
+language: cpp
+
+os:
+  - linux
+
+compiler:
+  - gcc
+  - clang
+
+addons:
+  apt:
+    packages:
+      - libssl-dev
+
+env:
+  - TARGET_CPU=amd64 BUILD_CONFIGURATION=Debug BUILD_SHARED=ON
+  - TARGET_CPU=amd64 BUILD_CONFIGURATION=Release BUILD_SHARED=ON
+  - TARGET_CPU=x86 BUILD_CONFIGURATION=Debug BUILD_SHARED=ON
+  - TARGET_CPU=x86 BUILD_CONFIGURATION=Release BUILD_SHARED=ON
+  - TARGET_CPU=amd64 BUILD_CONFIGURATION=Debug BUILD_SHARED=OFF
+  - TARGET_CPU=amd64 BUILD_CONFIGURATION=Release BUILD_SHARED=OFF
+  - TARGET_CPU=x86 BUILD_CONFIGURATION=Debug BUILD_SHARED=OFF
+  - TARGET_CPU=x86 BUILD_CONFIGURATION=Release BUILD_SHARED=OFF
+
+script:
+  - mkdir build
+  - cd build
+  - cmake .. -DCMAKE_BUILD_TYPE=$BUILD_CONFIGURATION -DTARGET_CPU=$TARGET_CPU -DBUILD_SHARED=$BUILD_SHARED
+  - cmake --build .
