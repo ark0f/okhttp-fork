@@ -97,7 +97,5 @@ namespace ohf {
         return stream;
     }
 
-    Headers::Headers(const Builder *builder) {
-        namesAndValues = builder->namesAndValues;
-    }
+    Headers::Headers(const Builder *builder): namesAndValues(builder->namesAndValues) {}
 }

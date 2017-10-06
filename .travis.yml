@@ -12,7 +12,10 @@ compiler:
 
 addons:
   apt:
+    sources:
+      - ubuntu-toolchain-r/test
     packages:
+      - g++-5
       - libssl-dev
 
 env:
@@ -20,9 +23,6 @@ env:
   - BUILD_CONFIGURATION=Release BUILD_SHARED=ON
   - BUILD_CONFIGURATION=Debug BUILD_SHARED=OFF
   - BUILD_CONFIGURATION=Release BUILD_SHARED=OFF
-
-install:
-  - source ci/$TRAVIS_OS_NAME-setup.sh
 
 script:
   - mkdir build

@@ -78,8 +78,8 @@ endif ()
 
 # Install
 if (WIN32)
-    set(INCLUDE_INSTALL_PATH ${CMAKE_CURRENT_SOURCE_DIR}/ohf/include/ohf)
-    set(LIB_INSTALL_PATH ${CMAKE_CURRENT_SOURCE_DIR}/ohf/lib)
+    set(INCLUDE_INSTALL_PATH ${CMAKE_CURRENT_BINARY_DIR}/ohf/include/ohf)
+    set(LIB_INSTALL_PATH ${CMAKE_CURRENT_BINARY_DIR}/ohf/lib)
 elseif (UNIX)
     set(INCLUDE_INSTALL_PATH /usr/include/ohf)
     set(LIB_INSTALL_PATH /usr/lib)

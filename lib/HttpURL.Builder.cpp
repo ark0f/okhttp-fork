@@ -8,6 +8,7 @@
 
 namespace ohf {
     HttpURL::Builder::Builder() :
+            mPathEndsWithFlash(false),
             mPort(80),
             mScheme("http") {}
 

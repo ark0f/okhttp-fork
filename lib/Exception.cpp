@@ -5,7 +5,7 @@
 #include "../include/Exception.hpp"
 
 namespace ohf {
-    Exception::Exception(Code code, const std::string &what) noexcept : m_code(code), m_what(what) {}
+    Exception::Exception(const Code &code, const std::string &what) noexcept : m_code(code), m_what(what) {}
 
     Exception::Code Exception::code() const noexcept {
         return m_code;

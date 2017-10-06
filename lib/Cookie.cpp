@@ -149,15 +149,15 @@ namespace ohf {
         return stream;
     }
 
-    Cookie::Cookie(const Builder *builder) {
-        m_expiresAt = builder->m_expiresAt;
-        m_hostOnly = builder->m_hostOnly;
-        m_httpOnly = builder->m_httpOnly;
-        m_persistent = builder->m_persistent;
-        m_secure = builder->m_secure;
-        m_name = builder->m_name;
-        m_value = builder->m_value;
-        m_path = builder->m_path;
-        m_domain = builder->m_domain;
-    }
+    Cookie::Cookie(const Builder *builder):
+            m_expiresAt(builder->m_expiresAt),
+            m_hostOnly(builder->m_hostOnly),
+            m_httpOnly(builder->m_httpOnly),
+            m_persistent(builder->m_persistent),
+            m_secure(builder->m_secure),
+            m_name(builder->m_name),
+            m_value(builder->m_value),
+            m_path(builder->m_path),
+            m_domain(builder->m_domain)
+    {}
 }

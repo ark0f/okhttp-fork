@@ -11,8 +11,8 @@ matrix:
 
 environment:
   matrix:
-    - BUILD_SHARED=ON
-    - BUILD_SHARED=OFF
+    - BUILD_SHARED: ON
+    - BUILD_SHARED: OFF
 
 configuration:
   - Debug

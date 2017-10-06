@@ -41,7 +41,7 @@ namespace ohf {
             INVALID_MIN_FRESH
         };
 
-        Exception(Code code, const std::string &what) noexcept;
+        Exception(const Code &code, const std::string &what) noexcept;
 
         Code code() const noexcept;
 

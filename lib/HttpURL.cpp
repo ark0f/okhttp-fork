@@ -346,13 +346,13 @@ namespace ohf {
                && ps1 == ps2;
     }
 
-    HttpURL::HttpURL(const Builder *builder) {
-        mPort = builder->mPort;
-        pathEndsWithSlash = builder->mPathEndsWithFlash;
-        mPathSegments = builder->pathSegments;
-        queryParameters = builder->mQueryParameters;
-        mFragment = builder->mFragment;
-        mHost = builder->mHost;
-        mScheme = builder->mScheme;
-    }
+    HttpURL::HttpURL(const Builder *builder):
+            mPort(builder->mPort),
+            pathEndsWithSlash(builder->mPathEndsWithFlash),
+            mPathSegments(builder->pathSegments),
+            queryParameters(builder->mQueryParameters),
+            mFragment(builder->mFragment),
+            mHost(builder->mHost),
+            mScheme(builder->mScheme)
+    {}
 }
