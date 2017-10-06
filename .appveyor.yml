@@ -1,0 +1,33 @@
+image: Visual Studio 2015
+
+init:
+  - git config --global core.autocrlf input
+
+clone_folder: c:\projects\okhttp-fork
+shallow_clone: true
+
+matrix:
+  fast_finish: false
+
+environment:
+  matrix:
+    - BUILD_SHARED=ON
+    - BUILD_SHARED=OFF
+
+configuration:
+  - Debug
+  - Release
+
+build_script:
+  - git clone https://github.com/Microsoft/vcpkg
+  - cd vcpkg
+  - .\bootstrap-vcpkg.bat
+  - .\vcpkg integrate install
+  - .\vcpkg install openssl
+  - set OPENSSL_INCLUDE_DIR=.\packages\openssl_x86-windows\include
+  - set OPENSSL_CRYPTO_LIBRARY=.\packages\openssl_x86-windows\lib
+  - cd ..
+  - mkdir build
+  - cd build
+  - cmake .. -DCMAKE_BUILD_TYPE=%CONFIGURATION% -DBUILD_SHARED=%BUILD_SHARED%
+  - cmake --build .
