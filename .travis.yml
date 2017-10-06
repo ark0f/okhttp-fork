@@ -26,6 +26,7 @@ env:
   - BUILD_CONFIGURATION=Release BUILD_SHARED=OFF
 
 script:
+  - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-5 90
   - mkdir build
   - cd build
   - cmake .. -DCMAKE_BUILD_TYPE=$BUILD_CONFIGURATION -DBUILD_SHARED=$BUILD_SHARED
