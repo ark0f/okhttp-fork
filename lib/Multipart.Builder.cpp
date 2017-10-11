@@ -10,7 +10,7 @@ namespace ohf {
     MultipartBody::Builder::Builder() {
         long long int time = std::chrono::system_clock::now().time_since_epoch().count();
         std::mt19937 mt(time);
-        std::uniform_int_distribution<char> random(0, 25);
+        std::uniform_int_distribution<int> random(0, 25);
         for (int i = 0; i < 10; i++)
             mBoundary.push_back('a' + random(mt));
         mBoundary += std::to_string(time);
