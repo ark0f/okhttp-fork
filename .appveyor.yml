@@ -32,7 +32,6 @@ configuration:
 build_script:
   - set OPENSSL_INCLUDE_DIR=C:\OpenSSL-Win64\include
   - set OPENSSL_CRYPTO_LIBRARY=C:\OpenSSL-Win64\lib
-  - cd ..
   - mkdir build
   - cd build
   - cmake .. -DCMAKE_BUILD_TYPE=%CONFIGURATION% -DBUILD_SHARED=%BUILD_SHARED%
