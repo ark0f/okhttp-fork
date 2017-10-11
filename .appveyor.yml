@@ -17,13 +17,9 @@ environment:
     - BUILD_SHARED: ON
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
     - BUILD_SHARED: ON
-      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2013
-    - BUILD_SHARED: ON
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
     - BUILD_SHARED: OFF
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
-    - BUILD_SHARED: OFF
-      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2013
 
 configuration:
   - Debug
