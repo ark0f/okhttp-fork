@@ -38,7 +38,10 @@ namespace ohf {
             INVALID_S_MAX_AGE,
             INVALID_IP,
             INVALID_MAX_STALE,
-            INVALID_MIN_FRESH
+            INVALID_MIN_FRESH,
+            UNEXPECTED_HEADER,
+            INVALID_CONTENT_TYPE_LINE,
+            HEADER_IS_EMPTY
         };
 
         Exception(const Code &code, const std::string &what) noexcept;

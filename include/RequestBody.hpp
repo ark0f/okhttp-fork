@@ -24,7 +24,7 @@ namespace ohf {
 
         MediaType contentType();
 
-    private:
+    protected:
         std::vector<char> content;
         MediaType mediaType;
     };

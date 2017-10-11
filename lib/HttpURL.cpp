@@ -115,7 +115,10 @@ namespace ohf {
         }
 
         // path
-        if (offset != std::string::npos) { // if path found
+        if (offset == std::string::npos) { // if path found
+            pathEndsWithSlash = util::string::endsWith(tempUrl, "/");
+            mPathSegments = util::string::split(tempUrl, "/");
+        } else {
             std::string path = tempUrl.substr(0, offset);
             pathEndsWithSlash = util::string::endsWith(path, "/");
             mPathSegments = util::string::split(path, "/");

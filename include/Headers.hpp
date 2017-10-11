@@ -25,12 +25,11 @@ namespace ohf {
 
             Builder &set(const std::string &name, const std::string &value);
 
-            friend class Headers;
-
         private:
             // std::map<std::string, std::vector<std::string>> headers;
             std::vector<std::string> namesAndValues;
 
+            friend class ohf::Headers;
         };
 
         Headers(const std::map<std::string, std::string> &headers);

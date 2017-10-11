@@ -62,7 +62,7 @@ namespace ohf {
             std::string mHost;
             std::string mScheme;
 
-            friend class HttpURL;
+            friend class ohf::HttpURL;
         };
 
         static std::string encode(const std::string &str);

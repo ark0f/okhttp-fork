@@ -37,7 +37,9 @@ set(LIB_SOURCE_FILES
         lib/Socket.cpp lib/SocketStreamBuf.cpp include/Socket.hpp
         lib/SSLSocket.cpp include/SSLSocket.hpp
         lib/Cookie.cpp lib/Cookie.Builder.cpp include/Cookie.hpp
-        lib/InetAddress.cpp include/InetAddress.hpp)
+        lib/InetAddress.cpp include/InetAddress.hpp
+        lib/FormBody.cpp lib/FormBody.Builder.cpp include/FormBody.hpp
+        lib/MultipartBody.cpp lib/Multipart.Part.cpp lib/Multipart.Builder.cpp include/MultipartBody.hpp)
 
 # Files for different platforms
 if (WIN32)

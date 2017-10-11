@@ -32,7 +32,6 @@ namespace ohf {
 
             Builder &minFresh(time_t seconds);
 
-            friend class CacheControl;
         private:
             bool mImmutable;
             bool mNoCache;
@@ -43,6 +42,7 @@ namespace ohf {
             time_t mMaxStale;
             time_t mMinFresh;
 
+            friend class ohf::CacheControl;
         };
 
         CacheControl(Headers &headers);

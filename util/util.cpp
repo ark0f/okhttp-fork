@@ -7,7 +7,6 @@
 #include <openssl/err.h>
 #include <sstream>
 #include <iomanip>
-#include <iterator>
 
 #if _WIN32
 
@@ -26,10 +25,9 @@ std::string util::getWSAError() {
 
 std::vector<char> util::readStream(std::istream &stream) {
     std::vector<char> buffer;
-    std::copy(
-            std::istreambuf_iterator<char>(stream),
-            std::istreambuf_iterator<char>(),
-            std::back_inserter(buffer));
+    int c;
+    while ((c = stream.get()) != EOF)
+        buffer.push_back((char) c);
     if (stream.bad())
         throw ohf::Exception(ohf::Exception::Code::FAILED_TO_READ_STREAM, "Failed to read stream: ");
     return buffer;

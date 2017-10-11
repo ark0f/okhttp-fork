@@ -33,8 +33,6 @@ namespace ohf {
 
             Builder &secure();
 
-            friend class Cookie;
-
         private:
             time_t m_expiresAt;
             bool m_hostOnly;
@@ -45,6 +43,8 @@ namespace ohf {
             std::string m_value;
             std::string m_path;
             std::string m_domain;
+
+            friend class ohf::Cookie;
         };
 
         Cookie(HttpURL &httpURL, const std::string &setCookie);

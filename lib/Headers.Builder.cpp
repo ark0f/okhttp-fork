@@ -17,8 +17,14 @@ Headers::Builder &Headers::Builder::add(const std::string &line) {
 }
 
 Headers::Builder &Headers::Builder::add(const std::string &name, const std::string &value) {
+    if (name.empty())
+        throw Exception(Exception::Code::HEADER_IS_EMPTY, "Header is empty: ");
     namesAndValues.push_back(name);
+
     namesAndValues.push_back(value);
+    if (value.empty())
+        throw Exception(Exception::Code::HEADER_IS_EMPTY, "Header is empty: " + name);
+
     return *this;
 }
 
@@ -35,7 +41,7 @@ std::string Headers::Builder::get(std::string name) const {
             return *(++it);
 
     }
-    throw Exception(Exception::Code::HEADER_NOT_EXISTS, "Header not exists: " + name);
+    return std::string();
 }
 
 Headers::Builder &Headers::Builder::removeAll(std::string name) {
@@ -55,7 +61,5 @@ Headers::Builder &Headers::Builder::removeAll(std::string name) {
 
 Headers::Builder &Headers::Builder::set(const std::string &name, const std::string &value) {
     removeAll(name);
-    namesAndValues.push_back(name);
-    namesAndValues.push_back(value);
-    return *this;
+    return add(name, value);
 }

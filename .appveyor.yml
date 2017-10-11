@@ -1,5 +1,3 @@
-image: Visual Studio 2015
-
 init:
   - git config --global core.autocrlf input
 
@@ -15,20 +13,29 @@ matrix:
 environment:
   matrix:
     - BUILD_SHARED: ON
+      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+    - BUILD_SHARED: ON
+      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
+    - BUILD_SHARED: ON
+      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2013
+    - BUILD_SHARED: ON
+      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2012
     - BUILD_SHARED: OFF
+      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+    - BUILD_SHARED: OFF
+      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
+    - BUILD_SHARED: OFF
+      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2013
+    - BUILD_SHARED: OFF
+      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2012
 
 configuration:
   - Debug
   - Release
 
 build_script:
-  - git clone https://github.com/Microsoft/vcpkg
-  - cd vcpkg
-  - .\bootstrap-vcpkg.bat
-  - .\vcpkg integrate install
-  - .\vcpkg install openssl
-  - set OPENSSL_INCLUDE_DIR=.\packages\openssl_x86-windows\include
-  - set OPENSSL_CRYPTO_LIBRARY=.\packages\openssl_x86-windows\lib
+  - set OPENSSL_INCLUDE_DIR=C:\OpenSSL-Win64\include
+  - set OPENSSL_CRYPTO_LIBRARY=C:\OpenSSL-Win64\lib
   - cd ..
   - mkdir build
   - cd build

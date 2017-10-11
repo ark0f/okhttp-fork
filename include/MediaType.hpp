@@ -10,6 +10,8 @@
 namespace ohf {
     class MediaType {
     public:
+        MediaType() = default;
+
         MediaType(const std::string &str);
 
         MediaType(const char *str);

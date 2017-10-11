@@ -14,7 +14,14 @@
 namespace ohf {
     Headers::Headers(const std::map<std::string, std::string> &headers) {
         for (const auto &header : headers) {
-            namesAndValues.push_back(header.first);
+            std::string headerName = header.first;
+            if (headerName.empty())
+                throw Exception(Exception::Code::HEADER_IS_EMPTY, "Header is empty: ");
+            namesAndValues.push_back(headerName);
+
+            std::string headerContent = header.second;
+            if (headerContent.empty())
+                throw Exception(Exception::Code::HEADER_IS_EMPTY, "Header is empty: " + headerName);
             namesAndValues.push_back(header.second);
         }
     }
@@ -26,9 +33,8 @@ namespace ohf {
             util::string::toLower(element);
             if (name == element)
                 return *(++it);
-
         }
-        throw Exception(Exception::Code::HEADER_NOT_EXISTS, "Header not exists: " + name);
+        return std::string();
     }
 
     time_t Headers::getDate() const {
