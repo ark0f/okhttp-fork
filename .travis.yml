@@ -5,7 +5,8 @@ notifications:
   email:
     on_success: never
     on_failure: always
-  webhooks: https://discordapp.com/api/webhooks/368024145172365322/L9N-OQIIjO5rFSmQaVWB4PttvCt_h55VvzISkOI9BgndPC33sQsN1nzFf6zy1SOO6E9e
+  discord:
+    channels: 368024145172365322:L9N-OQIIjO5rFSmQaVWB4PttvCt_h55VvzISkOI9BgndPC33sQsN1nzFf6zy1SOO6E9e
 
 language: cpp
 
