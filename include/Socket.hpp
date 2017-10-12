@@ -9,6 +9,7 @@
 #include <string>
 #include <memory>
 #include <vector>
+#include "HttpURL.hpp"
 
 namespace ohf {
     class Socket {
@@ -19,22 +20,27 @@ namespace ohf {
 
         int fd() const;
 
-        virtual std::iostream &connect(const std::string &address, const int &port);
+        virtual std::iostream &connect(const std::string &address, const int &port) const;
 
-        virtual void send(const char *data, int size);
+        std::iostream &connect(const HttpURL &url) const;
 
-        void send(const std::vector<char> &data);
+        virtual void send(const char *data, int size) const;
 
-        void send(const std::string &data);
+        void send(const std::vector<char> &data) const;
 
-        void send(std::istream &stream);
+        void send(const std::string &data) const;
 
-        virtual std::vector<char> receive(size_t size);
+        void send(std::istream &stream) const;
 
-        std::vector<char> receiveAll();
+        virtual std::vector<char> receive(size_t size) const;
 
-        void shutdown(int how = 2);
+        std::vector<char> receiveAll() const;
 
+        void shutdown(int how = 2) const;
+
+        std::string toString() const;
+
+        friend std::ostream &operator<<(std::ostream &stream, const Socket &socket);
     protected:
         class StreamBuf : public std::streambuf {
         public:

@@ -40,35 +40,27 @@ namespace ohf {
             mParts(builder->mParts),
             mType(builder->mType),
             RequestBody(
-                    builder->mType.type().empty()
+                    builder->mType.type().empty() // original MediaType
                     ? MediaType()
                     : builder->mType.type() + '/' + builder->mType.subtype() +
                       (builder->mType.charset().empty()
-                       ? ""
+                       ? std::string()
                        : "; charset=" + builder->mType.charset()) +
                       "; boundary=" + builder->mBoundary,
                     std::vector<char>()) {
-        struct Access {
-            std::vector<char> content;
-            MediaType mediaType;
-        };
-
         std::stringstream ss;
         for (auto part : mParts) {
             ss << "--" << mBoundary << "\r\n";
             ss << part.mHeaders;
 
-            std::stringstream contentType;
-            contentType << part.mBody.contentType();
-            std::string ct = contentType.str();
-            if (!ct.empty()) ss << ct << "\r\n";
+            std::string ct = part.mBody.contentType().toString();
+            if (!ct.empty()) ss << "Content-Type: " << ct << "\r\n";
 
             ss << "\r\n";
 
-            Access *access = (Access *) &part.mBody;
-            std::vector<char> bodyContent = access->content;
-            std::string contentStr(bodyContent.begin(), bodyContent.end());
-            ss << contentStr << "\r\n";
+            std::vector<char> bodyContent = part.mBody.content;
+            ss.write(bodyContent.data(), bodyContent.size());
+            ss << "\r\n";
         }
         ss << "--" << mBoundary << "--\r\n";
         ss << "\r\n";

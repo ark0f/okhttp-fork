@@ -71,9 +71,11 @@ namespace ohf {
 
         std::string domain() const;
 
+        std::string toString() const;
+
         bool operator==(const Cookie &cookie) const;
 
-        friend std::ostream &operator<<(std::ostream &stream, Cookie &cookie);
+        friend std::ostream &operator<<(std::ostream &stream, const Cookie &cookie);
 
     private:
         Cookie(const Builder *builder);

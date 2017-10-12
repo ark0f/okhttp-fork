@@ -4,42 +4,45 @@
 
 #include <iostream>
 #include <cstring>
+#include <iterator>
 #include "../include/ResponseBody.hpp"
 #include "../util/util.hpp"
 
 namespace ohf {
     ResponseBody::ResponseBody(const MediaType &mediaType, const char *content, size_t count) :
-            mediaType(mediaType),
-            is(std::make_shared<std::istream>(new StreamBuf(this))) {
-        for (size_t i = 0; i < count; i++)
-            this->content.push_back(content[i]);
+            mediaType(mediaType) {
+        mContent.insert(mContent.end(), content, content + count);
+        std::copy(mContent.begin(), mContent.end(), std::ostream_iterator<char>(ss));
     }
 
     ResponseBody::ResponseBody(const MediaType &mediaType, const std::vector<char> &content) :
             mediaType(mediaType),
-            content(content),
-            is(std::make_shared<std::istream>(new StreamBuf(this))) {}
+            mContent(content) {
+        std::copy(mContent.begin(), mContent.end(), std::ostream_iterator<char>(ss));
+    }
 
     ResponseBody::ResponseBody(const MediaType &mediaType, const std::string &content) :
             mediaType(mediaType),
-            is(std::make_shared<std::istream>(new StreamBuf(this))),
-            content(content.begin(), content.end()) {}
+            mContent(content.begin(), content.end()) {
+        std::copy(mContent.begin(), mContent.end(), std::ostream_iterator<char>(ss));
+    }
 
     ResponseBody::ResponseBody(const MediaType &mediaType, std::istream &stream) :
             mediaType(mediaType),
-            is(std::make_shared<std::istream>(new StreamBuf(this))),
-            content(util::readStream(stream)) {}
+            mContent(util::readStream(stream)) {
+        std::copy(mContent.begin(), mContent.end(), std::ostream_iterator<char>(ss));
+    }
 
     std::vector<char> ResponseBody::bytes() {
-        return content;
+        return mContent;
     }
 
     std::istream &ResponseBody::stream() {
-        return *is;
+        return ss;
     }
 
     unsigned int ResponseBody::contentLength() {
-        return content.size();
+        return mContent.size();
     }
 
     MediaType ResponseBody::contentType() {
@@ -47,6 +50,6 @@ namespace ohf {
     }
 
     std::string ResponseBody::string() {
-        return std::string(content.begin(), content.end());
+        return std::string(mContent.begin(), mContent.end());
     }
 }

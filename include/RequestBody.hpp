@@ -10,6 +10,8 @@
 #include "MediaType.hpp"
 
 namespace ohf {
+    class MultipartBody;
+
     class RequestBody {
     public:
         RequestBody(const MediaType &contentType, const char *content, size_t count);
@@ -27,6 +29,8 @@ namespace ohf {
     protected:
         std::vector<char> content;
         MediaType mediaType;
+
+        friend class ohf::MultipartBody;
     };
 }
 

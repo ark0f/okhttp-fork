@@ -83,6 +83,18 @@ namespace ohf {
         return values;
     }
 
+    std::string Headers::toString() const {
+        std::stringstream ss;
+        auto begin = namesAndValues.begin();
+        for (int i = 0; i < namesAndValues.size(); i += 2) {
+            ss << *begin << ": ";
+            ++begin;
+            ss << *begin << "\r\n";
+            ++begin;
+        }
+        return ss.str();
+    }
+
     bool Headers::operator==(const Headers &headers) {
         auto nav1 = headers.namesAndValues;
         std::sort(nav1.begin(), nav1.end());
@@ -93,13 +105,7 @@ namespace ohf {
     }
 
     std::ostream &operator<<(std::ostream &stream, const Headers &headers) {
-        auto begin = headers.namesAndValues.begin();
-        for (int i = 0; i < headers.namesAndValues.size(); i += 2) {
-            stream << *begin << ": ";
-            ++begin;
-            stream << *begin << "\r\n";
-            ++begin;
-        }
+        stream << headers.toString();
         return stream;
     }
 

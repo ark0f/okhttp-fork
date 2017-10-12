@@ -123,9 +123,11 @@ namespace ohf {
         // URL url();
         std::string url() const;
 
-        friend std::ostream &operator<<(std::ostream &stream, HttpURL &httpURL);
+        std::string toString() const;
 
         bool operator==(const HttpURL &url);
+
+        friend std::ostream &operator<<(std::ostream &stream, const HttpURL &httpURL);
     private:
         HttpURL(const Builder *builder);
 

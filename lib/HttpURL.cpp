@@ -329,9 +329,8 @@ namespace ohf {
         return oss.str();
     }
 
-    std::ostream &operator<<(std::ostream &stream, HttpURL &httpURL) {
-        stream << httpURL.url();
-        return stream;
+    std::string HttpURL::toString() const {
+        return url();
     }
 
     bool HttpURL::operator==(const HttpURL &url) {
@@ -347,6 +346,11 @@ namespace ohf {
                && url.mPort == this->mPort
                && url.queryParameters == this->queryParameters
                && ps1 == ps2;
+    }
+
+    std::ostream &operator<<(std::ostream &stream, const HttpURL &httpURL) {
+        stream << httpURL.url();
+        return stream;
     }
 
     HttpURL::HttpURL(const Builder *builder):

@@ -74,10 +74,6 @@ namespace ohf {
         return m_domain;
     }
 
-    bool Cookie::operator==(const Cookie &cookie) const {
-        return this == &cookie;
-    }
-
     time_t Cookie::expiresAt() const {
         return m_expiresAt;
     }
@@ -119,33 +115,51 @@ namespace ohf {
         return m_secure;
     }
 
-    std::ostream &operator<<(std::ostream &stream, Cookie &cookie) {
+    std::string Cookie::toString() const {
+        std::stringstream ss;
         // name = value
-        stream << "Set-Cookie: " << cookie.m_name << "=" << cookie.m_value;
+        ss << m_name << "=" << m_value;
 
         // path
-        std::string path = cookie.m_path;
+        std::string path = m_path;
         if (!path.empty())
-            stream << "; Path=" << path;
+            ss << "; Path=" << path;
 
         // domain
-        std::string domain = cookie.m_domain;
+        std::string domain = m_domain;
         if (!domain.empty())
-            stream << "; Domain=" << domain;
+            ss << "; Domain=" << domain;
 
         // expires
-        std::time_t expiresAt = cookie.m_expiresAt;
+        std::time_t expiresAt = m_expiresAt;
         if (expiresAt != -1)
-            stream << "; Max-Age=" << expiresAt;
+            ss << "; Max-Age=" << expiresAt;
 
         // http only
-        if (cookie.m_httpOnly)
-            stream << "; HttpOnly";
+        if (m_httpOnly)
+            ss << "; HttpOnly";
 
         // secure
-        if (cookie.m_secure)
-            stream << "; Secure";
+        if (m_secure)
+            ss << "; Secure";
 
+        return ss.str();
+    }
+
+    bool Cookie::operator==(const Cookie &cookie) const {
+        return m_expiresAt == cookie.m_expiresAt
+               || m_hostOnly == cookie.m_hostOnly
+               || m_httpOnly == cookie.m_httpOnly
+               || m_persistent == cookie.m_persistent
+               || m_secure == cookie.m_secure
+               || m_name == cookie.m_name
+               || m_value == cookie.m_value
+               || m_path == cookie.m_path
+               || m_domain == cookie.m_domain;
+    }
+
+    std::ostream &operator<<(std::ostream &stream, const Cookie &cookie) {
+        stream << cookie.toString();
         return stream;
     }
 

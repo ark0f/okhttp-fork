@@ -67,28 +67,30 @@ namespace ohf {
                || mediaType.mSubType == this->mSubType;
     }
 
-    std::ostream &operator<<(std::ostream &stream, const MediaType &mediaType) {
+    std::string MediaType::toString() const {
         std::stringstream ss;
 
-        std::string type = mediaType.mType;
-        std::string subtype = mediaType.mSubType;
+        std::string type = mType;
+        std::string subtype = mSubType;
         if (!type.empty() && !subtype.empty())
             ss << type << '/' << subtype << "; ";
 
-        std::string charset = mediaType.mCharset;
+        std::string charset = mCharset;
         if (!charset.empty())
             ss << "charset=" << charset << "; ";
 
-        std::string boundary = mediaType.mBoundary;
+        std::string boundary = mBoundary;
         if (!boundary.empty())
             ss << "boundary=" << boundary << "; ";
 
         std::string str = ss.str();
-        if (!str.empty()) {
+        if (!str.empty())
             str.erase(str.length() - 2, 2);
-            stream << "Content-Type: " << str;
-        }
+        return str;
+    }
 
+    std::ostream &operator<<(std::ostream &stream, const MediaType &mediaType) {
+        stream << mediaType.toString();
         return stream;
     }
 }

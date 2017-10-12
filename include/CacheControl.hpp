@@ -71,6 +71,8 @@ namespace ohf {
 
         time_t sMaxAgeSeconds() const;
 
+        std::string toString() const;
+
         bool operator==(const CacheControl &cc);
 
         friend std::ostream &operator<<(std::ostream &stream, const CacheControl &cacheControl);

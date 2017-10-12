@@ -156,6 +156,26 @@ namespace ohf {
         mMinFresh = builder->mMinFresh;
     }
 
+    std::string CacheControl::toString() const {
+        std::stringstream ss;
+        if (mPublic) ss << "public, ";
+        if (mPrivate) ss << "private, ";
+        if (mNoCache) ss << "no-cache, ";
+        if (mOnlyIfCached) ss << "only-if-cached, ";
+        if (mMustRevalidate) ss << "must-revalidate, ";
+        if (mImmutable) ss << "immutable, ";
+        if (mNoStore) ss << "no-store, ";
+        if (mNoTransform) ss << "no-transform, ";
+        if (mMaxAge > -1) ss << "max-age=" << mMaxAge << ", ";
+        if (mSMaxAge > -1) ss << "s-maxage" << mSMaxAge << ", ";
+        if (mMaxStale > -1) ss << "max-stale=" << mMaxStale << ", ";
+        if (mMinFresh > -1) ss << "min-fresh=" << mMinFresh << ", ";
+        std::string str = ss.str();
+        if (!str.empty())
+            str.erase(str.length() - 2, 2);
+        return str;
+    }
+
     bool CacheControl::operator==(const CacheControl &cc) {
         return this->mPublic == cc.mPublic
                || this->mPrivate == cc.mPrivate
@@ -172,24 +192,7 @@ namespace ohf {
     }
 
     std::ostream &operator<<(std::ostream &stream, const CacheControl &cc) {
-        std::stringstream ss;
-        if (cc.mPublic) ss << "public, ";
-        if (cc.mPrivate) ss << "private, ";
-        if (cc.mNoCache) ss << "no-cache, ";
-        if (cc.mOnlyIfCached) ss << "only-if-cached, ";
-        if (cc.mMustRevalidate) ss << "must-revalidate, ";
-        if (cc.mImmutable) ss << "immutable, ";
-        if (cc.mNoStore) ss << "no-store, ";
-        if (cc.mNoTransform) ss << "no-transform, ";
-        if (cc.mMaxAge > -1) ss << "max-age=" << cc.mMaxAge << ", ";
-        if (cc.mSMaxAge > -1) ss << "s-maxage" << cc.mSMaxAge << ", ";
-        if (cc.mMaxStale > -1) ss << "max-stale=" << cc.mMaxStale << ", ";
-        if (cc.mMinFresh > -1) ss << "min-fresh=" << cc.mMinFresh << ", ";
-        std::string str = ss.str();
-        str.erase(str.length() - 2, 2);
-
-        stream << "Cache-Control: " << str;
-
+        stream << cc.toString();
         return stream;
     }
 }

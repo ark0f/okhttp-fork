@@ -52,6 +52,8 @@ namespace ohf {
 
         std::vector<std::string> values(const std::string &name) const;
 
+        std::string toString() const;
+
         bool operator==(const Headers &headers);
 
         friend std::ostream &operator<<(std::ostream &stream, const Headers &headers);

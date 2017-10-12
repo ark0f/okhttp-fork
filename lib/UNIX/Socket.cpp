@@ -26,7 +26,7 @@ namespace ohf {
         close(socket_fd);
     }
 
-    std::iostream &Socket::connect(const std::string &address, const int &port) {
+    std::iostream &Socket::connect(const std::string &address, const int &port) const {
         // Address setup
         sockaddr_in addr;
         bzero(&addr, sizeof(addr));
@@ -41,13 +41,13 @@ namespace ohf {
         return *ios;
     }
 
-    void Socket::send(const char *data, int size) {
+    void Socket::send(const char *data, int size) const {
         if (write(socket_fd, data, size) < 0)
             throw Exception(Exception::Code::FAILED_TO_SEND_DATA,
                             "Failed to send data: " + std::string(strerror(errno)));
     }
 
-    std::vector<char> Socket::receive(size_t size) {
+    std::vector<char> Socket::receive(size_t size) const {
         int len = 0;
         std::vector<char> buffer(size);
         if ((len = read(socket_fd, &buffer.at(0), size)) < 0)
@@ -56,7 +56,7 @@ namespace ohf {
         return std::vector<char>(buffer.begin(), buffer.begin() + len);
     }
 
-    void Socket::shutdown(int how) {
+    void Socket::shutdown(int how) const {
         if (::shutdown(socket_fd, how) < 0)
             throw Exception(Exception::Code::FAILED_TO_SHUTDOWN_SOCKET, "Failed to disconnect: " +
                                                                         std::string(strerror(errno)));

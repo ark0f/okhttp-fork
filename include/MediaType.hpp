@@ -8,10 +8,10 @@
 #include <string>
 
 namespace ohf {
+    class MultipartBody;
+
     class MediaType {
     public:
-        MediaType() = default;
-
         MediaType(const std::string &str);
 
         MediaType(const char *str);
@@ -30,12 +30,18 @@ namespace ohf {
 
         bool operator==(const MediaType &mediaType);
 
+        std::string toString() const;
+
         friend std::ostream &operator<<(std::ostream &stream, const MediaType &mediaType);
     private:
         std::string mBoundary;
         std::string mCharset;
         std::string mSubType;
         std::string mType;
+
+        MediaType() = default;
+
+        friend class ohf::MultipartBody;
     };
 }
 

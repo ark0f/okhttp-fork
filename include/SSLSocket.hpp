@@ -27,6 +27,8 @@ namespace ohf {
 
         void sni(const std::string &name);
 
+        using Socket::connect;
+
         std::iostream &connect(const std::string &address, const int &port);
 
         using Socket::send;

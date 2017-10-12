@@ -21,7 +21,8 @@ namespace ohf {
     MultipartBody::Builder::Builder(const std::string &boundary) :
             mBoundary(boundary) {}
 
-    MultipartBody::Builder &MultipartBody::Builder::addFormDataPart(const std::string &name, const std::string &value) {
+    MultipartBody::Builder &MultipartBody::Builder::addFormDataPart(const std::string &name,
+                                                                    const std::string &value) {
         mParts.emplace_back(name, value);
         return *this;
     }
@@ -55,6 +56,7 @@ namespace ohf {
     }
 
     MultipartBody MultipartBody::Builder::build() {
+        if (mType.toString().empty()) mType = FORM;
         return {this};
     }
 }

@@ -5,6 +5,7 @@
 #ifndef OKHTTPFORK_RESPONSEBODY_HPP
 #define OKHTTPFORK_RESPONSEBODY_HPP
 
+#include <sstream>
 #include <vector>
 #include <streambuf>
 #include <memory>
@@ -32,39 +33,8 @@ namespace ohf {
         std::string string();
 
     private:
-        class StreamBuf : public std::streambuf {
-        public:
-            StreamBuf(ResponseBody *body) :
-                    cur(traits_type::eof()),
-                    body(body),
-                    offset(0) {};
-        protected:
-            int uflow() override {
-                int c = underflow();
-                cur = traits_type::eof();
-                return c;
-            }
-
-            int underflow() override {
-                if (cur != traits_type::eof())
-                    return cur;
-
-                std::vector<char> bytes = body->bytes();
-                if (offset >= bytes.size())
-                    return traits_type::eof();
-                cur = bytes[offset];
-                ++offset;
-                return cur;
-            }
-
-        private:
-            ResponseBody *body;
-            int cur;
-            unsigned int offset;
-        };
-
-        std::shared_ptr<std::istream> is;
-        std::vector<char> content;
+        std::stringstream ss;
+        std::vector<char> mContent;
         MediaType mediaType;
     };
 }
