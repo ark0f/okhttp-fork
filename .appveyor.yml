@@ -11,6 +11,8 @@ matrix:
   fast_finish: false
 
 environment:
+  OPENSSL_INCLUDE_DIR: C:\OpenSSL-Win64\include
+  OPENSSL_CRYPTO_LIBRARY: C:\OpenSSL-Win64\lib
   matrix:
     - BUILD_SHARED: ON
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
@@ -26,8 +28,6 @@ configuration:
   - Release
 
 build_script:
-  - set OPENSSL_INCLUDE_DIR=C:\OpenSSL-Win64\include
-  - set OPENSSL_CRYPTO_LIBRARY=C:\OpenSSL-Win64\lib
   - mkdir build
   - cd build
   - cmake .. -DCMAKE_BUILD_TYPE=%CONFIGURATION% -DBUILD_SHARED=%BUILD_SHARED%
