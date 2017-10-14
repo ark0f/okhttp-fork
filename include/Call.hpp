@@ -7,11 +7,20 @@
 
 #include "Response.hpp"
 #include "Request.hpp"
+#include "Callback.hpp"
 
 namespace ohf {
     class Call {
     public:
-        Call(Request &request) {};
+        class Factory {
+        public:
+            virtual Call newCall(const Request &request) = 0;
+        };
+
+        virtual void enqueue(const Callback &callback) = 0;
+
+        virtual void enqueue(void(*onResponse)(const Call &, const Response &),
+                             void(*onFailure)(const Call&, const Exception &)) = 0;
 
         virtual Response execute() = 0;
 

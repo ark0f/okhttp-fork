@@ -6,8 +6,10 @@
 #define OKHTTPFORK_PROTOCOL_HPP
 
 namespace ohf {
-    class Protocol {
-
+    enum Protocol {
+        HTTP_1_0,
+        HTTP_1_1,
+        HTTP_2
     };
 }
 
