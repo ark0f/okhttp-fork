@@ -39,7 +39,7 @@ namespace ohf {
                 try {
                     encoded.push_back(std::stoi(hex, nullptr, 16));
                 } catch (std::invalid_argument) {
-                    throw Exception(Exception::Code::INVALID_URI_HEX_CODE, "Invalid url hex code:" + hex);
+                    throw Exception(Exception::Code::INVALID_URI_HEX_CODE, "Invalid uri hex code:" + hex);
                 }
                 i += 2;
             } else
@@ -48,8 +48,8 @@ namespace ohf {
         return encoded;
     }
 
-    HttpURL::HttpURL(const std::string &url) :
-            pathEndsWithSlash(false) {
+    HttpURL::HttpURL(const std::string &url) : pathEndsWithSlash(false)
+    {
         std::string tempUrl = url;
 
         std::string::size_type offset = util::string::firstIndexOf(tempUrl, "://");
@@ -115,9 +115,9 @@ namespace ohf {
         }
 
         // path
-        if (offset == std::string::npos) { // if path found
+        if (offset == std::string::npos) { // if path not found
             pathEndsWithSlash = util::string::endsWith(tempUrl, "/");
-            mPathSegments = util::string::split(tempUrl, "/");
+            // mPathSegments = util::string::split(tempUrl, "/");
         } else {
             std::string path = tempUrl.substr(0, offset);
             pathEndsWithSlash = util::string::endsWith(path, "/");

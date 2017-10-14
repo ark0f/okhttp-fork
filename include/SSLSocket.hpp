@@ -6,6 +6,7 @@
 #define OKHTTPFORK_SSLSOCKET_HPP
 
 #include "Socket.hpp"
+#include "TLSVersion.hpp"
 #include <vector>
 #include <string>
 #include <memory>
@@ -13,29 +14,21 @@
 namespace ohf {
     class SSLSocket : public Socket {
     public:
-        enum class Protocol {
-            SSLv23,
-            SSLv3,
-            TLSv1,
-            TLSv1_1,
-            TLSv1_2
-        };
-
-        SSLSocket(const Protocol &protocol = Protocol::SSLv23);
+        SSLSocket(const TLSVersion &protocol = TLSVersion::SSLv23, const Type &type = Type::TCP);
 
         ~SSLSocket();
 
-        void sni(const std::string &name);
+        void sni(const std::string &name) const;
 
         using Socket::connect;
 
-        std::iostream &connect(const std::string &address, const int &port);
+        std::iostream &connect(const std::string &address, const int &port) const;
 
         using Socket::send;
 
-        void send(const char *data, int size);
+        void send(const char *data, int size) const;
 
-        std::vector<char> receive(size_t size);
+        std::vector<char> receive(size_t size) const;
 
     private:
         struct impl;

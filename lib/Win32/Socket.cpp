@@ -10,9 +10,18 @@
 #include <iostream>
 
 namespace ohf {
-    Socket::Socket() :
-            ios(std::make_shared<std::iostream>(new StreamBuf(this))) {
-        if ((socket_fd = socket(AF_INET, SOCK_STREAM, 0)) == INVALID_SOCKET)
+    Socket::Socket(const Type &type) : ios(std::make_shared<std::iostream>(new StreamBuf(this)))
+    {
+        int s_type, protocol;
+        if(type == Type::TCP) {
+            s_type = SOCK_STREAM;
+            protocol = IPPROTO_TCP;
+        } else if(type == Type::UDP) {
+            s_type = SOCK_DGRAM;
+            protocol = IPPROTO_UDP;
+        }
+
+        if ((socket_fd = socket(AF_INET, s_type, protocol)) == INVALID_SOCKET)
             throw Exception(Exception::Code::FAILED_TO_CREATE_SOCKET,
                             "Failed to create socket: " + util::getWSAError());
     }
@@ -25,9 +34,9 @@ namespace ohf {
         // Address setup
         sockaddr_in addr;
         ZeroMemory(&addr, sizeof(addr));
-        addr.sin_family = AF_INET; // TCP/IP
+        addr.sin_family = AF_INET;
         addr.sin_addr.S_un.S_addr = inet_addr(InetAddress(address).hostAddress().c_str());
-        addr.sin_port = htons(port); // Port
+        addr.sin_port = htons(port);
         // Connect
         if (::connect(socket_fd, (sockaddr *) &addr, sizeof(addr)) == SOCKET_ERROR)
             throw Exception(Exception::Code::FAILED_TO_CREATE_CONNECTION, "Failed to create connection: " +

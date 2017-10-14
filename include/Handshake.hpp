@@ -6,9 +6,9 @@
 #define OKHTTPFORK_HANDSHAKE_HPP
 
 #include "CipherSuite.hpp"
-#include "TLSVersion.hpp"
 #include "Certificate.hpp"
 #include "Principal.hpp"
+#include "TLSVersion.hpp"
 #include <vector>
 
 namespace ohf {

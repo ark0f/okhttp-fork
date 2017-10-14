@@ -9,6 +9,7 @@
 #include "Request.hpp"
 #include "Response.hpp"
 #include "Exception.hpp"
+#include <memory>
 
 namespace ohf {
     class WebSocket {
@@ -25,7 +26,7 @@ namespace ohf {
 
         class Factory {
         public:
-            virtual WebSocket newWebSocket(const Request &request, const Listener &listener) = 0;
+            virtual std::unique_ptr<WebSocket> newWebSocket(const Request &request, const Listener &listener) = 0;
         };
 
         virtual void cancel() = 0;

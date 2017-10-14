@@ -41,7 +41,8 @@ set(LIB_SOURCE_FILES
         lib/FormBody.cpp lib/FormBody.Builder.cpp include/FormBody.hpp
         lib/MultipartBody.cpp lib/Multipart.Part.cpp lib/Multipart.Builder.cpp include/MultipartBody.hpp
         include/Callback.hpp # Interface
-        include/WebSocket.hpp) # Interface
+        include/WebSocket.hpp # Interface
+        include/TLSVersion.hpp) # Enum
 
 # Files for different platforms
 if (WIN32)

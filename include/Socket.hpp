@@ -14,7 +14,12 @@
 namespace ohf {
     class Socket {
     public:
-        Socket();
+        enum class Type {
+            TCP,
+            UDP
+        };
+
+        Socket(const Type &type);
 
         virtual ~Socket();
 
@@ -22,7 +27,7 @@ namespace ohf {
 
         virtual std::iostream &connect(const std::string &address, const int &port) const;
 
-        std::iostream &connect(const HttpURL &url) const;
+        virtual std::iostream &connect(const HttpURL &url) const;
 
         virtual void send(const char *data, int size) const;
 
@@ -59,6 +64,16 @@ namespace ohf {
 
         std::shared_ptr<std::iostream> ios;
         int socket_fd;
+    };
+
+    class TCPSocket : public Socket {
+    public:
+        TCPSocket() : Socket(Socket::Type::TCP) {}
+    };
+
+    class UDPSocket : public Socket {
+    public:
+        UDPSocket() : Socket(Socket::Type::UDP) {}
     };
 }
 

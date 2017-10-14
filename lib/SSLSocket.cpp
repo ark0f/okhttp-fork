@@ -24,22 +24,25 @@ namespace ohf {
         SSL_CTX *ssl_context;
     };
 
-    SSLSocket::SSLSocket(const Protocol &protocol) : Socket(), pImpl(new impl) {
+    SSLSocket::SSLSocket(const TLSVersion &protocol, const Type &type) :
+            Socket(type),
+            pImpl(new impl)
+    {
         const SSL_METHOD *method;
         switch (protocol) {
-            case Protocol::SSLv23:
+            case TLSVersion::SSLv23:
                 method = SSLv23_method();
                 break;
-            case Protocol::SSLv3:
+            case TLSVersion::SSLv3:
                 method = SSLv3_method();
                 break;
-            case Protocol::TLSv1:
+            case TLSVersion::TLSv1:
                 method = TLSv1_method();
                 break;
-            case Protocol::TLSv1_1:
+            case TLSVersion::TLSv1_1:
                 method = TLSv1_1_method();
                 break;
-            case Protocol::TLSv1_2:
+            case TLSVersion::TLSv1_2:
                 method = TLSv1_2_method();
                 break;
         }
@@ -61,11 +64,11 @@ namespace ohf {
         delete pImpl;
     }
 
-    void SSLSocket::sni(const std::string &name) {
+    void SSLSocket::sni(const std::string &name) const {
         SSL_set_tlsext_host_name(pImpl->ssl, name.c_str());
     }
 
-    std::iostream &SSLSocket::connect(const std::string &address, const int &port) {
+    std::iostream &SSLSocket::connect(const std::string &address, const int &port) const {
         std::iostream &ios = Socket::connect(address, port);
 
         SSL_set_fd(pImpl->ssl, socket_fd);
@@ -76,7 +79,7 @@ namespace ohf {
         return ios;
     }
 
-    void SSLSocket::send(const char *data, int size) {
+    void SSLSocket::send(const char *data, int size) const {
         int len = SSL_write(pImpl->ssl, data, size);
         if (len < 0) {
             int error = SSL_get_error(pImpl->ssl, len);
@@ -86,7 +89,7 @@ namespace ohf {
         }
     }
 
-    std::vector<char> SSLSocket::receive(size_t size) {
+    std::vector<char> SSLSocket::receive(size_t size) const {
         std::vector<char> buffer(size);
         int len = SSL_read(pImpl->ssl, &buffer.at(0), size);
         if (len < 0) {
