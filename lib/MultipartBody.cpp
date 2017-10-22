@@ -19,7 +19,7 @@ namespace ohf {
 
     MultipartBody::Part MultipartBody::part(int index) {
         if (index > mParts.size())
-            throw Exception(Exception::Code::OUT_OF_RANGE, "Out of range: " + index);
+            throw Exception(Exception::Code::OUT_OF_RANGE, "Out of range: " + std::to_string(index));
         return mParts[index];
     }
 

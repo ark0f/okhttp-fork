@@ -54,8 +54,8 @@ namespace ohf {
         addr.sin_port = htons(port);
         // Connect
         if (::connect(socket_fd, (sockaddr *) &addr, sizeof(addr)) == SOCKET_ERROR)
-            throw Exception(Exception::Code::FAILED_TO_CREATE_CONNECTION, "Failed to create connection: " +
-                    getWSAError());
+            throw Exception(Exception::Code::FAILED_TO_CREATE_CONNECTION,
+                            "Failed to create connection: " + getWSAError());
 
         return *ios;
     }

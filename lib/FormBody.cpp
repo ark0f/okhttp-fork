@@ -18,13 +18,13 @@ namespace ohf {
 
     std::string FormBody::name(int index) const {
         if (index > names.size())
-            throw Exception(Exception::Code::OUT_OF_RANGE, "Out of range:" + index);
+            throw Exception(Exception::Code::OUT_OF_RANGE, "Out of range:" + std::to_string(index));
         return names[index];
     }
 
     std::string FormBody::value(int index) const {
         if (index > values.size())
-            throw Exception(Exception::Code::OUT_OF_RANGE, "Out of range:" + index);
+            throw Exception(Exception::Code::OUT_OF_RANGE, "Out of range:" + std::to_string(index));
         return values[index];
     }
 

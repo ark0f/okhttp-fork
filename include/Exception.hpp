@@ -31,7 +31,7 @@ namespace ohf {
             HOST_IS_EMPTY,
             OUT_OF_RANGE,
             INVALID_COOKIE_LINE,
-            INVALID_COOKIE_PARAMETER,
+            INVALID_COOKIE_NAME_VALUE,
             INVALID_MAX_AGE,
             INVALID_S_MAX_AGE,
             INVALID_IP,

@@ -33,10 +33,10 @@ namespace ohf {
         for (int i = 0; addresses[i] != nullptr; i++) {
             auto addr = addresses[i]->s_addr;
             inets.emplace_back(std::vector<unsigned char> {
-                    (addr & 0xFF),
-                    ((addr & 0xFF00) >> 8),
-                    ((addr & 0xFF0000) >> 16),
-                    ((addr & 0xFF000000) >> 24),
+                    (unsigned char) (addr & 0xFF),
+                    (unsigned char) ((addr & 0xFF00) >> 8),
+                    (unsigned char) ((addr & 0xFF0000) >> 16),
+                    (unsigned char) ((addr & 0xFF000000) >> 24),
             });
         }
 

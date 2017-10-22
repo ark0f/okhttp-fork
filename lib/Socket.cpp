@@ -20,7 +20,7 @@ namespace ohf {
     std::iostream &Socket<T>::connect(const HttpURL &url) const {
         int port = url.port();
         if (port == -1)
-            throw Exception(Exception::Code::INVALID_PORT, "Invalid port: " + port);
+            throw Exception(Exception::Code::INVALID_PORT, "Invalid port: " + std::to_string(port));
         return connect(url.host(), url.port());
     }
 

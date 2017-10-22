@@ -15,7 +15,8 @@ namespace ohf {
             m_hostOnly(false),
             m_httpOnly(false),
             m_persistent(false),
-            m_secure(false) {
+            m_secure(false)
+    {
         std::vector<std::string> parameters = util::string::split(setCookie, "; ");
         if (parameters.empty())
             throw Exception(Exception::Code::INVALID_COOKIE_LINE, "Invalid cookie line: " + setCookie);
@@ -23,7 +24,7 @@ namespace ohf {
         std::string nameValue = parameters[0];
         unsigned int offset = nameValue.find_first_of('=');
         if (offset == std::string::npos)
-            throw Exception(Exception::Code::INVALID_COOKIE_PARAMETER, "Invalid cookie parameter: " + parameters[0]);
+            throw Exception(Exception::Code::INVALID_COOKIE_NAME_VALUE, "Invalid cookie name-value: " + parameters[0]);
         m_name = nameValue.substr(0, offset);
         m_value = nameValue.substr(++offset, nameValue.length());
 
@@ -66,7 +67,7 @@ namespace ohf {
         std::vector<std::string> values = headers.values("Set-Cookie");
         std::vector<Cookie> cookies;
         for (const std::string &value : values)
-            cookies.push_back(Cookie(httpUrl, value));
+            cookies.emplace_back(httpUrl, value);
         return cookies;
     }
 

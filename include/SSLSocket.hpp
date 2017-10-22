@@ -15,7 +15,7 @@ namespace ohf {
     template <SocketType T>
     class SSLSocket : public Socket<T> {
     public:
-        SSLSocket(const TLSVersion &protocol = TLSVersion::SSLv23);
+        explicit SSLSocket(const TLSVersion &protocol = TLSVersion::SSLv23);
 
         ~SSLSocket();
 

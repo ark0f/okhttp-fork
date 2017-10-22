@@ -30,8 +30,8 @@ namespace ohf {
         }
 
         if ((socket_fd = socket(AF_INET, s_type, protocol)) < 0)
-            throw Exception(Exception::Code::FAILED_TO_CREATE_SOCKET, "Failed to create socket: " +
-                                                                      std::string(strerror(errno)));
+            throw Exception(Exception::Code::FAILED_TO_CREATE_SOCKET,
+                            "Failed to create socket: " + std::string(strerror(errno)));
     }
 
     template <SocketType T>
@@ -49,8 +49,8 @@ namespace ohf {
         addr.sin_port = htons(port);
         // Connect
         if (::connect(socket_fd, (sockaddr * ) & addr, sizeof(addr)) < 0)
-            throw Exception(Exception::Code::FAILED_TO_CREATE_CONNECTION, "Failed to create connection: " +
-                                                                          std::string(strerror(errno)));
+            throw Exception(Exception::Code::FAILED_TO_CREATE_CONNECTION,
+                            "Failed to create connection: " + std::string(strerror(errno)));
 
         return *ios;
     }
@@ -67,15 +67,15 @@ namespace ohf {
         int len = 0;
         std::vector<char> buffer(size);
         if ((len = read(socket_fd, &buffer.at(0), size)) < 0)
-            throw Exception(Exception::Code::FAILED_TO_RECEIVE_DATA, "Failed to receive data: " +
-                                                                     std::string(strerror(errno)));
+            throw Exception(Exception::Code::FAILED_TO_RECEIVE_DATA,
+                            "Failed to receive data: " + std::string(strerror(errno)));
         return std::vector<char>(buffer.begin(), buffer.begin() + len);
     }
 
     template <SocketType T>
     void Socket<T>::shutdown(int how) const {
         if (::shutdown(socket_fd, how) < 0)
-            throw Exception(Exception::Code::FAILED_TO_SHUTDOWN_SOCKET, "Failed to disconnect: " +
-                                                                        std::string(strerror(errno)));
+            throw Exception(Exception::Code::FAILED_TO_SHUTDOWN_SOCKET,
+                            "Failed to disconnect: " + std::string(strerror(errno)));
     }
 }

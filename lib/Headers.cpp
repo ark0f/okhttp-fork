@@ -45,15 +45,14 @@ namespace ohf {
 
     std::string Headers::name(int i) const {
         if (i * 2 > namesAndValues.size())
-            throw Exception(Exception::Code::OUT_OF_RANGE, "Out of range: " + i);
+            throw Exception(Exception::Code::OUT_OF_RANGE, "Out of range: " + std::to_string(i));
         return namesAndValues[i * 2];
     }
 
     std::vector<std::string> Headers::names() const {
         std::vector<std::string> names_;
-        for (auto it = namesAndValues.begin(); it != namesAndValues.end(); it += 2) {
+        for (auto it = namesAndValues.begin(); it != namesAndValues.end(); it += 2)
             names_.push_back(*it);
-        }
         return names_;
     }
 
@@ -69,7 +68,7 @@ namespace ohf {
 
     std::string Headers::value(int index) const {
         if (index * 2 + 1 > namesAndValues.size())
-            throw Exception(Exception::Code::OUT_OF_RANGE, "Out of range: " + index);
+            throw Exception(Exception::Code::OUT_OF_RANGE, "Out of range: " + std::to_string(index));
         return namesAndValues[index];
     }
 

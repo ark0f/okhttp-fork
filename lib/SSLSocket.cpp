@@ -68,8 +68,8 @@ namespace ohf {
 
         pImpl->ssl_context = SSL_CTX_new(method);
         if (!pImpl->ssl_context)
-            throw Exception(Exception::Code::SSL_CONTEXT_CREATE_ERROR, "SSL context create error:" +
-                    getOpenSSLError());
+            throw Exception(Exception::Code::SSL_CONTEXT_CREATE_ERROR,
+                            "SSL context create error:" + getOpenSSLError());
 
         pImpl->ssl = SSL_new(pImpl->ssl_context);
         if (!pImpl->ssl)
