@@ -94,6 +94,7 @@ namespace ohf {
             mHost = tempUrl.substr(0, offset);
             tempUrl.erase(0, ++offset);
         }
+        if(mHost.empty()) throw Exception(Exception::Code::HOST_IS_EMPTY, "Host is empty");
 
         // port
         if (portExists) {

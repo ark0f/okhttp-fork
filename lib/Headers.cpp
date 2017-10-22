@@ -13,16 +13,18 @@
 
 namespace ohf {
     Headers::Headers(const std::map<std::string, std::string> &headers) {
-        for (const auto &header : headers) {
-            std::string headerName = header.first;
+        auto begin = headers.begin();
+        for (unsigned int i = 0; i < headers.size(); i++) {
+            auto header = std::next(begin, i);
+            std::string headerName = header->first;
             if (headerName.empty())
-                throw Exception(Exception::Code::HEADER_IS_EMPTY, "Header is empty: ");
+                throw Exception(Exception::Code::HEADER_NAME_IS_EMPTY, "Header is empty: index: " + std::to_string(i));
             namesAndValues.push_back(headerName);
 
-            std::string headerContent = header.second;
+            std::string headerContent = header->second;
             if (headerContent.empty())
-                throw Exception(Exception::Code::HEADER_IS_EMPTY, "Header is empty: " + headerName);
-            namesAndValues.push_back(header.second);
+                throw Exception(Exception::Code::HEADER_VALUE_IS_EMPTY, "Header is empty: name: " + headerName);
+            namesAndValues.push_back(header->second);
         }
     }
 

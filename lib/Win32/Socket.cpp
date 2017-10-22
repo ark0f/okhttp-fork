@@ -9,28 +9,43 @@
 #include "../../include/InetAddress.hpp"
 #include <iostream>
 
+std::string getWSAError() {
+    char *error;
+    FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
+                  nullptr, WSAGetLastError(),
+                  MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_US),
+                  (LPSTR) &error, 0, nullptr);
+    return std::string(error);
+}
+
 namespace ohf {
-    Socket::Socket(const Type &type) : ios(std::make_shared<std::iostream>(new StreamBuf(this)))
+    template class Socket<SocketType::TCP>;
+    template class Socket<SocketType::UDP>;
+
+    template <SocketType T>
+    Socket<T>::Socket() : ios(std::make_shared<std::iostream>(new StreamBuf(this)))
     {
         int s_type, protocol;
-        if(type == Type::TCP) {
+        if(T == SocketType::TCP) {
             s_type = SOCK_STREAM;
             protocol = IPPROTO_TCP;
-        } else if(type == Type::UDP) {
+        } else if(T == SocketType::UDP) {
             s_type = SOCK_DGRAM;
             protocol = IPPROTO_UDP;
         }
 
         if ((socket_fd = socket(AF_INET, s_type, protocol)) == INVALID_SOCKET)
             throw Exception(Exception::Code::FAILED_TO_CREATE_SOCKET,
-                            "Failed to create socket: " + util::getWSAError());
+                            "Failed to create socket: " + getWSAError());
     }
 
-    Socket::~Socket() {
+    template <SocketType T>
+    Socket<T>::~Socket() {
         closesocket(socket_fd);
     }
 
-    std::iostream &Socket::connect(const std::string &address, const int &port) const {
+    template <SocketType T>
+    std::iostream &Socket<T>::connect(const std::string &address, const int &port) const {
         // Address setup
         sockaddr_in addr;
         ZeroMemory(&addr, sizeof(addr));
@@ -40,29 +55,30 @@ namespace ohf {
         // Connect
         if (::connect(socket_fd, (sockaddr *) &addr, sizeof(addr)) == SOCKET_ERROR)
             throw Exception(Exception::Code::FAILED_TO_CREATE_CONNECTION, "Failed to create connection: " +
-                                                                          util::getWSAError());
+                    getWSAError());
 
         return *ios;
     }
 
-    void Socket::send(const char *data, int size) const {
+    template <SocketType T>
+    void Socket<T>::send(const char *data, int size) const {
         if (::send(socket_fd, data, size, 0) == SOCKET_ERROR)
-            throw Exception(Exception::Code::FAILED_TO_SEND_DATA, "Failed to send data: " +
-                                                                  util::getWSAError());
+            throw Exception(Exception::Code::FAILED_TO_SEND_DATA, "Failed to send data: " + getWSAError());
     }
 
-    std::vector<char> Socket::receive(size_t size) const {
+    template <SocketType T>
+    std::vector<char> Socket<T>::receive(size_t size) const {
         int len = 0;
         std::vector<char> buffer(size);
         if ((len = recv(socket_fd, &buffer.at(0), size, 0)) == SOCKET_ERROR)
-            throw Exception(Exception::Code::FAILED_TO_RECEIVE_DATA, "Failed to receive data: " +
-                                                                     util::getWSAError());
+            throw Exception(Exception::Code::FAILED_TO_RECEIVE_DATA, "Failed to receive data: " + getWSAError());
         return std::vector<char>(buffer.begin(), buffer.begin() + len);
     }
 
-    void Socket::shutdown(int how) const {
+    template <SocketType T>
+    void Socket<T>::shutdown(int how) const {
         if (::shutdown(socket_fd, how) == SOCKET_ERROR)
             throw Exception(Exception::Code::FAILED_TO_SHUTDOWN_SOCKET,
-                            "Failed to shutdown socket: " + util::getWSAError());
+                            "Failed to shutdown socket: " + getWSAError());
     }
 }

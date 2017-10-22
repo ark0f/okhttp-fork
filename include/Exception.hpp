@@ -11,7 +11,6 @@ namespace ohf {
     class Exception : public std::exception {
     public:
         enum class Code {
-            HEADER_NOT_EXISTS,
             INVALID_HEADER_LINE,
             INVALID_MIME_TYPE,
             FAILED_TO_READ_STREAM,
@@ -28,7 +27,6 @@ namespace ohf {
             INVALID_QUERY_PARAMETER,
             INVALID_URI,
             INVALID_PORT,
-            INVALID_HOST,
             INVALID_URI_HEX_CODE,
             HOST_IS_EMPTY,
             OUT_OF_RANGE,
@@ -41,7 +39,8 @@ namespace ohf {
             INVALID_MIN_FRESH,
             UNEXPECTED_HEADER,
             INVALID_CONTENT_TYPE_LINE,
-            HEADER_IS_EMPTY
+            HEADER_NAME_IS_EMPTY,
+            HEADER_VALUE_IS_EMPTY
         };
 
         Exception(const Code &code, const std::string &what) noexcept;
@@ -52,7 +51,6 @@ namespace ohf {
 
         const char *what() const noexcept override;
 
-        friend std::ostream &operator<<(std::ostream &stream, const Exception &e);
     private:
         Code m_code;
         std::string m_what;

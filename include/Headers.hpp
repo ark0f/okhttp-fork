@@ -32,7 +32,7 @@ namespace ohf {
             friend class ohf::Headers;
         };
 
-        Headers(const std::map<std::string, std::string> &headers);
+        explicit Headers(const std::map<std::string, std::string> &headers);
 
         std::string get(std::string name) const;
 

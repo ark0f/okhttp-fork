@@ -71,7 +71,7 @@ namespace ohf {
 
         static int defaultPort(std::string scheme);
 
-        HttpURL(const std::string &tempUrl);
+        explicit HttpURL(const std::string &tempUrl);
 
         HttpURL(const char *url);
 

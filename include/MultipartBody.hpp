@@ -26,7 +26,7 @@ namespace ohf {
 
             Part(const Headers &headers, const RequestBody &body);
 
-            Part(const RequestBody &body);
+            explicit Part(const RequestBody &body);
 
             RequestBody body() const;
 
@@ -43,7 +43,7 @@ namespace ohf {
         public:
             Builder();
 
-            Builder(const std::string &boundary);
+            explicit Builder(const std::string &boundary);
 
             Builder &addFormDataPart(const std::string &name, const std::string &value);
 

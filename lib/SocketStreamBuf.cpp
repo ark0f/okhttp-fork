@@ -5,9 +5,14 @@
 #include "../include/Socket.hpp"
 
 namespace ohf {
-    Socket::StreamBuf::StreamBuf(Socket *socket) : sock(socket), cur(traits_type::eof()) {};
+    template class Socket<SocketType::TCP>;
+    template class Socket<SocketType::UDP>;
 
-    int Socket::StreamBuf::overflow(int c) {
+    template <SocketType T>
+    Socket<T>::StreamBuf::StreamBuf(Socket<T> *socket) : sock(socket), cur(traits_type::eof()) {};
+
+    template <SocketType T>
+    int Socket<T>::StreamBuf::overflow(int c) {
         if (c == traits_type::eof())
             return traits_type::eof();
 
@@ -17,13 +22,15 @@ namespace ohf {
         return c;
     }
 
-    int Socket::StreamBuf::uflow() {
+    template <SocketType T>
+    int Socket<T>::StreamBuf::uflow() {
         int c = underflow();
         cur = traits_type::eof();
         return c;
     }
 
-    int Socket::StreamBuf::underflow() {
+    template <SocketType T>
+    int Socket<T>::StreamBuf::underflow() {
         if (cur != traits_type::eof())
             return cur;
 

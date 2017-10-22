@@ -18,12 +18,12 @@ Headers::Builder &Headers::Builder::add(const std::string &line) {
 
 Headers::Builder &Headers::Builder::add(const std::string &name, const std::string &value) {
     if (name.empty())
-        throw Exception(Exception::Code::HEADER_IS_EMPTY, "Header is empty: ");
+        throw Exception(Exception::Code::HEADER_NAME_IS_EMPTY, "Header is empty: value: " + value);
     namesAndValues.push_back(name);
 
-    namesAndValues.push_back(value);
     if (value.empty())
-        throw Exception(Exception::Code::HEADER_IS_EMPTY, "Header is empty: " + name);
+        throw Exception(Exception::Code::HEADER_VALUE_IS_EMPTY, "Header is empty: name: " + name);
+    namesAndValues.push_back(value);
 
     return *this;
 }

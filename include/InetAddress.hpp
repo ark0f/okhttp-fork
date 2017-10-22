@@ -11,13 +11,11 @@
 namespace ohf {
     class InetAddress {
     public:
-        InetAddress() = default;
-
         InetAddress(const char *x);
 
-        InetAddress(const std::string &x);
+        explicit InetAddress(const std::string &x);
 
-        InetAddress(const std::vector<unsigned char> &ip);
+        explicit InetAddress(const std::vector<unsigned char> &ip);
 
         static std::vector<InetAddress> getAllByName(const std::string &host);
 

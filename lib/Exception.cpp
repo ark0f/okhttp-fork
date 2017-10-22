@@ -18,9 +18,4 @@ namespace ohf {
     const char *Exception::what() const noexcept {
         return m_what.c_str();
     }
-
-    std::ostream &operator<<(std::ostream &stream, const Exception &e) {
-        stream << e.m_what;
-        return stream;
-    }
 }

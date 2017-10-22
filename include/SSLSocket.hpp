@@ -12,19 +12,20 @@
 #include <memory>
 
 namespace ohf {
-    class SSLSocket : public Socket {
+    template <SocketType T>
+    class SSLSocket : public Socket<T> {
     public:
-        SSLSocket(const TLSVersion &protocol = TLSVersion::SSLv23, const Type &type = Type::TCP);
+        SSLSocket(const TLSVersion &protocol = TLSVersion::SSLv23);
 
         ~SSLSocket();
 
-        void sni(const std::string &name) const;
+        void sni(const std::string &name);
 
-        using Socket::connect;
+        using Socket<T>::connect;
 
         std::iostream &connect(const std::string &address, const int &port) const;
 
-        using Socket::send;
+        using Socket<T>::send;
 
         void send(const char *data, int size) const;
 
@@ -32,7 +33,9 @@ namespace ohf {
 
     private:
         struct impl;
-        impl *pImpl;
+        impl *pImpl; // just for OpenSSL includes
+
+        bool autoSNI;
     };
 }
 

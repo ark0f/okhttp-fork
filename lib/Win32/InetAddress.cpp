@@ -13,8 +13,7 @@ namespace ohf {
 
     InetAddress::InetAddress(const std::string &x) {
         hostent *ips = gethostbyname(x.c_str());
-        if (!ips)
-            throw Exception(Exception::Code::UNKNOWN_HOST, "Unknown host: " + x);
+        if (!ips) throw Exception(Exception::Code::UNKNOWN_HOST, "Unknown host: " + x);
 
         mHostName = ips->h_name;
 
@@ -27,21 +26,19 @@ namespace ohf {
 
     std::vector<InetAddress> InetAddress::getAllByName(const std::string &host) {
         hostent *ips = gethostbyname(host.c_str());
-        if (!ips)
-            throw Exception(Exception::Code::UNKNOWN_HOST, "Unknown host: " + host);
+        if (!ips) throw Exception(Exception::Code::UNKNOWN_HOST, "Unknown host: " + host);
 
         std::vector<InetAddress> inets;
 
         in_addr **addresses = (in_addr **) ips->h_addr_list;
         for (int i = 0; addresses[i] != nullptr; i++) {
             auto addr = addresses[i]->S_un.S_un_b;
-            InetAddress inetAddress;
-            inetAddress.mHostName = ips->h_name;
-            inetAddress.mIP.push_back(addr.s_b1);
-            inetAddress.mIP.push_back(addr.s_b2);
-            inetAddress.mIP.push_back(addr.s_b3);
-            inetAddress.mIP.push_back(addr.s_b4);
-            inets.push_back(inetAddress);
+            inets.emplace_back(std::vector<unsigned char> {
+                addr.s_b1,
+                addr.s_b2,
+                addr.s_b3,
+                addr.s_b4
+            });
         }
 
         return inets;

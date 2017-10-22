@@ -15,7 +15,7 @@ namespace ohf {
     public:
         class Factory {
         public:
-            virtual std::unique_ptr<Call> newCall(const Request &request) = 0;
+            virtual Call *newCall(const Request &request) = 0;
         };
 
         virtual void enqueue(const Callback &callback) = 0;

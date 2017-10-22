@@ -42,11 +42,11 @@ namespace ohf {
             RequestBody(
                     builder->mType.type().empty() // original MediaType
                     ? MediaType()
-                    : builder->mType.type() + '/' + builder->mType.subtype() +
+                    : MediaType(builder->mType.type() + '/' + builder->mType.subtype() +
                       (builder->mType.charset().empty()
                        ? std::string()
                        : "; charset=" + builder->mType.charset()) +
-                      "; boundary=" + builder->mBoundary,
+                      "; boundary=" + builder->mBoundary),
                     std::vector<char>()) {
         std::stringstream ss;
         for (auto part : mParts) {

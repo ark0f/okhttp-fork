@@ -12,14 +12,16 @@
 #include "HttpURL.hpp"
 
 namespace ohf {
+    enum class SocketType {
+        TCP,
+        UDP
+    };
+
+    template <SocketType T>
     class Socket {
     public:
-        enum class Type {
-            TCP,
-            UDP
-        };
-
-        Socket(const Type &type);
+        //explicit Socket(const Type &type);
+        Socket();
 
         virtual ~Socket();
 
@@ -45,11 +47,13 @@ namespace ohf {
 
         std::string toString() const;
 
-        friend std::ostream &operator<<(std::ostream &stream, const Socket &socket);
+        friend std::ostream &operator<<(std::ostream &stream, const Socket<T> &socket) {
+            return stream << socket.toString();
+        }
     protected:
         class StreamBuf : public std::streambuf {
         public:
-            StreamBuf(Socket *socket);
+            StreamBuf(Socket<T> *socket);
         protected:
             int overflow(int c) override;
 
@@ -58,7 +62,7 @@ namespace ohf {
             int underflow() override;
 
         private:
-            Socket *sock;
+            Socket<T> *sock;
             int cur;
         };
 
@@ -66,15 +70,8 @@ namespace ohf {
         int socket_fd;
     };
 
-    class TCPSocket : public Socket {
-    public:
-        TCPSocket() : Socket(Socket::Type::TCP) {}
-    };
-
-    class UDPSocket : public Socket {
-    public:
-        UDPSocket() : Socket(Socket::Type::UDP) {}
-    };
+    using TCPSocket = Socket<SocketType::TCP>;
+    using UDPSocket = Socket<SocketType::UDP>;
 }
 
 #endif //OKHTTPFORK_SOCKET_HPP

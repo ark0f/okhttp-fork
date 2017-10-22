@@ -45,7 +45,7 @@ namespace ohf {
             friend class ohf::CacheControl;
         };
 
-        CacheControl(Headers &headers);
+        explicit CacheControl(Headers &headers);
 
         bool isPrivate() const;
 

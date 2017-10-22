@@ -26,7 +26,7 @@ namespace ohf {
 
         class Factory {
         public:
-            virtual std::unique_ptr<WebSocket> newWebSocket(const Request &request, const Listener &listener) = 0;
+            virtual WebSocket *newWebSocket(const Request &request, const Listener &listener) = 0;
         };
 
         virtual void cancel() = 0;

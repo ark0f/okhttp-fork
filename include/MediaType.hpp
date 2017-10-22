@@ -12,7 +12,7 @@ namespace ohf {
 
     class MediaType {
     public:
-        MediaType(const std::string &str);
+        explicit MediaType(const std::string &str);
 
         MediaType(const char *str);
 
