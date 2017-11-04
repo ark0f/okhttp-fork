@@ -24,7 +24,7 @@ namespace ohf {
         static TimeUnit milliseconds(Int32 time);
         static TimeUnit microseconds(Int64 time);
 
-        TimeUnit(long long int count, const TimeUnit::Type &type);
+        TimeUnit(Int64 count, const TimeUnit::Type &type);
 
         std::time_t std_time() const;
 

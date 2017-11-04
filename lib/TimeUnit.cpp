@@ -10,7 +10,7 @@ namespace ohf {
     const TimeUnit TimeUnit::ZERO = {0, Type::SECONDS};
     const TimeUnit TimeUnit::MINUS_ONE_SECOND = {-1, Type::SECONDS};
 
-    TimeUnit::TimeUnit(long long int count, const TimeUnit::Type &type) :
+    TimeUnit::TimeUnit(Int64 count, const TimeUnit::Type &type) :
             mSec(count / static_cast<int>(type)),
             mUSec(count % static_cast<int>(type)),
             mMicroseconds(count),
@@ -18,7 +18,7 @@ namespace ohf {
     {}
 
     TimeUnit TimeUnit::seconds(float time) {
-        return {time * static_cast<int>(Type::MICROSECONDS), TimeUnit::Type::MICROSECONDS};
+        return {static_cast<Int64>(time * static_cast<int>(Type::MICROSECONDS)), TimeUnit::Type::MICROSECONDS};
     }
 
     TimeUnit TimeUnit::milliseconds(int time) {

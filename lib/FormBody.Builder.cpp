@@ -6,7 +6,7 @@
 #include "../include/HttpURL.hpp"
 
 namespace ohf {
-    FormBody::Builder &FormBody::Builder::add(const std::string &name, const std::string &value) {
+    FormBody::Builder& FormBody::Builder::add(const std::string &name, const std::string &value) {
         names.push_back(HttpURL::decode(name));
         values.push_back(HttpURL::decode(value));
         return *this;
@@ -14,7 +14,7 @@ namespace ohf {
 
     FormBody::Builder& FormBody::Builder::add(const std::string &name) {
         names.push_back(HttpURL::decode(name));
-        values.push_back(std::string());
+        values.emplace_back();
         return *this;
     }
 

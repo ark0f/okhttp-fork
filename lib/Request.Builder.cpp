@@ -8,10 +8,9 @@
 
 namespace ohf {
     Request::Builder::~Builder() {
-        delete
-            mCC,
-            mURL,
-            mBody;
+        delete mCC;
+        delete mURL;
+        delete mBody;
     }
 
     Request Request::Builder::build() {
@@ -112,8 +111,8 @@ namespace ohf {
     Request::Builder::Builder(Request *request) :
             mMethod(request->mMethod),
             mHeaders(request->mHeaders.newBuilder()),
-            mCC(request->mCC.clone()),
-            mURL(request->mURL.clone()),
-            mBody(request->mBody.clone())
+            mCC(&request->mCC),
+            mURL(&request->mURL),
+            mBody(&request->mBody)
     {}
 }

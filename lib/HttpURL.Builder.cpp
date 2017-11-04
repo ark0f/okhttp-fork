@@ -10,7 +10,8 @@ namespace ohf {
     HttpURL::Builder::Builder() :
             mPathEndsWithFlash(false),
             mPort(80),
-            mScheme("http") {}
+            mScheme("http")
+    {}
 
     HttpURL::Builder &HttpURL::Builder::addPathSegments(const std::string &pathSegments) {
         mPathEndsWithFlash = util::string::endsWith(pathSegments, "/");
