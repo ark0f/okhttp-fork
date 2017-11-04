@@ -7,7 +7,7 @@
 #include <iostream>
 #include <algorithm>
 #include "../include/HttpURL.hpp"
-#include "../util/string.hpp"
+#include "../lib/util/string.hpp"
 #include "../include/Exception.hpp"
 
 namespace ohf {
@@ -30,15 +30,13 @@ namespace ohf {
 
     std::string HttpURL::decode(const std::string &str) {
         std::string encoded;
-        // oss.fill('0');
-        // oss << std::hex;
         for (std::string::size_type i = 0; i < str.length(); i++) {
             char c = str[i];
             if (c == '%') {
                 std::string hex = str.substr(i + 1, 2);
                 try {
                     encoded.push_back(std::stoi(hex, nullptr, 16));
-                } catch (std::invalid_argument) {
+                } catch (std::invalid_argument&) {
                     throw Exception(Exception::Code::INVALID_URI_HEX_CODE, "Invalid uri hex code:" + hex);
                 }
                 i += 2;
@@ -69,14 +67,14 @@ namespace ohf {
         // check query
         if (offset == std::string::npos) { // if path not found
             offset = tempUrl.find_first_of('?');
-            if (offset != std::string::npos) // but found query, url is invalid
+            if (offset != std::string::npos) // but found query - url is invalid
                 throw Exception(Exception::Code::INVALID_URI, "Invalid url: " + url);
         }
 
         // check fragment
         if (offset == std::string::npos) { // if path not found
             offset = tempUrl.find_first_of('#');
-            if (offset != std::string::npos) // but found fragment, url is invalid
+            if (offset != std::string::npos) // but found fragment - url is invalid
                 throw Exception(Exception::Code::INVALID_URI, "Invalid url: " + url);
         }
 
@@ -102,7 +100,7 @@ namespace ohf {
             std::string port = tempUrl.substr(0, offset);
             try {
                 mPort = std::stoi(port);
-            } catch (std::invalid_argument) {
+            } catch (std::invalid_argument&) {
                 throw Exception(Exception::Code::INVALID_PORT, "Invalid port: " + port);
             }
             tempUrl.erase(0, offset);
@@ -116,10 +114,7 @@ namespace ohf {
         }
 
         // path
-        if (offset == std::string::npos) { // if path not found
-            pathEndsWithSlash = util::string::endsWith(tempUrl, "/");
-            // mPathSegments = util::string::split(tempUrl, "/");
-        } else {
+        if (offset != std::string::npos) {
             std::string path = tempUrl.substr(0, offset);
             pathEndsWithSlash = util::string::endsWith(path, "/");
             mPathSegments = util::string::split(path, "/");
@@ -135,7 +130,7 @@ namespace ohf {
                 if (nameValue.size() == 2)
                     queryParameters[nameValue[0]] = HttpURL::decode(nameValue[1]);
                 else if (nameValue.size() == 1)
-                    queryParameters[nameValue[0]] = "";
+                    queryParameters[nameValue[0]] = std::string();
                 else
                     throw Exception(Exception::Code::INVALID_QUERY_PARAMETER, "Invalid query parameter: " + parameter);
             }
@@ -149,7 +144,7 @@ namespace ohf {
     HttpURL::HttpURL(const char *url) : HttpURL(std::string(url)) {
     }
 
-    int HttpURL::defaultPort(std::string scheme) {
+    Uint16 HttpURL::defaultPort(std::string scheme) {
         util::string::toLower(scheme);
         if (scheme == "https")
             return 443;
@@ -167,7 +162,7 @@ namespace ohf {
             return 6667;
         if (scheme == "ldap")
             return 389;
-        return -1;
+        return 0;
     }
 
     std::string HttpURL::encodedFragment() const {
@@ -244,7 +239,7 @@ namespace ohf {
         return mPathSegments;
     }
 
-    int HttpURL::pathSize() const {
+    Uint32 HttpURL::pathSize() const {
         if (mPathSegments.empty())
             return 0;
         std::ostringstream oss;
@@ -256,7 +251,7 @@ namespace ohf {
         return oss.str().length();
     }
 
-    int HttpURL::port() const {
+    Uint16 HttpURL::port() const {
         return mPort;
     }
 
@@ -284,7 +279,7 @@ namespace ohf {
         return queryParameters.find(name) != queryParameters.end() ? queryParameters.at(name) : std::string();
     }
 
-    std::string HttpURL::queryParameterName(int index) const {
+    std::string HttpURL::queryParameterName(Uint32 index) const {
         return std::next(queryParameters.begin(), index)->first;
     }
 
@@ -295,11 +290,11 @@ namespace ohf {
         return names;
     }
 
-    std::string HttpURL::queryParameterValue(int index) const {
+    std::string HttpURL::queryParameterValue(Uint32 index) const {
         return std::next(queryParameters.begin(), index)->second;
     }
 
-    int HttpURL::querySize() const {
+    Uint32 HttpURL::querySize() const {
         return encodedQuery().length();
     }
 
@@ -311,7 +306,7 @@ namespace ohf {
         std::ostringstream oss;
 
         oss << mScheme << "://" << mHost;
-        if (mPort != -1 && defaultPort(mScheme) == -1) // if port specified but it is not default
+        if (mPort != 0 && defaultPort(mScheme) == 0) // if port specified but it is not default
             oss << ':' << mPort;
 
         oss << '/';
@@ -328,6 +323,10 @@ namespace ohf {
             oss << '#' << fragment;
 
         return oss.str();
+    }
+
+    HttpURL* HttpURL::clone() const {
+        return new HttpURL(*this);
     }
 
     std::string HttpURL::toString() const {
@@ -350,11 +349,10 @@ namespace ohf {
     }
 
     std::ostream &operator<<(std::ostream &stream, const HttpURL &httpURL) {
-        stream << httpURL.url();
-        return stream;
+        return stream << httpURL.url();
     }
 
-    HttpURL::HttpURL(const Builder *builder):
+    HttpURL::HttpURL(const Builder *builder) :
             mPort(builder->mPort),
             pathEndsWithSlash(builder->mPathEndsWithFlash),
             mPathSegments(builder->pathSegments),
@@ -363,4 +361,6 @@ namespace ohf {
             mHost(builder->mHost),
             mScheme(builder->mScheme)
     {}
+
+
 }

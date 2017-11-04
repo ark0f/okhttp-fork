@@ -19,64 +19,67 @@
 #include "Protocol.hpp"
 #include "Proxy.hpp"
 #include "ProxySelector.hpp"
+#include "TimeUnit.hpp"
+#include "WebSocket.hpp"
 
 namespace ohf {
     class Client {
     public:
         class Builder {
         public:
-            Builder addInterceptor(const Interceptor &interceptor);
+            Builder& addInterceptor(const Interceptor &interceptor);
 
-            Builder addNetworkInterceptor(const Interceptor &interceptor);
+            Builder& addNetworkInterceptor(const Interceptor &interceptor);
 
             Builder authenticator(const Authenticator &authenticator);
 
             Client build();
 
-            Builder cache(const Cache &cache);
+            Builder& cache(const Cache &cache);
 
-            Builder certificatePinner(const CertificatePinner &pinner);
+            Builder& certificatePinner(const CertificatePinner &pinner);
 
-            Builder connectionPool(const ConnectionPool &pool);
+            Builder& connectionPool(const ConnectionPool &pool);
 
-            Builder connectionSpecs(const std::vector<ConnectionSpec> &specs);
+            Builder& connectionSpecs(const std::vector<ConnectionSpec> &specs);
 
-            Builder connectTimeout(time_t timeout);
+            Builder& connectTimeout(const TimeUnit &timeout);
 
-            Builder cookieJar(const CookieJar &jar);
+            Builder& cookieJar(const CookieJar &jar);
 
-            Builder dispatcher(const Dispatcher &dispatcher);
+            Builder& dispatcher(const Dispatcher &dispatcher);
 
-            Builder dns(const DNS &dns);
+            Builder& dns(const DNS &dns);
 
-            Builder followRedirects(bool follorRedirects);
+            Builder& followRedirects(bool follorRedirects);
 
-            Builder follorSslRedirects(bool followProtocolRedirects);
+            Builder& follorSslRedirects(bool followProtocolRedirects);
 
-            Builder hostnameVerifier(const HostnameVerifier &verifier);
+            Builder& hostnameVerifier(const HostnameVerifier &verifier);
 
-            std::vector<Interceptor> &interceptors();
+            std::vector<Interceptor> interceptors();
 
-            std::vector<Interceptor> &networkInterceptors();
+            std::vector<Interceptor> networkInterceptors();
 
-            Builder pingInterval(time_t interval);
+            Builder& pingInterval(const TimeUnit &interval);
 
-            Builder protocols(const std::vector<Protocol> &protocols);
+            Builder& protocols(const std::vector<Protocol> &protocols);
 
-            Builder proxy(const Proxy &proxy);
+            Builder& proxy(const Proxy &proxy);
 
-            Builder proxyAuthenticator(const Authenticator &authenticator);
+            Builder& proxyAuthenticator(const Authenticator &authenticator);
 
-            Builder proxySelector(const ProxySelector &selector);
+            Builder& proxySelector(const ProxySelector &selector);
 
-            Builder readTimeout(time_t timeout);
+            Builder& readTimeout(const TimeUnit &timeout);
 
-            Builder retryOnConnectionFailure(bool retry);
+            Builder& retryOnConnectionFailure(bool retry);
 
             //Builder socketFactory(const SocketFactory &factory);
             //Builder sslSocketFactory(const SSLSocketFactory &factory);
             //Builder sslSocketFactory(const SSLSocketFactory &factory, const X509TrustManager &manager);
-            Builder writeTimeout(time_t timeout);
+
+            Builder& writeTimeout(const TimeUnit &timeout);
         };
 
         Authenticator authenticator();
@@ -89,7 +92,7 @@ namespace ohf {
 
         std::vector<ConnectionSpec> connectionSpecs();
 
-        int connectTimeoutMillis();
+        TimeUnit connectTimeout();
 
         CookieJar cookieJar();
 
@@ -99,7 +102,7 @@ namespace ohf {
 
         bool followRedirects();
 
-        bool followSslRedirects();
+        bool followSSLRedirects();
 
         HostnameVerifier hostnameVerifier();
 
@@ -109,10 +112,11 @@ namespace ohf {
 
         Builder newBuilder();
 
-        void newCall(const Call &call);
+        Call newCall(const Request &request);
 
-        // WebSocket newWebSocket(const Request &request, const WebSocketListener &listener);
-        int pingIntervalMillis();
+        WebSocket newWebSocket(const Request &request, const WebSocket::Listener &listener);
+
+        TimeUnit pingInterval();
 
         std::vector<Protocol> protocols();
 
@@ -122,13 +126,14 @@ namespace ohf {
 
         ProxySelector proxySelector();
 
-        int readTimeoutMillis();
+        TimeUnit readTimeout();
 
         bool retryOnConnectionFailure();
 
         // SocketFactory socketFactory();
         // SSLSocketFactory sslSocketFactory();
-        int writeTimeoutMillis();
+
+        TimeUnit writeTimeout();
     };
 }
 

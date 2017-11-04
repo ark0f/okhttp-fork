@@ -5,10 +5,10 @@
 #ifndef OKHTTPFORK_CACHE_HPP
 #define OKHTTPFORK_CACHE_HPP
 
+namespace ohf {
+    class Cache {
 
-class Cache {
-
-};
-
+    };
+}
 
 #endif //OKHTTPFORK_CACHE_HPP

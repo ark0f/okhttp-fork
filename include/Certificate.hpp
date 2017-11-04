@@ -5,6 +5,8 @@
 #ifndef OKHTTPFORK_CERTIFICATE_HPP
 #define OKHTTPFORK_CERTIFICATE_HPP
 
+#include "string"
+
 namespace ohf {
     class Certificate {
     public:
@@ -12,7 +14,7 @@ namespace ohf {
 
         // abstract byte[] getEncoded();
         // abstract PublicKey getPublicKey();
-        const char *getType();
+        std::string getType();
         // abstract void verify(const PublicKey &publicKey);
         // abstract void verify(const PublicKey &publicKey, const char *sigProvider);
     protected:

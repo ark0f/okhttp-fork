@@ -5,9 +5,12 @@
 #ifndef OKHTTPFORK_CACHECONTROL_HPP
 #define OKHTTPFORK_CACHECONTROL_HPP
 
+#include "Config.hpp"
 #include "Headers.hpp"
 
 namespace ohf {
+    class Request;
+
     class CacheControl {
     public:
         class Builder {
@@ -26,21 +29,23 @@ namespace ohf {
 
             Builder &onlyIfCached();
 
-            Builder &maxAge(time_t seconds);
+            Builder &maxAge(const TimeUnit &seconds);
 
-            Builder &maxStale(time_t seconds);
+            Builder &maxStale(const TimeUnit &seconds);
 
-            Builder &minFresh(time_t seconds);
+            Builder &minFresh(const TimeUnit &seconds);
 
         private:
-            bool mImmutable;
-            bool mNoCache;
-            bool mNoStore;
-            bool mNoTransform;
-            bool mOnlyIfCached;
-            time_t mMaxAge;
-            time_t mMaxStale;
-            time_t mMinFresh;
+            bool
+                    mImmutable,
+                    mNoCache,
+                    mNoStore,
+                    mNoTransform,
+                    mOnlyIfCached;
+            TimeUnit
+                    mMaxAge,
+                    mMaxStale,
+                    mMinFresh;
 
             friend class ohf::CacheControl;
         };
@@ -63,13 +68,15 @@ namespace ohf {
 
         bool onlyIfCached() const;
 
-        time_t maxAgeSeconds() const;
+        TimeUnit maxAgeSeconds() const;
 
-        time_t maxStaleSeconds() const;
+        TimeUnit maxStaleSeconds() const;
 
-        time_t minFreshSeconds() const;
+        TimeUnit minFreshSeconds() const;
 
-        time_t sMaxAgeSeconds() const;
+        TimeUnit sMaxAgeSeconds() const;
+
+        CacheControl *clone() const;
 
         std::string toString() const;
 
@@ -77,20 +84,25 @@ namespace ohf {
 
         friend std::ostream &operator<<(std::ostream &stream, const CacheControl &cacheControl);
     private:
+        CacheControl();
         CacheControl(const Builder *builder);
 
-        bool mPublic;
-        bool mPrivate;
-        bool mNoCache;
-        bool mOnlyIfCached;
-        bool mMustRevalidate;
-        bool mImmutable;
-        bool mNoStore;
-        bool mNoTransform;
-        time_t mMaxAge;
-        time_t mSMaxAge;
-        time_t mMaxStale;
-        time_t mMinFresh;
+        bool
+                mPublic,
+                mPrivate,
+                mNoCache,
+                mOnlyIfCached,
+                mMustRevalidate,
+                mImmutable,
+                mNoStore,
+                mNoTransform;
+        TimeUnit
+                mMaxAge,
+                mSMaxAge,
+                mMaxStale,
+                mMinFresh;
+
+        friend class ohf::Request;
     };
 }
 

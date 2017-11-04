@@ -7,10 +7,29 @@
 #include <sstream>
 #include <vector>
 #include "../include/RequestBody.hpp"
-#include "../util/util.hpp"
+#include "../lib/util/util.hpp"
 
 namespace ohf {
-    unsigned int RequestBody::contentLength() {
+    RequestBody::RequestBody(const MediaType &contentType, const char *content, size_t count) :
+            mediaType(contentType),
+            content(std::vector<Int8>(content, content + count))
+    {}
+
+    RequestBody::RequestBody(const MediaType &contentType, const std::string &content) :
+            mediaType(contentType),
+            content(content.begin(), content.end())
+    {}
+
+    RequestBody::RequestBody(const MediaType &contentType, const std::vector<Int8> &content) :
+            mediaType(contentType),
+            content(content) {}
+
+    RequestBody::RequestBody(const MediaType &contentType, std::istream &stream) :
+            mediaType(contentType),
+            content(util::readStream(stream))
+    {}
+
+    Uint32 RequestBody::contentLength() {
         return content.size();
     }
 
@@ -18,21 +37,7 @@ namespace ohf {
         return mediaType;
     }
 
-    RequestBody::RequestBody(const MediaType &contentType, const char *content, size_t count) :
-            mediaType(contentType) {
-        for (size_t i = 0; i < count; i++)
-            this->content.push_back(content[i]);
+    RequestBody* RequestBody::clone() const {
+        return new RequestBody(*this);
     }
-
-    RequestBody::RequestBody(const MediaType &contentType, const std::string &content) :
-            mediaType(contentType),
-            content(content.begin(), content.end()) {}
-
-    RequestBody::RequestBody(const MediaType &contentType, const std::vector<char> &content) :
-            mediaType(contentType),
-            content(content) {}
-
-    RequestBody::RequestBody(const MediaType &contentType, std::istream &stream) :
-            mediaType(contentType),
-            content(util::readStream(stream)) {}
 }

@@ -5,14 +5,16 @@
 #ifndef OKHTTPFORK_CHALLENGE_HPP
 #define OKHTTPFORK_CHALLENGE_HPP
 
+#include "string"
+
 namespace ohf {
     class Challenge {
     public:
         bool operator==(const Challenge &challenge);
 
-        const char *realm();
+        std::string realm();
 
-        const char *scheme();
+        std::string scheme();
     };
 }
 

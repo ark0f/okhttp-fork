@@ -11,9 +11,9 @@ namespace ohf {
             mNoStore(false),
             mNoTransform(false),
             mOnlyIfCached(false),
-            mMaxAge(-1),
-            mMaxStale(-1),
-            mMinFresh(-1) {}
+            mMaxAge(TimeUnit::MINUS_ONE_SECOND),
+            mMaxStale(TimeUnit::MINUS_ONE_SECOND),
+            mMinFresh(TimeUnit::MINUS_ONE_SECOND) {}
 
     CacheControl CacheControl::Builder::build() {
         return {this};
@@ -44,17 +44,17 @@ namespace ohf {
         return *this;
     }
 
-    CacheControl::Builder &CacheControl::Builder::maxAge(time_t seconds) {
+    CacheControl::Builder &CacheControl::Builder::maxAge(const TimeUnit &seconds) {
         mMaxAge = seconds;
         return *this;
     }
 
-    CacheControl::Builder &CacheControl::Builder::maxStale(time_t seconds) {
+    CacheControl::Builder &CacheControl::Builder::maxStale(const TimeUnit &seconds) {
         mMaxStale = seconds;
         return *this;
     }
 
-    CacheControl::Builder &CacheControl::Builder::minFresh(time_t seconds) {
+    CacheControl::Builder &CacheControl::Builder::minFresh(const TimeUnit &seconds) {
         mMinFresh = seconds;
         return *this;
     }

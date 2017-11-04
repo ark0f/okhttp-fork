@@ -5,10 +5,10 @@
 #ifndef OKHTTPFORK_HOSTNAMEVERIFIER_HPP
 #define OKHTTPFORK_HOSTNAMEVERIFIER_HPP
 
+namespace ohf {
+    class HostnameVerifier {
 
-class HostnameVerifier {
-
-};
-
+    };
+}
 
 #endif //OKHTTPFORK_HOSTNAMEVERIFIER_HPP

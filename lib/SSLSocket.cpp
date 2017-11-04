@@ -4,7 +4,6 @@
 
 #include "../include/SSLSocket.hpp"
 #include "../include/Exception.hpp"
-#include "../util/util.hpp"
 #include <openssl/ssl.h>
 #include <openssl/err.h>
 #include <cstring>
@@ -90,12 +89,12 @@ namespace ohf {
     }
 
     template <SocketType T>
-    std::iostream &SSLSocket<T>::connect(const std::string &address, const int &port) const {
+    std::iostream &SSLSocket<T>::connect(const std::string &address, Uint16 port) const {
         std::iostream &ios = Socket<T>::connect(address, port);
 
         if(autoSNI) SSL_set_tlsext_host_name(pImpl->ssl, address.c_str());
 
-        SSL_set_fd(pImpl->ssl, this->socket_fd);
+        SSL_set_fd(pImpl->ssl, this->mSocketFD);
         if (SSL_connect(pImpl->ssl) < 1)
             throw Exception(Exception::Code::SSL_CONNECTION_CREATE_ERROR,
                             "SSL connection create error: " + getOpenSSLError());
@@ -115,8 +114,8 @@ namespace ohf {
     }
 
     template <SocketType T>
-    std::vector<char> SSLSocket<T>::receive(size_t size) const {
-        std::vector<char> buffer(size);
+    std::vector<Int8> SSLSocket<T>::receive(size_t size) const {
+        std::vector<Int8> buffer(size);
         int len = SSL_read(pImpl->ssl, &buffer.at(0), size);
         if (len < 0) {
             int error = SSL_get_error(pImpl->ssl, len);
@@ -124,6 +123,6 @@ namespace ohf {
                 return buffer;
             throw Exception(Exception::Code::SSL_ERROR, "SSL error: " + getOpenSSLError());
         }
-        return std::vector<char>(buffer.begin(), buffer.begin() + len);
+        return std::vector<Int8>(buffer.begin(), buffer.begin() + len);
     }
 }

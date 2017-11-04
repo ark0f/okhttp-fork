@@ -10,19 +10,20 @@
 #include <streambuf>
 #include <memory>
 #include "MediaType.hpp"
+#include "Config.hpp"
 
 namespace ohf {
     class ResponseBody {
     public:
         ResponseBody(const MediaType &mediaType, const char *content, size_t count);
 
-        ResponseBody(const MediaType &mediaType, const std::vector<char> &content);
+        ResponseBody(const MediaType &mediaType, const std::vector<Int8> &content);
 
         ResponseBody(const MediaType &mediaType, const std::string &content);
 
         ResponseBody(const MediaType &mediaType, std::istream &stream);
 
-        std::vector<char> bytes();
+        std::vector<Int8> bytes();
 
         std::istream &stream();
 
@@ -34,7 +35,7 @@ namespace ohf {
 
     private:
         std::stringstream ss;
-        std::vector<char> mContent;
+        std::vector<Int8> mContent;
         MediaType mediaType;
     };
 }

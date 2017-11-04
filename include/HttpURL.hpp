@@ -7,6 +7,7 @@
 
 #include <vector>
 #include <map>
+#include "Config.hpp"
 
 namespace ohf {
     class HttpURL {
@@ -33,7 +34,7 @@ namespace ohf {
 
             Builder &host(const std::string &host);
 
-            Builder &port(const int &port);
+            Builder &port(Uint16 port);
 
             Builder &query(const std::string &query);
 
@@ -41,26 +42,24 @@ namespace ohf {
             // void removeAllQueryParameters(const std::string &name);
             Builder &removeQueryParameter(const std::string &name);
 
-            Builder &removePathSegment(const int &index);
+            Builder &removePathSegment(Uint32 index);
 
             Builder &scheme(const std::string &scheme);
 
             // void setEncodedPathSegment(const int &index, const std::string &encodedPathSegment);
             // void setEncodedQueryParameter(const std::string &encodedName, const std::string &encodedValue);
-            Builder &setPathSegment(const int &index, std::string pathSegment);
+            Builder &setPathSegment(Uint32 index, std::string pathSegment);
 
             Builder &setQueryParameter(const std::string &name, const std::string &value);
 
             Builder &pathEndsWithSlash(bool b);
 
         private:
-            int mPort;
+            Uint16 mPort;
             std::map<std::string, std::string> mQueryParameters;
             bool mPathEndsWithFlash;
             std::vector<std::string> pathSegments;
-            std::string mFragment;
-            std::string mHost;
-            std::string mScheme;
+            std::string mFragment, mHost, mScheme;
 
             friend class ohf::HttpURL;
         };
@@ -69,7 +68,7 @@ namespace ohf {
 
         static std::string decode(const std::string &str);
 
-        static int defaultPort(std::string scheme);
+        static Uint16 defaultPort(std::string scheme);
 
         explicit HttpURL(const std::string &tempUrl);
 
@@ -97,22 +96,22 @@ namespace ohf {
         // Builder newBuilder(const std::string &link);
         std::vector<std::string> pathSegments() const;
 
-        int pathSize() const;
+        Uint32 pathSize() const;
 
-        int port() const;
+        Uint16 port() const;
 
         std::string query() const;
 
         std::string queryParameter(const std::string &name) const;
 
-        std::string queryParameterName(int index) const;
+        std::string queryParameterName(Uint32 index) const;
 
         std::vector<std::string> queryParameterNames() const;
 
-        std::string queryParameterValue(int index) const;
+        std::string queryParameterValue(Uint32 index) const;
 
         // std::vector<std::string> queryParameterValues(const std::string &name);
-        int querySize() const;
+        Uint32 querySize() const;
 
         // std::string redact();
         // HttpURL resolve(const std::string &link);
@@ -123,6 +122,8 @@ namespace ohf {
         // URL url();
         std::string url() const;
 
+        HttpURL *clone() const;
+
         std::string toString() const;
 
         bool operator==(const HttpURL &url);
@@ -130,14 +131,13 @@ namespace ohf {
         friend std::ostream &operator<<(std::ostream &stream, const HttpURL &httpURL);
     private:
         HttpURL(const Builder *builder);
+        //HttpURL(const HttpURL *url);
 
-        int mPort;
+        Uint16 mPort;
         bool pathEndsWithSlash;
         std::vector<std::string> mPathSegments;
         std::map<std::string, std::string> queryParameters;
-        std::string mFragment;
-        std::string mHost;
-        std::string mScheme;
+        std::string mFragment, mHost, mScheme;
     };
 }
 

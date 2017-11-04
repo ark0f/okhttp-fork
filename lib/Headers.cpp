@@ -8,8 +8,8 @@
 #include <algorithm>
 #include "../include/Headers.hpp"
 #include "../include/Exception.hpp"
-#include "../util/string.hpp"
-#include "../util/util.hpp"
+#include "../lib/util/string.hpp"
+#include "../lib/util/util.hpp"
 
 namespace ohf {
     Headers::Headers(const std::map<std::string, std::string> &headers) {
@@ -39,21 +39,22 @@ namespace ohf {
         return std::string();
     }
 
-    time_t Headers::getDate() const {
-        return util::parseDate(this->get("Date"), "%a, %d %b %Y %H:%M:%S GMT");
+    TimeUnit Headers::getDate() const {
+        return TimeUnit::seconds(util::parseDate(this->get("Date"), "%a, %d %b %Y %H:%M:%S GMT"));
     }
 
-    std::string Headers::name(int i) const {
-        if (i * 2 > namesAndValues.size())
-            throw Exception(Exception::Code::OUT_OF_RANGE, "Out of range: " + std::to_string(i));
-        return namesAndValues[i * 2];
+    std::string Headers::name(Uint32 index) const {
+        if (index * 2 > namesAndValues.size())
+            throw Exception(Exception::Code::OUT_OF_RANGE, "Out of range: " + std::to_string(index));
+        return namesAndValues[index * 2];
     }
 
     std::vector<std::string> Headers::names() const {
-        std::vector<std::string> names_;
+        std::vector<std::string> names;
         for (auto it = namesAndValues.begin(); it != namesAndValues.end(); it += 2)
-            names_.push_back(*it);
-        return names_;
+            if(std::find(names.begin(), names.end(), *it) == names.end())
+                names.push_back(*it);
+        return names;
     }
 
     Headers::Builder Headers::newBuilder() const {
@@ -62,11 +63,11 @@ namespace ohf {
         return builder;
     }
 
-    int Headers::size() const {
+    Uint32 Headers::size() const {
         return namesAndValues.size() / 2;
     }
 
-    std::string Headers::value(int index) const {
+    std::string Headers::value(Uint32 index) const {
         if (index * 2 + 1 > namesAndValues.size())
             throw Exception(Exception::Code::OUT_OF_RANGE, "Out of range: " + std::to_string(index));
         return namesAndValues[index];
@@ -74,12 +75,8 @@ namespace ohf {
 
     std::vector<std::string> Headers::values(const std::string &name) const {
         std::vector<std::string> values;
-        auto begin = namesAndValues.begin();
-        for (int i = 0; i < namesAndValues.size(); i += 2) {
-            if (*begin == name) {
-                ++begin;
-                values.push_back(*begin);
-            }
+        for (auto it = namesAndValues.begin(); it != namesAndValues.end(); it += 2) {
+            if (*it == name) values.push_back(*(it + 1));
         }
         return values;
     }
@@ -96,8 +93,8 @@ namespace ohf {
         return ss.str();
     }
 
-    bool Headers::operator==(const Headers &headers) {
-        auto nav1 = headers.namesAndValues;
+    bool Headers::operator==(const Headers &headers) const {
+        auto nav1 = std::move(headers.namesAndValues);
         std::sort(nav1.begin(), nav1.end());
         auto nav2 = std::move(this->namesAndValues);
         std::sort(nav2.begin(), nav2.end());

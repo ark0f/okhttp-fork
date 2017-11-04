@@ -5,6 +5,8 @@
 #ifndef OKHTTPFORK_HEADERS_HPP
 #define OKHTTPFORK_HEADERS_HPP
 
+#include "Config.hpp"
+#include "TimeUnit.hpp"
 #include <vector>
 #include <map>
 
@@ -17,7 +19,7 @@ namespace ohf {
 
             Builder &add(const std::string &name, const std::string &value);
 
-            Headers build();
+            Headers build() const;
 
             std::string get(std::string name) const;
 
@@ -36,25 +38,25 @@ namespace ohf {
 
         std::string get(std::string name) const;
 
-        time_t getDate() const;
+        TimeUnit getDate() const;
 
-        std::string name(int i) const;
+        std::string name(Uint32 index) const;
 
         std::vector<std::string> names() const;
 
         Builder newBuilder() const;
 
         // static Headers of(...);
-        int size() const;
+        Uint32 size() const;
 
         // std::map<const char *, std::vector<const char *>> toMultimap();
-        std::string value(int index) const;
+        std::string value(Uint32 index) const;
 
         std::vector<std::string> values(const std::string &name) const;
 
         std::string toString() const;
 
-        bool operator==(const Headers &headers);
+        bool operator==(const Headers &headers) const;
 
         friend std::ostream &operator<<(std::ostream &stream, const Headers &headers);
     private:

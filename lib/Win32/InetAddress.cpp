@@ -4,9 +4,10 @@
 
 #include "../../include/InetAddress.hpp"
 #include "../../include/Exception.hpp"
-#include "WSAInit.hpp"
+#include "WinUtils.hpp"
 
 #include <stdexcept>
+#include <winsock.h>
 
 namespace ohf {
     WSAInit init;

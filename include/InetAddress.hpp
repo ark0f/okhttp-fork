@@ -7,6 +7,7 @@
 
 #include <string>
 #include <vector>
+#include "Config.hpp"
 
 namespace ohf {
     class InetAddress {
@@ -15,19 +16,20 @@ namespace ohf {
 
         explicit InetAddress(const std::string &x);
 
-        explicit InetAddress(const std::vector<unsigned char> &ip);
+        explicit InetAddress(const std::vector<Uint8> &ip);
 
         static std::vector<InetAddress> getAllByName(const std::string &host);
 
-        std::vector<unsigned char> address();
+        std::vector<Uint8> address();
 
         std::string hostAddress();
 
         std::string hostName();
 
+        Uint32 toUint32();
     private:
         std::string mHostName;
-        std::vector<unsigned char> mIP;
+        std::vector<Uint8> mIP;
     };
 }
 

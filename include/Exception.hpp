@@ -20,6 +20,9 @@ namespace ohf {
             FAILED_TO_SEND_DATA,
             FAILED_TO_RECEIVE_DATA,
             FAILED_TO_SHUTDOWN_SOCKET,
+            FAILED_TO_SET_READ_TIMEOUT,
+            FAILED_TO_SET_WRITE_TIMEOUT,
+            CONNECT_TIMEOUT,
             SSL_CREATE_ERROR,
             SSL_CONTEXT_CREATE_ERROR,
             SSL_CONNECTION_CREATE_ERROR,
@@ -40,7 +43,9 @@ namespace ohf {
             UNEXPECTED_HEADER,
             INVALID_CONTENT_TYPE_LINE,
             HEADER_NAME_IS_EMPTY,
-            HEADER_VALUE_IS_EMPTY
+            HEADER_VALUE_IS_EMPTY,
+            METHOD_IS_NOT_NAMED,
+            URL_IS_NOT_NAMED
         };
 
         Exception(const Code &code, const std::string &what) noexcept;

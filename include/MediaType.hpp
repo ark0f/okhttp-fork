@@ -8,6 +8,7 @@
 #include <string>
 
 namespace ohf {
+    class RequestBody;
     class MultipartBody;
 
     class MediaType {
@@ -34,14 +35,16 @@ namespace ohf {
 
         friend std::ostream &operator<<(std::ostream &stream, const MediaType &mediaType);
     private:
-        std::string mBoundary;
-        std::string mCharset;
-        std::string mSubType;
-        std::string mType;
+        std::string
+                mBoundary,
+                mCharset,
+                mSubType,
+                mType;
 
         MediaType() = default;
 
         friend class ohf::MultipartBody;
+        friend class ohf::RequestBody;
     };
 }
 

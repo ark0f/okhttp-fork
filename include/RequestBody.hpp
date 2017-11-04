@@ -7,9 +7,11 @@
 
 #include <cstdio>
 #include <vector>
+#include "Config.hpp"
 #include "MediaType.hpp"
 
 namespace ohf {
+    class Request;
     class MultipartBody;
 
     class RequestBody {
@@ -18,19 +20,23 @@ namespace ohf {
 
         RequestBody(const MediaType &contentType, const std::string &content);
 
-        RequestBody(const MediaType &contentType, const std::vector<char> &content);
+        RequestBody(const MediaType &contentType, const std::vector<Int8> &content);
 
         RequestBody(const MediaType &contentType, std::istream &stream);
 
-        unsigned int contentLength();
+        Uint32 contentLength();
 
         MediaType contentType();
 
+        RequestBody *clone() const;
     protected:
-        std::vector<char> content;
+        RequestBody() = default;
+
+        std::vector<Int8> content;
         MediaType mediaType;
 
         friend class ohf::MultipartBody;
+        friend class ohf::Request;
     };
 }
 

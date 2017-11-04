@@ -4,7 +4,7 @@
 
 #include "../../include/InetAddress.hpp"
 #include "../../include/Exception.hpp"
-#include "../../util/util.hpp"
+#include "../../lib/util/util.hpp"
 
 #include <stdexcept>
 #include <arpa/inet.h>
@@ -33,10 +33,10 @@ namespace ohf {
         for (int i = 0; addresses[i] != nullptr; i++) {
             auto addr = addresses[i]->s_addr;
             inets.emplace_back(std::vector<unsigned char> {
-                    (unsigned char) (addr & 0xFF),
-                    (unsigned char) ((addr & 0xFF00) >> 8),
-                    (unsigned char) ((addr & 0xFF0000) >> 16),
-                    (unsigned char) ((addr & 0xFF000000) >> 24),
+                    (Uint8) (addr & 0xFF),
+                    (Uint8) ((addr & 0xFF00) >> 8),
+                    (Uint8) ((addr & 0xFF0000) >> 16),
+                    (Uint8) ((addr & 0xFF000000) >> 24),
             });
         }
 

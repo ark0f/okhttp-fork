@@ -27,22 +27,24 @@ namespace ohf {
 
             Builder &hostOnlyDomain(const std::string &domain);
 
-            Builder &expiresAt(time_t expiresAt);
+            Builder &expiresAt(const TimeUnit &expiresAt);
 
             Builder &httpOnly();
 
             Builder &secure();
 
         private:
-            time_t m_expiresAt;
-            bool m_hostOnly;
-            bool m_httpOnly;
-            bool m_secure;
-            bool m_persistent;
-            std::string m_name;
-            std::string m_value;
-            std::string m_path;
-            std::string m_domain;
+            TimeUnit m_expiresAt;
+            bool
+                    m_hostOnly,
+                    m_httpOnly,
+                    m_secure,
+                    m_persistent;
+            std::string
+                    m_name,
+                    m_value,
+                    m_path,
+                    m_domain;
 
             friend class ohf::Cookie;
         };
@@ -51,7 +53,7 @@ namespace ohf {
 
         static std::vector<Cookie> parseAll(HttpURL &httpUrl, Headers &headers);
 
-        time_t expiresAt() const;
+        TimeUnit expiresAt() const;
 
         bool hostOnly() const;
 
@@ -80,15 +82,17 @@ namespace ohf {
     private:
         Cookie(const Builder *builder);
 
-        time_t m_expiresAt;
-        bool m_hostOnly;
-        bool m_httpOnly;
-        bool m_persistent;
-        bool m_secure;
-        std::string m_name;
-        std::string m_value;
-        std::string m_path;
-        std::string m_domain;
+        TimeUnit m_expiresAt;
+        bool
+                m_hostOnly,
+                m_httpOnly,
+                m_persistent,
+                m_secure;
+        std::string
+                m_name,
+                m_value,
+                m_path,
+                m_domain;
     };
 }
 

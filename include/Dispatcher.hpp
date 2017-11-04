@@ -5,10 +5,10 @@
 #ifndef OKHTTPFORK_DISPATCHER_HPP
 #define OKHTTPFORK_DISPATCHER_HPP
 
+namespace ohf {
+    class Dispatcher {
 
-class Dispatcher {
-
-};
-
+    };
+}
 
 #endif //OKHTTPFORK_DISPATCHER_HPP

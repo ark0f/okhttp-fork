@@ -3,12 +3,12 @@
 //
 
 #include "util.hpp"
-#include "../include/Exception.hpp"
+#include "../../include/Exception.hpp"
 #include <sstream>
 #include <iomanip>
 
-std::vector<char> util::readStream(std::istream &stream) {
-    std::vector<char> buffer;
+std::vector<ohf::Int8> util::readStream(std::istream &stream) {
+    std::vector<ohf::Int8> buffer;
     int c;
     while ((c = stream.get()) != EOF)
         buffer.push_back((char) c);
@@ -24,7 +24,7 @@ std::time_t util::parseDate(const std::string &what, const std::string &format) 
     return std::mktime(&t);
 }
 
-std::string util::ip2s(const std::vector<unsigned char> &ip) {
+std::string util::ip2s(const std::vector<ohf::Uint8> &ip) {
     std::string readyIP;
     for (auto it = ip.begin(); it != ip.end() - 1; it++) {
         readyIP += std::to_string(*it);

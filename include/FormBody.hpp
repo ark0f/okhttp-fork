@@ -13,31 +13,30 @@ namespace ohf {
         class Builder {
         public:
             Builder &add(const std::string &name, const std::string &value);
+            Builder &add(const std::string &name);
 
             FormBody build();
 
         private:
-            std::vector<std::string> names;
-            std::vector<std::string> values;
+            std::vector<std::string> names, values;
 
             friend class ohf::FormBody;
         };
 
-        std::string encodedName(int index) const;
+        std::string encodedName(Uint32 index) const;
 
-        std::string encodedValue(int index) const;
+        std::string encodedValue(Uint32 index) const;
 
-        std::string name(int index) const;
+        std::string name(Uint32 index) const;
 
-        std::string value(int index) const;
+        std::string value(Uint32 index) const;
 
-        int size() const;
+        Uint32 size() const;
 
     private:
         FormBody(const Builder *builder);
 
-        std::vector<std::string> names;
-        std::vector<std::string> values;
+        std::vector<std::string> names, values;
     };
 }
 

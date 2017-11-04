@@ -9,12 +9,13 @@
 #include <string>
 #include <vector>
 #include <ctime>
+#include "../../include/Config.hpp"
 
 namespace util {
-    std::vector<char> readStream(std::istream &stream);
+    std::vector<ohf::Int8> readStream(std::istream &stream);
 
     std::time_t parseDate(const std::string &what, const std::string &format);
-    std::string ip2s(const std::vector<unsigned char> &ip);
+    std::string ip2s(const std::vector<ohf::Uint8> &ip);
 }
 
 #endif //OKHTTPFORK_UTIL_HPP

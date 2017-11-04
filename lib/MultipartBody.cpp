@@ -41,13 +41,14 @@ namespace ohf {
             mType(builder->mType),
             RequestBody(
                     builder->mType.type().empty() // original MediaType
-                    ? MediaType()
+                    ? FORM
                     : MediaType(builder->mType.type() + '/' + builder->mType.subtype() +
                       (builder->mType.charset().empty()
                        ? std::string()
                        : "; charset=" + builder->mType.charset()) +
                       "; boundary=" + builder->mBoundary),
-                    std::vector<char>()) {
+                    std::vector<char>())
+    {
         std::stringstream ss;
         for (auto part : mParts) {
             ss << "--" << mBoundary << "\r\n";
@@ -60,6 +61,7 @@ namespace ohf {
 
             std::vector<char> bodyContent = part.mBody.content;
             ss.write(bodyContent.data(), bodyContent.size());
+
             ss << "\r\n";
         }
         ss << "--" << mBoundary << "--\r\n";

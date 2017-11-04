@@ -5,10 +5,10 @@
 #ifndef OKHTTPFORK_CONNECTIONPOOL_HPP
 #define OKHTTPFORK_CONNECTIONPOOL_HPP
 
+namespace ohf {
+    class ConnectionPool {
 
-class ConnectionPool {
-
-};
-
+    };
+}
 
 #endif //OKHTTPFORK_CONNECTIONPOOL_HPP

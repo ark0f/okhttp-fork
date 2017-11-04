@@ -23,13 +23,13 @@ namespace ohf {
 
         using Socket<T>::connect;
 
-        std::iostream &connect(const std::string &address, const int &port) const;
+        std::iostream &connect(const std::string &address, Uint16 port) const;
 
         using Socket<T>::send;
 
         void send(const char *data, int size) const;
 
-        std::vector<char> receive(size_t size) const;
+        std::vector<Int8> receive(size_t size) const;
 
     private:
         struct impl;

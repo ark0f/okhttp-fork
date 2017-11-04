@@ -5,13 +5,13 @@
 #include <iomanip>
 #include <sstream>
 #include "../include/Cookie.hpp"
-#include "../util/string.hpp"
+#include "../lib/util/string.hpp"
+#include "../lib/util/util.hpp"
 #include "../include/Exception.hpp"
-#include "../util/util.hpp"
 
 namespace ohf {
     Cookie::Cookie(HttpURL &httpURL, const std::string &setCookie) :
-            m_expiresAt(-1),
+            m_expiresAt(TimeUnit::MINUS_ONE_SECOND),
             m_hostOnly(false),
             m_httpOnly(false),
             m_persistent(false),
@@ -43,12 +43,12 @@ namespace ohf {
                 util::string::toLower(name);
                 std::string value = parameter[1];
                 if (name == "expires") {
-                    m_expiresAt = util::parseDate(value, "%a, %d %b %Y %H:%M:%S GMT");
+                    m_expiresAt = TimeUnit::seconds(util::parseDate(value, "%a, %d %b %Y %H:%M:%S GMT"));
                     m_persistent = true;
                 } else if (name == "max-age") {
                     try {
-                        m_expiresAt = std::stoi(value);
-                    } catch (std::invalid_argument) {
+                        m_expiresAt = TimeUnit::seconds(std::stoi(value));
+                    } catch (std::invalid_argument&) {
                         throw Exception(Exception::Code::INVALID_MAX_AGE, "Invalid Max-Age: " + value);
                     }
                     m_persistent = true;
@@ -75,7 +75,7 @@ namespace ohf {
         return m_domain;
     }
 
-    time_t Cookie::expiresAt() const {
+    TimeUnit Cookie::expiresAt() const {
         return m_expiresAt;
     }
 
@@ -132,7 +132,7 @@ namespace ohf {
             ss << "; Domain=" << domain;
 
         // expires
-        std::time_t expiresAt = m_expiresAt;
+        std::time_t expiresAt = m_expiresAt.std_time();
         if (expiresAt != -1)
             ss << "; Max-Age=" << expiresAt;
 
@@ -149,10 +149,12 @@ namespace ohf {
 
     bool Cookie::operator==(const Cookie &cookie) const {
         return m_expiresAt == cookie.m_expiresAt
+               // bool
                || m_hostOnly == cookie.m_hostOnly
                || m_httpOnly == cookie.m_httpOnly
                || m_persistent == cookie.m_persistent
                || m_secure == cookie.m_secure
+               // std::string
                || m_name == cookie.m_name
                || m_value == cookie.m_value
                || m_path == cookie.m_path
@@ -160,8 +162,7 @@ namespace ohf {
     }
 
     std::ostream &operator<<(std::ostream &stream, const Cookie &cookie) {
-        stream << cookie.toString();
-        return stream;
+        return stream << cookie.toString();
     }
 
     Cookie::Cookie(const Builder *builder):

@@ -6,7 +6,7 @@
 
 namespace ohf {
     Cookie::Builder::Builder() :
-            m_expiresAt(-1),
+            m_expiresAt(TimeUnit::MINUS_ONE_SECOND),
             m_hostOnly(false),
             m_httpOnly(false),
             m_secure(false),
@@ -21,7 +21,7 @@ namespace ohf {
         return *this;
     }
 
-    Cookie::Builder &Cookie::Builder::expiresAt(time_t expiresAt) {
+    Cookie::Builder &Cookie::Builder::expiresAt(const ohf::TimeUnit &expiresAt) {
         m_expiresAt = expiresAt;
         return *this;
     }

@@ -7,7 +7,7 @@
 #include <random>
 
 namespace ohf {
-    MultipartBody::Builder::Builder() {
+    MultipartBody::Builder::Builder() : mType(FORM) {
         long long int time = std::chrono::system_clock::now().time_since_epoch().count();
         std::mt19937 mt(time);
         std::uniform_int_distribution<int> random(0, 25);
@@ -19,10 +19,13 @@ namespace ohf {
     }
 
     MultipartBody::Builder::Builder(const std::string &boundary) :
-            mBoundary(boundary) {}
+            mBoundary(boundary),
+            mType(FORM)
+    {}
 
     MultipartBody::Builder &MultipartBody::Builder::addFormDataPart(const std::string &name,
-                                                                    const std::string &value) {
+                                                                    const std::string &value)
+    {
         mParts.emplace_back(name, value);
         return *this;
     }
@@ -30,7 +33,8 @@ namespace ohf {
     MultipartBody::Builder &MultipartBody::Builder::addFormDataPart(
             const std::string &name,
             const std::string &filename,
-            const RequestBody &body) {
+            const RequestBody &body)
+    {
         mParts.emplace_back(name, filename, body);
         return *this;
     }
@@ -56,7 +60,6 @@ namespace ohf {
     }
 
     MultipartBody MultipartBody::Builder::build() {
-        if (mType.toString().empty()) mType = FORM;
         return {this};
     }
 }

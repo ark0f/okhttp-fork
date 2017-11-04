@@ -6,8 +6,9 @@
 #include <vector>
 #include <sstream>
 #include "../include/MediaType.hpp"
-#include "../util/string.hpp"
+#include "../lib/util/string.hpp"
 #include "../include/Exception.hpp"
+#include "../include/Config.hpp"
 
 namespace ohf {
     MediaType::MediaType(const std::string &str) {
@@ -18,17 +19,17 @@ namespace ohf {
         std::vector<std::string> typeSubtype = util::string::split(values[0], "/");
         if (typeSubtype.size() != 2)
             throw Exception(Exception::Code::INVALID_MIME_TYPE, "Invalid MIME type: " + values[0]);
-        this->mSubType = typeSubtype[1];
-        this->mType = typeSubtype[0];
+        mType = typeSubtype[0];
+        mSubType = typeSubtype[1];
         // boundary / charset
-        for (int i = 1; i < values.size(); i++) {
+        for (Uint32 i = 1; i < values.size(); i++) {
             std::string value = values[i];
             if (util::string::startsWith(value, "charset=")) {
                 std::string charset = value.substr(8, value.length());
                 util::string::toLower(charset);
-                this->mCharset = charset;
+                mCharset = charset;
             } else if (util::string::startsWith(value, "boundary="))
-                this->mBoundary = value.substr(9, value.length());
+                mBoundary = value.substr(9, value.length());
         }
     }
 
@@ -62,7 +63,6 @@ namespace ohf {
     bool MediaType::operator==(const MediaType &mediaType) {
         return mediaType.mBoundary == this->mBoundary
                || mediaType.mCharset == this->mCharset
-               || mediaType.mBoundary == this->mBoundary
                || mediaType.mType == this->mType
                || mediaType.mSubType == this->mSubType;
     }
@@ -90,7 +90,6 @@ namespace ohf {
     }
 
     std::ostream &operator<<(std::ostream &stream, const MediaType &mediaType) {
-        stream << mediaType.toString();
-        return stream;
+        return stream << mediaType.toString();
     }
 }

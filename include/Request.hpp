@@ -5,6 +5,7 @@
 #ifndef OKHTTPFORK_REQUEST_HPP
 #define OKHTTPFORK_REQUEST_HPP
 
+#include <memory>
 #include "RequestBody.hpp"
 #include "CacheControl.hpp"
 #include "HttpURL.hpp"
@@ -14,57 +15,77 @@ namespace ohf {
     public:
         class Builder {
         public:
-            void addHeader(const char *name, const char *value);
+            Builder() = default;
+
+            ~Builder();
 
             Request build();
 
-            void cacheControl(const CacheControl &cacheControl);
+            Builder& cacheControl(const CacheControl &cacheControl);
 
-            void del();
+            Builder& delete_();
 
-            void del(const RequestBody &body);
+            Builder& delete_(const RequestBody &body);
 
-            void get();
+            Builder& get();
 
-            void head();
+            Builder& head();
 
-            void header(const char *name, const char *value);
+            Builder& patch(const RequestBody &body);
 
-            void headers(const Headers &headers);
+            Builder& post(const RequestBody &body);
 
-            void method(const char *method, const RequestBody &body);
+            Builder& put(const RequestBody &body);
 
-            void patch(const RequestBody &body);
+            Builder& method(const std::string &method, const RequestBody &body);
 
-            void post(const RequestBody &body);
+            Builder& addHeader(const std::string &name, const std::string &value);
 
-            void put(const RequestBody &body);
+            Builder& header(const std::string &name, const std::string &value);
 
-            void removeHeader(const char *name);
+            Builder& headers(const Headers &headers);
 
-            // Builder tag(const Object &obj);
-            void url(const HttpURL &url);
+            Builder& removeHeader(const std::string &name);
 
-            void url(const char *url);
+            Builder& url(const HttpURL &url);
+        private:
+            Builder(Request *request);
+
+            CacheControl *mCC;
+            std::string mMethod;
+            RequestBody *mBody;
+            Headers::Builder mHeaders;
+            HttpURL *mURL;
+
+            friend class ohf::Request;
         };
 
-        RequestBody &body();
+        RequestBody body();
 
-        CacheControl &cacheControl();
+        CacheControl cacheControl();
 
-        const char *header(const char *name);
+        std::string header(const std::string &name);
 
-        Headers &headers();
+        std::vector<std::string> headers(const std::string &name);
 
-        // std::vector<const char *> headers(const char *name);
+        Headers headers();
+
+        std::string method();
+
+        HttpURL url();
+
         bool isHttps();
-
-        const char *method();
 
         Builder newBuilder();
 
-        // Object tag();
-        HttpURL url();
+    private:
+        Request(const Builder *builder);
+
+        CacheControl mCC;
+        std::string mMethod;
+        RequestBody mBody;
+        Headers mHeaders;
+        HttpURL mURL;
     };
 }
 

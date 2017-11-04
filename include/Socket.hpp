@@ -5,11 +5,13 @@
 #ifndef OKHTTPFORK_SOCKET_HPP
 #define OKHTTPFORK_SOCKET_HPP
 
+#include <iostream>
 #include <streambuf>
 #include <string>
 #include <memory>
 #include <vector>
 #include "HttpURL.hpp"
+#include "TimeUnit.hpp"
 
 namespace ohf {
     enum class SocketType {
@@ -17,33 +19,38 @@ namespace ohf {
         UDP
     };
 
+    enum class SocketShutdown {
+        RECEIVE, // 0
+        SEND,    // 1
+        BOTH     // 2
+    };
+
     template <SocketType T>
     class Socket {
     public:
-        //explicit Socket(const Type &type);
         Socket();
 
         virtual ~Socket();
 
-        int fd() const;
-
-        virtual std::iostream &connect(const std::string &address, const int &port) const;
+        virtual std::iostream &connect(const std::string &address, Uint16 port) const;
 
         virtual std::iostream &connect(const HttpURL &url) const;
 
         virtual void send(const char *data, int size) const;
 
-        void send(const std::vector<char> &data) const;
+        void send(const std::vector<Int8> &data) const;
 
         void send(const std::string &data) const;
 
         void send(std::istream &stream) const;
 
-        virtual std::vector<char> receive(size_t size) const;
+        virtual std::vector<Int8> receive(size_t size) const;
 
-        std::vector<char> receiveAll() const;
+        std::vector<Int8> receiveAll() const;
 
-        void shutdown(int how = 2) const;
+        void shutdown(const SocketShutdown &shutdown = SocketShutdown::BOTH) const;
+
+        int fd() const;
 
         std::string toString() const;
 
@@ -66,8 +73,10 @@ namespace ohf {
             int cur;
         };
 
-        std::shared_ptr<std::iostream> ios;
-        int socket_fd;
+        std::shared_ptr<std::iostream> mIOStream;
+        int mSocketFD;
+    private:
+        TimeUnit mConnect;
     };
 
     using TCPSocket = Socket<SocketType::TCP>;

@@ -5,10 +5,10 @@
 #ifndef OKHTTPFORK_CONNECTIONSPEC_HPP
 #define OKHTTPFORK_CONNECTIONSPEC_HPP
 
+namespace ohf {
+    class ConnectionSpec {
 
-class ConnectionSpec {
-
-};
-
+    };
+}
 
 #endif //OKHTTPFORK_CONNECTIONSPEC_HPP

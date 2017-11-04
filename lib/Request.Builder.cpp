@@ -1,0 +1,119 @@
+//
+// Created by Good_Pudge.
+//
+
+#include <cstring>
+#include "../include/Request.hpp"
+#include "../include/Exception.hpp"
+
+namespace ohf {
+    Request::Builder::~Builder() {
+        delete
+            mCC,
+            mURL,
+            mBody;
+    }
+
+    Request Request::Builder::build() {
+        if(mMethod.empty())
+            throw Exception(Exception::Code::METHOD_IS_NOT_NAMED, "Method is not named: ");
+        if(mURL == nullptr)
+            throw Exception(Exception::Code::URL_IS_NOT_NAMED, "URL is not named: ");
+        if(mCC == nullptr)
+            mCC = new CacheControl();
+        if(mBody == nullptr)
+            mBody = new RequestBody();
+
+        return {this};
+    }
+
+    Request::Builder& Request::Builder::cacheControl(const CacheControl &cacheControl) {
+        mCC = cacheControl.clone();
+        std::string value = mCC->toString();
+        if(value.empty()) return removeHeader("Cache-Control");
+        return header("Cache-Control", value);
+    }
+
+    Request::Builder& Request::Builder::delete_() {
+        mMethod = "DELETE";
+        return *this;
+    }
+
+    Request::Builder& Request::Builder::delete_(const RequestBody &body) {
+        mMethod = "DELETE";
+        mBody = body.clone();
+
+        return *this;
+    }
+
+    Request::Builder& Request::Builder::get() {
+        mMethod = "GET";
+        return *this;
+    }
+
+    Request::Builder& Request::Builder::head() {
+        mMethod = "HEAD";
+        return *this;
+    }
+
+    Request::Builder& Request::Builder::patch(const RequestBody &body) {
+        mMethod = "PATCH";
+        mBody = body.clone();
+
+        return *this;
+    }
+
+    Request::Builder& Request::Builder::post(const RequestBody &body) {
+        mMethod = "POST";
+        mBody = body.clone();
+
+        return *this;
+    }
+
+    Request::Builder& Request::Builder::put(const RequestBody &body) {
+        mMethod = "PUT";
+        mBody = body.clone();
+
+        return *this;
+    }
+
+    Request::Builder& Request::Builder::method(const std::string &method, const RequestBody &body) {
+        mMethod = method;
+        mBody = body.clone();
+
+        return *this;
+    }
+
+    Request::Builder& Request::Builder::addHeader(const std::string &name, const std::string &value) {
+        mHeaders.add(name, value);
+        return *this;
+    }
+
+    Request::Builder& Request::Builder::header(const std::string &name, const std::string &value) {
+        mHeaders.set(name, value);
+        return *this;
+    }
+
+    Request::Builder& Request::Builder::headers(const Headers &headers) {
+        mHeaders = headers.newBuilder();
+        return *this;
+    }
+
+    Request::Builder& Request::Builder::removeHeader(const std::string &name) {
+        mHeaders.removeAll(name);
+        return *this;
+    }
+
+    Request::Builder& Request::Builder::url(const HttpURL &url) {
+        mURL = url.clone();
+        return *this;
+    }
+
+    Request::Builder::Builder(Request *request) :
+            mMethod(request->mMethod),
+            mHeaders(request->mHeaders.newBuilder()),
+            mCC(request->mCC.clone()),
+            mURL(request->mURL.clone()),
+            mBody(request->mBody.clone())
+    {}
+}

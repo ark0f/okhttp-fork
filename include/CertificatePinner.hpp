@@ -5,10 +5,10 @@
 #ifndef OKHTTPFORK_CERTIFICATEPINNER_HPP
 #define OKHTTPFORK_CERTIFICATEPINNER_HPP
 
+namespace ohf {
+    class CertificatePinner {
 
-class CertificatePinner {
-
-};
-
+    };
+}
 
 #endif //OKHTTPFORK_CERTIFICATEPINNER_HPP

@@ -3,7 +3,7 @@
 //
 
 #include "../include/HttpURL.hpp"
-#include "../util/string.hpp"
+#include "../lib/util/string.hpp"
 #include "../include/Exception.hpp"
 
 namespace ohf {
@@ -36,7 +36,7 @@ namespace ohf {
         return *this;
     }
 
-    HttpURL::Builder &HttpURL::Builder::port(const int &port) {
+    HttpURL::Builder &HttpURL::Builder::port(Uint16 port) {
         mPort = port;
         return *this;
     }
@@ -62,7 +62,7 @@ namespace ohf {
         return *this;
     }
 
-    HttpURL::Builder &HttpURL::Builder::removePathSegment(const int &index) {
+    HttpURL::Builder &HttpURL::Builder::removePathSegment(Uint32 index) {
         if (index < this->pathSegments.size()) { // check out of range
             mPathEndsWithFlash = index != this->pathSegments.size() - 1;
             auto path_segment = std::next(this->pathSegments.begin(), index);
@@ -76,7 +76,7 @@ namespace ohf {
         return *this;
     }
 
-    HttpURL::Builder &HttpURL::Builder::setPathSegment(const int &index, std::string pathSegment) {
+    HttpURL::Builder &HttpURL::Builder::setPathSegment(Uint32 index, std::string pathSegment) {
         if (index < pathSegments.size()) {
             if (util::string::endsWith(pathSegment, "/")) {
                 pathSegment = pathSegment.substr(0, pathSegment.length() - 1);

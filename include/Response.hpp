@@ -11,6 +11,7 @@
 #include "Handshake.hpp"
 #include "Headers.hpp"
 #include "Request.hpp"
+#include "TimeUnit.hpp"
 #include <vector>
 
 namespace ohf {
@@ -33,19 +34,19 @@ namespace ohf {
 
         Handshake handshake();
 
-        const char *header(const char *name);
+        const std::string header(const std::string &name);
 
-        const char *header(const char *name, const char *default_value);
+        const std::string header(const std::string &name, const std::string &default_value);
 
         Headers headers();
 
-        std::vector<const char *> headers(const char *name);
+        std::vector<std::string> headers(const std::string &name);
 
         bool isRedirect();
 
         bool isSuccessful();
 
-        const char *message();
+        std::string message();
 
         Response networkResponse();
 
@@ -55,11 +56,11 @@ namespace ohf {
 
         Response priorBody();
 
-        long receivedResponseAtMillis();
+        TimeUnit receivedResponse();
 
         Request request();
 
-        long sentRequestAtMillis();
+        TimeUnit sentRequest();
     };
 }
 
