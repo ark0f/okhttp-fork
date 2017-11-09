@@ -3,6 +3,7 @@
 //
 
 #include <cstring>
+#include <sys/ioctl.h>
 #include "SocketImpl.hpp"
 
 namespace ohf {
@@ -22,6 +23,11 @@ namespace ohf {
 
     std::string SocketImpl::getError() {
         return std::string(strerror(errno));
+    }
+
+    void SocketImpl::setBlocking(int sock, bool blocking) {
+        unsigned long mode = blocking ? 0 : 1;
+        ioctl(sock, FIONBIO, &mode);
     }
 
     int SocketImpl::invalidSocket() {

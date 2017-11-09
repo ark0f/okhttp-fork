@@ -12,6 +12,8 @@
 namespace ohf {
     class SocketImpl {
     public:
+        typedef int SocketLength;
+
         static sockaddr_in createAddress(Uint32 address, Uint16 port);
 
         static void close(int sock);
