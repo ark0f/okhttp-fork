@@ -35,7 +35,10 @@ set(LIB_SOURCE_FILES
         lib/HttpURL.cpp lib/HttpURL.Builder.cpp include/HttpURL.hpp
         lib/MediaType.cpp include/MediaType.hpp
         lib/Exception.cpp include/Exception.hpp
-        lib/Socket.cpp lib/SocketStreamBuf.cpp include/Socket.hpp
+        lib/TCPSocket.cpp lib/TCPSocket.Builder.cpp include/TCPSocket.hpp
+        lib/UDPSocket.cpp include/UDPSocket.hpp
+        lib/Socket.cpp lib/Socket.Builder.cpp include/Socket.hpp
+        lib/SocketStreamBuf.cpp include/SocketStreamBuf.hpp
         lib/SocketImpl.hpp
         lib/SSLSocket.cpp include/SSLSocket.hpp
         lib/Cookie.cpp lib/Cookie.Builder.cpp include/Cookie.hpp

@@ -2,117 +2,64 @@
 // Created by Good_Pudge.
 //
 
-#include <sstream>
 #include "../include/Socket.hpp"
-#include "../lib/util/util.hpp"
-#include "../include/Exception.hpp"
 #include "SocketImpl.hpp"
-#include "../include/InetAddress.hpp"
+#include "../include/Exception.hpp"
 
 namespace ohf {
-    template class Socket<SocketType::TCP>;
-    template class Socket<SocketType::UDP>;
+    Socket::Socket(const Type &type) :
+            mType(type),
+            mFD(SocketImpl::invalidSocket()),
+            mBlocking(true),
+            mWrite(TimeUnit::ZERO),
+            mRead(TimeUnit::ZERO)
+    {}
 
-    template <SocketType T>
-    Socket<T>::Socket() :
-            mConnect(TimeUnit::ZERO),
-            mIOStream(std::make_shared<std::iostream>(new StreamBuf(this)))
-    {
-        int type, protocol;
-        if(T == SocketType::TCP) {
-            type = SOCK_STREAM;
-            protocol = IPPROTO_TCP;
-        } else {
-            type = SOCK_DGRAM;
-            protocol = IPPROTO_UDP;
-        }
+    Socket::Socket() : mWrite(TimeUnit::ZERO), mRead(TimeUnit::ZERO) {}
 
-        if((mSocketFD = socket(AF_INET, type, protocol)) == SocketImpl::invalidSocket()) {
+    Socket::~Socket() {
+        close();
+    }
+
+    int Socket::fd() const {
+        return mFD;
+    }
+
+    void Socket::create() {
+        if(mFD != SocketImpl::invalidSocket()) return;
+
+        mFD = socket(AF_INET, mType == Type::TCP ? SOCK_STREAM : SOCK_DGRAM, 0);
+        if(mFD == SocketImpl::invalidSocket()) {
             throw Exception(Exception::Code::FAILED_TO_CREATE_SOCKET,
                             "Failed to create socket: " + SocketImpl::getError());
         }
+
+        blocking(mBlocking);
     }
 
-    template <SocketType T>
-    Socket<T>::~Socket() {
-        SocketImpl::close(mSocketFD);
-    }
-
-    template <SocketType T>
-    std::iostream& Socket<T>::connect(const std::string &address, Uint16 port) const {
-        sockaddr_in addr = SocketImpl::createAddress(InetAddress(address).toUint32(), port);
-        if(::connect(mSocketFD, (sockaddr *) &addr, sizeof(sockaddr)) == -1) {
-            throw Exception(Exception::Code::FAILED_TO_CREATE_CONNECTION,
-                            "Failed to create connection: " + SocketImpl::getError());
+    void Socket::blocking(bool mode) {
+        if(mFD != SocketImpl::invalidSocket()) {
+            SocketImpl::setBlocking(mFD, mode);
         }
-        return *mIOStream;
+        mBlocking = mode;
     }
 
-    template <SocketType T>
-    std::iostream &Socket<T>::connect(const HttpURL &url) const {
-        return connect(url.host(), url.port());
+    bool Socket::isBlocking() const {
+        return mBlocking;
     }
 
-    template <SocketType T>
-    void Socket<T>::send(const char *data, int size) const {
-        if(::send(mSocketFD, data, size, 0) == -1) {
-            throw Exception(Exception::Code::FAILED_TO_SEND_DATA,
-                            "Failed to send data: " + SocketImpl::getError());
+    void Socket::close() {
+        if(mFD != SocketImpl::invalidSocket()) {
+            SocketImpl::close(mFD);
+            mFD = SocketImpl::invalidSocket();
         }
     }
 
-    template <SocketType T>
-    void Socket<T>::send(const std::vector<Int8> &data) const {
-        this->send(data.data(), data.size());
-    }
-
-    template <SocketType T>
-    void Socket<T>::send(const std::string &data) const {
-        this->send(data.c_str(), data.length());
-    }
-
-    template <SocketType T>
-    void Socket<T>::send(std::istream &stream) const {
-        std::vector<Int8> buffer = util::readStream(stream);
-        this->send(std::string(buffer.begin(), buffer.end()));
-    }
-
-    template <SocketType T>
-    std::vector<Int8> Socket<T>::receive(size_t size) const {
-        std::vector<Int8> buffer(size);
-        int received = 0;
-        if((received = ::recv(mSocketFD, buffer.data(), size, 0)) == -1) {
-            throw Exception(Exception::Code::FAILED_TO_RECEIVE_DATA,
-                            "Failed to receive data: " + SocketImpl::getError());
-        }
-        return std::vector<Int8>(buffer.begin(), buffer.begin() + received);
-    }
-
-    template <SocketType T>
-    std::vector<Int8> Socket<T>::receiveAll() const {
-        std::vector<Int8> storage;
-        std::vector<Int8> buffer;
-        while (!(buffer = receive(512)).empty())
-            storage.insert(storage.end(), buffer.begin(), buffer.end());
-        return storage;
-    }
-
-    template <SocketType T>
-    void Socket<T>::shutdown(const SocketShutdown &shutdown) const {
-        if(::shutdown(mSocketFD, static_cast<int>(shutdown)) == -1) {
-            throw Exception(Exception::Code::FAILED_TO_SHUTDOWN_SOCKET,
-                            "Failed to shutdown socket: " + SocketImpl::getError());
-        }
-    }
-
-    template <SocketType T>
-    int Socket<T>::fd() const {
-        return mSocketFD;
-    }
-
-    template <SocketType T>
-    std::string Socket<T>::toString() const {
-        std::vector<Int8> data = receiveAll();
-        return std::string(data.begin(), data.end());
-    }
+    Socket::Socket(const Builder *builder) :
+            mType(builder->mType),
+            mFD(builder->mFD),
+            mBlocking(builder->mBlocking),
+            mWrite(builder->mWrite),
+            mRead(builder->mRead)
+    {}
 }

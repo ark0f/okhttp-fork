@@ -26,6 +26,11 @@ namespace ohf {
         return getWSAError();
     }
 
+    void SocketImpl::setBlocking(int sock, bool blocking) {
+        unsigned long mode = blocking ? 0 : 1;
+        ioctlsocket(sock, FIONBIO, &mode);
+    }
+
     int SocketImpl::invalidSocket() {
         return INVALID_SOCKET;
     }

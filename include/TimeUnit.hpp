@@ -5,6 +5,7 @@
 #ifndef OKHTTPFORK_TIMEUNIT_HPP
 #define OKHTTPFORK_TIMEUNIT_HPP
 
+#include <string>
 #include <ctime>
 #include "Config.hpp"
 
@@ -12,9 +13,9 @@ namespace ohf {
     class TimeUnit {
     public:
         enum class Type {
-            SECONDS = 1,
-            MILLISECONDS = 1000,
-            MICROSECONDS = 1000000
+            SECONDS,
+            MILLISECONDS,
+            MICROSECONDS
         };
 
         static const TimeUnit ZERO;
@@ -36,6 +37,10 @@ namespace ohf {
         long sec() const;
         long usec() const;
 
+        // automatic conversion
+        Int64 value() const;
+        std::string toString() const;
+
         bool operator ==(const TimeUnit &right) const;
         bool operator !=(const TimeUnit &right) const;
         bool operator >=(const TimeUnit &right) const;
@@ -49,8 +54,11 @@ namespace ohf {
         TimeUnit operator /(const TimeUnit &right) const;
         TimeUnit operator ^(const TimeUnit &right) const;
     private:
-        std::time_t time; // 2036
-        long long mMicroseconds;
+        TimeUnit(float seconds);
+
+        Type mType;
+        std::time_t mTime; // 2036
+        Int64 mMicroseconds;
         long mSec;
         long mUSec;
     };

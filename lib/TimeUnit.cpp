@@ -2,44 +2,64 @@
 // Created by Good_Pudge.
 //
 
-#include <ctime>
 #include "../include/TimeUnit.hpp"
-
 
 namespace ohf {
     const TimeUnit TimeUnit::ZERO = {0, Type::SECONDS};
     const TimeUnit TimeUnit::MINUS_ONE_SECOND = {-1, Type::SECONDS};
 
-    TimeUnit::TimeUnit(Int64 count, const TimeUnit::Type &type) :
-            mSec(count / static_cast<int>(type)),
-            mUSec(count % static_cast<int>(type)),
-            mMicroseconds(count),
-            time(count / static_cast<int>(type))
-    {}
+    TimeUnit::TimeUnit(Int64 count, const TimeUnit::Type &type) : mType(type) {
+        Int32 multiplier, delimiter;
+        switch (type) {
+            case Type::SECONDS:
+                multiplier = 1000000;
+                delimiter = 1;
+                break;
+            case Type::MILLISECONDS:
+                multiplier = delimiter = 1000;
+                break;
+            case Type::MICROSECONDS:
+                multiplier = 1;
+                delimiter = 1000000;
+                break;
+        }
+
+        mMicroseconds = count * multiplier;
+        mSec = count / delimiter;
+        mUSec = count % delimiter;
+        mTime = count / delimiter;
+    }
+
+    TimeUnit::TimeUnit(float seconds) {
+        mMicroseconds = seconds * 1000000;
+        mSec = static_cast<long>(seconds);
+        mUSec = mMicroseconds % 1000000;
+        mTime = static_cast<std::time_t>(seconds);
+        mType = Type::SECONDS;
+    }
 
     TimeUnit TimeUnit::seconds(float time) {
-        return {static_cast<Int64>(time * static_cast<int>(Type::MICROSECONDS)), TimeUnit::Type::MICROSECONDS};
+        return {time};
     }
 
-    TimeUnit TimeUnit::milliseconds(int time) {
-        return {time, TimeUnit::Type::MILLISECONDS};
+    TimeUnit TimeUnit::milliseconds(Int32 time) {
+        return {time, Type::MILLISECONDS};
     }
 
-    TimeUnit TimeUnit::microseconds(long long int time) {
-        return {time, TimeUnit::Type::MICROSECONDS};
+    TimeUnit TimeUnit::microseconds(Int64 time) {
+        return {time, Type::MICROSECONDS};
     }
 
     std::time_t TimeUnit::std_time() const {
-        return time;
+        return mTime;
     }
 
     float TimeUnit::seconds() const {
-        return mMicroseconds / static_cast<int>(Type::SECONDS)
-             + mMicroseconds % static_cast<int>(Type::SECONDS);
+        return mMicroseconds / 1000000.0f;
     }
 
     Int32 TimeUnit::milliseconds() const {
-        return mMicroseconds / static_cast<int>(Type::MILLISECONDS);
+        return mMicroseconds / 1000;
     }
 
     Int64 TimeUnit::microseconds() const {
@@ -52,6 +72,38 @@ namespace ohf {
 
     long TimeUnit::usec() const {
         return mUSec;
+    }
+
+    Int64 TimeUnit::value() const {
+        Int32 delimiter;
+        switch (mType) {
+            case Type::SECONDS:
+                delimiter = 1000000;
+                break;
+            case Type::MILLISECONDS:
+                delimiter = 1000;
+                break;
+            case Type::MICROSECONDS:
+                delimiter = 1;
+                break;
+        }
+        return mMicroseconds / delimiter;
+    }
+
+    std::string TimeUnit::toString() const {
+        std::string str = std::to_string(value());
+        switch(mType) {
+            case Type::SECONDS:
+                str += " seconds";
+                break;
+            case Type::MILLISECONDS:
+                str += " milliseconds";
+                break;
+            case Type::MICROSECONDS:
+                str += " microseconds";
+                break;
+        }
+        return str;
     }
 
     bool TimeUnit::operator==(const TimeUnit &right) const {

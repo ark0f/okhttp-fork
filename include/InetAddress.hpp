@@ -20,13 +20,13 @@ namespace ohf {
 
         static std::vector<InetAddress> getAllByName(const std::string &host);
 
-        std::vector<Uint8> address();
+        std::vector<Uint8> address() const;
 
-        std::string hostAddress();
+        std::string hostAddress() const;
 
-        std::string hostName();
+        std::string hostName() const;
 
-        Uint32 toUint32();
+        Uint32 toUint32() const;
     private:
         std::string mHostName;
         std::vector<Uint8> mIP;

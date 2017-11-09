@@ -9,4 +9,3 @@
 #elif defined(OKHTTPFORK_UNIX)
     #include "UNIX/SocketImpl.hpp"
 #endif
-

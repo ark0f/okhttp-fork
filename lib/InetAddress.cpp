@@ -16,19 +16,19 @@ namespace ohf {
                         : throw ohf::Exception(ohf::Exception::Code::INVALID_IP, "Invalid IP: "))
     {}
 
-    std::vector<Uint8> InetAddress::address() {
+    std::vector<Uint8> InetAddress::address() const {
         return mIP;
     }
 
-    std::string InetAddress::hostAddress() {
+    std::string InetAddress::hostAddress() const {
         return util::ip2s(mIP);
     }
 
-    std::string InetAddress::hostName() {
+    std::string InetAddress::hostName() const {
         return mHostName;
     }
 
-    Uint32 InetAddress::toUint32() {
+    Uint32 InetAddress::toUint32() const {
         return mIP[0] << 24 | mIP[1] << 16 | mIP[2] << 8 | mIP[3];
     }
 }

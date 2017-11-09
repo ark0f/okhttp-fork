@@ -27,13 +27,17 @@ namespace ohf {
     public:
         class Builder {
         public:
+            Builder() = default;
+
+            ~Builder();
+
+            Client build();
+
             Builder& addInterceptor(const Interceptor &interceptor);
 
             Builder& addNetworkInterceptor(const Interceptor &interceptor);
 
-            Builder authenticator(const Authenticator &authenticator);
-
-            Client build();
+            Builder& authenticator(const Authenticator &authenticator);
 
             Builder& cache(const Cache &cache);
 
@@ -53,7 +57,7 @@ namespace ohf {
 
             Builder& followRedirects(bool follorRedirects);
 
-            Builder& follorSslRedirects(bool followProtocolRedirects);
+            Builder& follorSSLRedirects(bool followSSLRedirects);
 
             Builder& hostnameVerifier(const HostnameVerifier &verifier);
 
@@ -80,7 +84,14 @@ namespace ohf {
             //Builder sslSocketFactory(const SSLSocketFactory &factory, const X509TrustManager &manager);
 
             Builder& writeTimeout(const TimeUnit &timeout);
+
+        private:
+            friend class ohf::Client;
         };
+
+        Client() = default;
+
+        ~Client();
 
         Authenticator authenticator();
 
@@ -91,8 +102,6 @@ namespace ohf {
         ConnectionPool connectionPool();
 
         std::vector<ConnectionSpec> connectionSpecs();
-
-        TimeUnit connectTimeout();
 
         CookieJar cookieJar();
 
@@ -112,7 +121,7 @@ namespace ohf {
 
         Builder newBuilder();
 
-        Call newCall(const Request &request);
+        Call *newCall(const Request &request);
 
         WebSocket newWebSocket(const Request &request, const WebSocket::Listener &listener);
 
@@ -126,14 +135,24 @@ namespace ohf {
 
         ProxySelector proxySelector();
 
+        TimeUnit connectTimeout();
+
         TimeUnit readTimeout();
+
+        TimeUnit writeTimeout();
 
         bool retryOnConnectionFailure();
 
         // SocketFactory socketFactory();
         // SSLSocketFactory sslSocketFactory();
 
-        TimeUnit writeTimeout();
+    private:
+        TimeUnit mReadTimeout;
+        TimeUnit mWriteTimeout;
+        TimeUnit mConnectTimeout;
+        bool mFollowRedirects;
+        bool mFollowSSLRedirects;
+
     };
 }
 

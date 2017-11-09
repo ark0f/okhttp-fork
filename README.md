@@ -85,8 +85,8 @@ Second step for different systems:
 - [ ] Client
     - [ ] Builder
 - [x] Protocol
-- [ ] Request
-    - [ ] Builder
+- [x] Request
+    - [x] Builder
 - [x] RequestBody
 - [ ] Response
     - [ ] Builder
@@ -100,6 +100,7 @@ Second step for different systems:
 * Socket (POSIX, Windows for now)
 * SSLSocket (extends Socket)
 * InetAddress
+* TimeUnit
 
 ## <a name="license"></a> License
 OkHttp fork distribute with an Apache 2.0 License. See LICENSE and NOTICE for more info.

@@ -8,19 +8,19 @@
 #include <openssl/err.h>
 #include <cstring>
 
-std::string getOpenSSLError() {
-    std::string error;
-    unsigned long error_code;
-    while (error_code = ERR_get_error()) {
-        char *str = ERR_error_string(error_code, nullptr);
-        if (!str)
-            return error;
-        error += str;
-    }
-    return error;
-}
-
 namespace ohf {
+    std::string getOpenSSLError() {
+        std::string error;
+        unsigned long error_code;
+        while (error_code = ERR_get_error()) {
+            char *str = ERR_error_string(error_code, nullptr);
+            if (!str)
+                return error;
+            error += str;
+        }
+        return error;
+    }
+
     struct OpenSSLInit {
         OpenSSLInit() {
             SSL_library_init();
@@ -29,20 +29,15 @@ namespace ohf {
         }
     };
 
-    OpenSSLInit globalInitSSL;
+    OpenSSLInit globalSSLInit;
 
-    template class SSLSocket<SocketType::TCP>;
-    template class SSLSocket<SocketType::UDP>;
-
-    template <SocketType T>
-    struct SSLSocket<T>::impl {
+    struct SSLSocket::impl {
         SSL *ssl;
         SSL_CTX *ssl_context;
     };
 
-    template <SocketType T>
-    SSLSocket<T>::SSLSocket(const TLSVersion &protocol) :
-            Socket<T>(),
+    SSLSocket::SSLSocket(const TLSVersion &protocol) :
+            TCPSocket(),
             pImpl(new impl),
             autoSNI(true)
     {
@@ -75,26 +70,23 @@ namespace ohf {
             throw Exception(Exception::Code::SSL_CREATE_ERROR, "SSL create error: " + getOpenSSLError());
     }
 
-    template <SocketType T>
-    SSLSocket<T>::~SSLSocket() {
+    SSLSocket::~SSLSocket() {
         SSL_CTX_free(pImpl->ssl_context);
         SSL_free(pImpl->ssl);
         delete pImpl;
     }
 
-    template <SocketType T>
-    void SSLSocket<T>::sni(const std::string &name) {
+    void SSLSocket::sni(const std::string &name) {
         SSL_set_tlsext_host_name(pImpl->ssl, name.c_str());
         autoSNI = false;
     }
 
-    template <SocketType T>
-    std::iostream &SSLSocket<T>::connect(const std::string &address, Uint16 port) const {
-        std::iostream &ios = Socket<T>::connect(address, port);
+    std::iostream &SSLSocket::connect(const std::string &address, Uint16 port) {
+        std::iostream &ios = TCPSocket::connect(address, port);
 
         if(autoSNI) SSL_set_tlsext_host_name(pImpl->ssl, address.c_str());
 
-        SSL_set_fd(pImpl->ssl, this->mSocketFD);
+        SSL_set_fd(pImpl->ssl, mFD);
         if (SSL_connect(pImpl->ssl) < 1)
             throw Exception(Exception::Code::SSL_CONNECTION_CREATE_ERROR,
                             "SSL connection create error: " + getOpenSSLError());
@@ -102,8 +94,7 @@ namespace ohf {
         return ios;
     }
 
-    template <SocketType T>
-    void SSLSocket<T>::send(const char *data, int size) const {
+    void SSLSocket::send(const char *data, int size) const {
         int len = SSL_write(pImpl->ssl, data, size);
         if (len < 0) {
             int error = SSL_get_error(pImpl->ssl, len);
@@ -113,8 +104,7 @@ namespace ohf {
         }
     }
 
-    template <SocketType T>
-    std::vector<Int8> SSLSocket<T>::receive(size_t size) const {
+    std::vector<Int8> SSLSocket::receive(size_t size) const {
         std::vector<Int8> buffer(size);
         int len = SSL_read(pImpl->ssl, &buffer.at(0), size);
         if (len < 0) {

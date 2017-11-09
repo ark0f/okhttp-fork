@@ -5,15 +5,14 @@
 #ifndef OKHTTPFORK_SSLSOCKET_HPP
 #define OKHTTPFORK_SSLSOCKET_HPP
 
-#include "Socket.hpp"
 #include "TLSVersion.hpp"
+#include "TCPSocket.hpp"
 #include <vector>
 #include <string>
 #include <memory>
 
 namespace ohf {
-    template <SocketType T>
-    class SSLSocket : public Socket<T> {
+    class SSLSocket : public TCPSocket {
     public:
         explicit SSLSocket(const TLSVersion &protocol = TLSVersion::SSLv23);
 
@@ -21,11 +20,11 @@ namespace ohf {
 
         void sni(const std::string &name);
 
-        using Socket<T>::connect;
+        using TCPSocket::connect;
 
-        std::iostream &connect(const std::string &address, Uint16 port) const;
+        std::iostream &connect(const std::string &address, Uint16 port);
 
-        using Socket<T>::send;
+        using TCPSocket::send;
 
         void send(const char *data, int size) const;
 
