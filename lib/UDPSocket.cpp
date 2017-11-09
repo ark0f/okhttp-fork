@@ -46,7 +46,7 @@ namespace ohf {
     size_t UDPSocket::receive(InetAddress &address, Uint16 &port, char *data, size_t size) {
         sockaddr_in socket_address = SocketImpl::createAddress(INADDR_ANY, 0);
         SocketImpl::SocketLength addressSize = sizeof(sockaddr_in);
-        Int32 dataReceived = recvfrom(mFD, data, size, 0, (sockaddr *) &socket_address, (socklen_t *) &addressSize);
+        Int32 dataReceived = recvfrom(mFD, data, size, 0, (sockaddr *) &socket_address, &addressSize);
         if(dataReceived < 0) {
             throw Exception(Exception::Code::FAILED_TO_RECEIVE_DATA,
                             "Failed to receive data: " + SocketImpl::getError());
