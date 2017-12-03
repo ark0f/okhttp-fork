@@ -3,8 +3,7 @@
 //
 
 #include "SocketImpl.hpp"
-#include "../include/Socket.hpp"
-#include "../include/Exception.hpp"
+#include <ohf/Exception.hpp>
 
 namespace ohf {
     Socket::Builder::Builder(const Socket::Type &type) :

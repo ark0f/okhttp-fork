@@ -3,8 +3,9 @@
 //
 
 #include "SocketImpl.hpp"
-#include "../include/UDPSocket.hpp"
-#include "../include/Exception.hpp"
+#include <ohf/UDPSocket.hpp>
+#include <ohf/Exception.hpp>
+#include <ohf/HttpURL.hpp>
 
 namespace ohf {
     UDPSocket::UDPSocket() : Socket(Type::UDP) {

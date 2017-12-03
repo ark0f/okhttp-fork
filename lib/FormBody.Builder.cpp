@@ -2,8 +2,8 @@
 // Created by Good_Pudge.
 //
 
-#include "../include/FormBody.hpp"
-#include "../include/HttpURL.hpp"
+#include <ohf/FormBody.hpp>
+#include <ohf/HttpURL.hpp>
 
 namespace ohf {
     FormBody::Builder& FormBody::Builder::add(const std::string &name, const std::string &value) {

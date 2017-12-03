@@ -3,8 +3,8 @@
 //
 
 #include <vector>
-#include "../include/SocketStreamBuf.hpp"
-#include "../include/TCPSocket.hpp"
+#include <ohf/SocketStreamBuf.hpp>
+#include <ohf/TCPSocket.hpp>
 
 namespace ohf {
     SocketStreamBuf::SocketStreamBuf(TCPSocket *socket) : sock(socket), cur(traits_type::eof()) {};
@@ -30,8 +30,9 @@ namespace ohf {
             return cur;
 
         std::vector<Int8> data = sock->receive(1);
-        if (data.empty())
-            return traits_type::eof();
+        if (data.empty()) {
+            return (cur = traits_type::eof());
+        }
 
         cur = data[0];
 

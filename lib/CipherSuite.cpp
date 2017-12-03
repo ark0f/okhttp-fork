@@ -2,7 +2,7 @@
 // Created by Good_Pudge.
 //
 
-#include "../include/CipherSuite.hpp"
+#include <ohf/CipherSuite.hpp>
 
 namespace ohf {
     const char * CipherSuite::forOpenSSL(int i) {

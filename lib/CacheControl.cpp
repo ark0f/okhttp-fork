@@ -3,10 +3,10 @@
 //
 
 #include <sstream>
-#include "../include/CacheControl.hpp"
-#include "../lib/util/util.hpp"
-#include "../lib/util/string.hpp"
-#include "../include/Exception.hpp"
+#include <ohf/CacheControl.hpp>
+#include <ohf/Exception.hpp>
+#include "util/util.hpp"
+#include "util/string.hpp"
 
 using namespace util;
 using namespace util::string;

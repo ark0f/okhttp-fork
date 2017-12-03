@@ -11,16 +11,13 @@ int main() {
     try {
         ohf::MediaType common = "text/html";
 
-        std::ifstream ifs("CMakeLists.txt", std::ios_base::binary);
+        std::ifstream ifs("some_file.txt", std::ios_base::binary);
         ohf::RequestBody ifsbody(common, ifs);
         std::cout << "std::ifstream | Content length: " << ifsbody.contentLength() << std::endl;
 
         char content[] = "Hello, world";
         ohf::RequestBody charBody(common, content);
         std::cout << "char[] | Content length: " << charBody.contentLength() << std::endl;
-
-        ohf::RequestBody cutCharBody(common, content, 3, 5);
-        std::cout << "char[] with offset and length | Content length: " << cutCharBody.contentLength() << std::endl;
 
         std::string c = "Hello, world";
         ohf::RequestBody stringBody(common, c);

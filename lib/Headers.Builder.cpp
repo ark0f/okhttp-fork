@@ -2,9 +2,9 @@
 // Created by Good_Pudge.
 //
 
-#include "../include/Headers.hpp"
-#include "../lib/util/string.hpp"
-#include "../include/Exception.hpp"
+#include <ohf/Headers.hpp>
+#include <ohf/Exception.hpp>
+#include "util/string.hpp"
 
 namespace ohf {
     Headers::Builder &Headers::Builder::add(const std::string &line) {

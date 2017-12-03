@@ -2,54 +2,52 @@
 // Created by Good_Pudge.
 //
 
+#include <ohf/HttpURL.hpp>
+#include <ohf/Cookie.hpp>
 #include <iostream>
 #include <ohf/Exception.hpp>
-#include <ohf/Cookie.hpp>
-#include <ohf/HttpURL.hpp>
 
 int main() {
     try {
         ohf::HttpURL url = "https://www.google.com/";
 
-        ohf::Cookie::Builder builder;
-        builder.hostOnlyDomain(".github.com");
-        builder.expiresAt(123);
-        builder.secure();
-        builder.httpOnly();
-        builder.name("Hello");
-        builder.value("World");
-        builder.path("/q=123");
-        ohf::Cookie one_cookie = builder.build();
+        ohf::Cookie one_cookie = ohf::Cookie::Builder()
+                .hostOnlyDomain(".github.com")
+                .expiresAt(ohf::TimeUnit::seconds(10))
+                .secure()
+                .httpOnly()
+                .name("Hello")
+                .value("World")
+                .path("/some/path")
+                .build();
 
-        std::cout << one_cookie.name() << " = " << one_cookie.value() << std::endl;
-        std::cout << "Domain:     " << one_cookie.domain() << std::endl;
-        std::cout << "Expires at: " << one_cookie.expiresAt() << std::endl;
-        std::cout << "Host only:  " << one_cookie.hostOnly() << std::endl;
-        std::cout << "HTTP only:  " << one_cookie.httpOnly() << std::endl;
-        std::cout << "Path:       " << one_cookie.path() << std::endl;
-        std::cout << "Persistent: " << one_cookie.persistent() << std::endl;
-        std::cout << "Secure:     " << one_cookie.secure() << std::endl;
-        std::cout << "Stream:     " << one_cookie << std::endl;
-        std::cout << "URL match Cookie: " << one_cookie.matches(url) << std::endl;
+        std::cout << one_cookie.name() << " = " << one_cookie.value() << std::endl
+                  << "Domain:           " << one_cookie.domain() << std::endl
+                  << "Expires at:       " << one_cookie.expiresAt().seconds() << std::endl
+                  << "Host only:        " << one_cookie.hostOnly() << std::endl
+                  << "HTTP only:        " << one_cookie.httpOnly() << std::endl
+                  << "Path:             " << one_cookie.path() << std::endl
+                  << "Persistent:       " << one_cookie.persistent() << std::endl
+                  << "Secure:           " << one_cookie.secure() << std::endl
+                  << "URL match Cookie: " << one_cookie.matches(url) << std::endl;
 
-        ohf::Headers::Builder headersBuilder;
-        headersBuilder.add("Set-Cookie", "Hello=world");
-        headersBuilder.add("Set-Cookie", "Yes=No; Max-Age=123");
-        ohf::Headers headers = headersBuilder.build();
+        ohf::Headers headers = ohf::Headers::Builder()
+                .add("Set-Cookie", "Hello=world")
+                .add("Set-Cookie", "Yes=No; Max-Age=123")
+                .build();
+
         std::vector<ohf::Cookie> cookies = ohf::Cookie::parseAll(url, headers);
         for (auto &cookie : cookies) {
-            std::cout << cookie.name() << " = " << cookie.value() << std::endl;
-            std::cout << "Domain:     " << cookie.domain() << std::endl;
-            std::cout << "Expires at: " << cookie.expiresAt() << std::endl;
-            std::cout << "Host only:  " << cookie.hostOnly() << std::endl;
-            std::cout << "HTTP only:  " << cookie.httpOnly() << std::endl;
-            std::cout << "Path:       " << cookie.path() << std::endl;
-            std::cout << "Persistent: " << cookie.persistent() << std::endl;
-            std::cout << "Secure:     " << cookie.secure() << std::endl;
-            std::cout << "Stream:     " << cookie << std::endl;
-            std::cout << "URL match Cookie: " << cookie.matches(url) << std::endl;
+            std::cout << cookie.name() << " = " << cookie.value() << std::endl
+                      << "Domain:           " << one_cookie.domain() << std::endl
+                      << "Expires at:       " << one_cookie.expiresAt().seconds() << std::endl
+                      << "Host only:        " << one_cookie.hostOnly() << std::endl
+                      << "HTTP only:        " << one_cookie.httpOnly() << std::endl
+                      << "Path:             " << one_cookie.path() << std::endl
+                      << "Persistent:       " << one_cookie.persistent() << std::endl
+                      << "Secure:           " << one_cookie.secure() << std::endl
+                      << "URL match Cookie: " << one_cookie.matches(url) << std::endl;
         }
-
     } catch (ohf::Exception &e) {
         std::cout << e.what() << std::endl << "\tCode: " << e.code() << std::endl;
         return 1;

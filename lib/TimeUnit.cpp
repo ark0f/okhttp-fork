@@ -2,7 +2,7 @@
 // Created by Good_Pudge.
 //
 
-#include "../include/TimeUnit.hpp"
+#include <ohf/TimeUnit.hpp>
 
 namespace ohf {
     const TimeUnit TimeUnit::ZERO = {0, Type::SECONDS};

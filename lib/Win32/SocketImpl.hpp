@@ -5,9 +5,10 @@
 #ifndef OKHTTPFORK_SOCKETIMPL_HPP
 #define OKHTTPFORK_SOCKETIMPL_HPP
 
+#include <ohf/Socket.hpp>
+#include <ohf/Config.hpp>
 #include <string>
 #include <winsock.h>
-#include "../../include/Config.hpp"
 
 namespace ohf {
     class SocketImpl {
@@ -22,7 +23,7 @@ namespace ohf {
 
         static void setBlocking(int sock, bool blocking);
 
-        static int invalidSocket();
+        static Socket::Handle invalidSocket();
     };
 }
 

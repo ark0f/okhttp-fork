@@ -18,23 +18,24 @@ namespace ohf {
 
         ~SSLSocket();
 
-        void sni(const std::string &name);
+        using TCPSocket::create;
+        void create(Handle fd);
+
+        void sni(const std::string &name) const;
 
         using TCPSocket::connect;
-
-        std::iostream &connect(const std::string &address, Uint16 port);
+        void connect(const InetAddress &address, Uint16 port);
 
         using TCPSocket::send;
-
         void send(const char *data, int size) const;
 
+        using TCPSocket::receive;
         std::vector<Int8> receive(size_t size) const;
-
     private:
         struct impl;
         impl *pImpl; // just for OpenSSL includes
 
-        bool autoSNI;
+        mutable bool autoSNI;
     };
 }
 

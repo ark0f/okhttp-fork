@@ -13,6 +13,56 @@
 namespace ohf {
     class Headers {
     public:
+        typedef std::pair<std::string, std::string> ValueType;
+
+        class Iterator {
+        public:
+            Iterator(Uint32 index, const Headers *headers);
+
+            bool isOutOfRange() const;
+
+            const ValueType& operator *() const;
+
+            const ValueType& operator *();
+
+            const ValueType* operator ->() const;
+
+            const ValueType* operator ->();
+
+            const Iterator operator ++(Int32) const;
+
+            const Iterator& operator ++();
+
+            const Iterator operator --(Int32) const;
+
+            const Iterator& operator --();
+
+            const Iterator operator +(Uint32 index) const;
+
+            const Iterator operator -(Uint32 index) const;
+
+            const Iterator& operator +=(Uint32 index);
+
+            const Iterator& operator -=(Uint32 index);
+
+            bool operator ==(const Iterator &right) const;
+
+            bool operator !=(const Iterator &right) const;
+        private:
+            void swapType();
+
+            mutable bool outOfRange;
+            ValueType type;
+            Uint32 index;
+            const Headers *headers;
+        };
+
+        const Iterator begin() const;
+        Iterator begin();
+
+        const Iterator end() const;
+        Iterator end();
+
         class Builder {
         public:
             Builder &add(const std::string &line);
@@ -53,6 +103,8 @@ namespace ohf {
         std::string value(Uint32 index) const;
 
         std::vector<std::string> values(const std::string &name) const;
+
+        ValueType pair(Uint32 index) const;
 
         std::string toString() const;
 

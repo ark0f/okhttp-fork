@@ -5,12 +5,14 @@
 #include <iostream>
 #include <vector>
 #include <sstream>
-#include "../include/MediaType.hpp"
-#include "../lib/util/string.hpp"
-#include "../include/Exception.hpp"
-#include "../include/Config.hpp"
+#include <ohf/MediaType.hpp>
+#include <ohf/Exception.hpp>
+#include <ohf/Config.hpp>
+#include "util/string.hpp"
 
 namespace ohf {
+    const MediaType MediaType::EMPTY = {};
+
     MediaType::MediaType(const std::string &str) {
         std::vector<std::string> values = util::string::split(str, "; ");
         if (values.empty())

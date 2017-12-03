@@ -11,6 +11,7 @@ namespace ohf {
     class Exception : public std::exception {
     public:
         enum class Code {
+            OK,
             INVALID_HEADER_LINE,
             INVALID_MIME_TYPE,
             FAILED_TO_READ_STREAM,
@@ -21,10 +22,12 @@ namespace ohf {
             FAILED_TO_SEND_DATA,
             FAILED_TO_RECEIVE_DATA,
             FAILED_TO_BIND_SOCKET,
+            FAILED_TO_ACCEPT_SOCKET,
+            FAILED_TO_LISTEN_SOCKET,
             DATAGRAM_PACKET_IS_TOO_BIG,
             SSL_CREATE_ERROR,
-            SSL_CONTEXT_CREATE_ERROR,
-            SSL_CONNECTION_CREATE_ERROR,
+            SSL_CREATE_CONTEXT_ERROR,
+            SSL_CREATE_CONNECTION_ERROR,
             SSL_ERROR,
             INVALID_QUERY_PARAMETER,
             INVALID_URI,

@@ -9,6 +9,8 @@
 #include "Socket.hpp"
 
 namespace ohf {
+    class HttpURL;
+
     class UDPSocket : public Socket {
     public:
         UDPSocket();

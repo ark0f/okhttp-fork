@@ -5,8 +5,8 @@
 #include <iostream>
 #include <cstring>
 #include <iterator>
-#include "../include/ResponseBody.hpp"
-#include "../lib/util/util.hpp"
+#include <ohf/ResponseBody.hpp>
+#include "util/util.hpp"
 
 namespace ohf {
     ResponseBody::ResponseBody(const MediaType &mediaType, const char *content, size_t count) :

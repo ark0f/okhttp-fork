@@ -3,8 +3,8 @@
 //
 
 #include <sstream>
-#include "../include/MultipartBody.hpp"
-#include "../include/Exception.hpp"
+#include <ohf/MultipartBody.hpp>
+#include <ohf/Exception.hpp>
 
 namespace ohf {
     MediaType MultipartBody::MIXED = "multipart/mixed";

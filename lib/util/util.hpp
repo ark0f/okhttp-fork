@@ -9,7 +9,7 @@
 #include <string>
 #include <vector>
 #include <ctime>
-#include "../../include/Config.hpp"
+#include "../../include/ohf/Config.hpp"
 
 namespace util {
     std::vector<ohf::Int8> readStream(std::istream &stream);

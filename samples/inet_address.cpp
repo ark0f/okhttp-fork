@@ -3,8 +3,8 @@
 //
 
 #include <iostream>
-#include <ohf/Exception>
-#include <ohf/InetAddress>
+#include <ohf/Exception.hpp>
+#include <ohf/InetAddress.hpp>
 
 int main() {
     try {

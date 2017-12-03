@@ -7,17 +7,25 @@
 #include <ohf/SSLSocket.hpp>
 
 int main() {
-    try {
-        ohf::SSLSocket sslSocket;
-        std::iostream &ios = sslSocket.connect("www.yandex.ru", 443);
+    // Same API as TCPSocket but have function `sni(const std::string &host_name)`
 
-        ios << "GET / HTTP/1.1\r\n";
-        ios << "Host: www.yandex.ru\r\n";
-        ios << "Connection: close\r\n\r\n";
+    try {
+        ohf::HttpURL url = "https://yandex.ru";
+
+        ohf::SSLSocket sslSocket;
+        sslSocket.connect(url); // port specified by protocol `https`
+        sslSocket.sni(url.host());
+
+
+        std::iostream &ios = sslSocket.stream();
+        ios << "GET / HTTP/1.1\r\n"
+            << "Host: " << url.host() << "\r\n"
+            << "Connection: close\r\n"
+            << "\r\n";
 
         std::cout << ios.rdbuf() << std::endl;
 
-        sslSocket.shutdown();
+        sslSocket.disconnect();
     } catch (ohf::Exception &e) {
         std::cout << e.what() << std::endl << "\tCode: " << e.code() << std::endl;
     }

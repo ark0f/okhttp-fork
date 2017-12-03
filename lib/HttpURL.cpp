@@ -6,9 +6,9 @@
 #include <iomanip>
 #include <iostream>
 #include <algorithm>
-#include "../include/HttpURL.hpp"
-#include "../lib/util/string.hpp"
-#include "../include/Exception.hpp"
+#include <ohf/HttpURL.hpp>
+#include <ohf/Exception.hpp>
+#include "util/string.hpp"
 
 namespace ohf {
     std::string HttpURL::encode(const std::string &str) {
@@ -29,21 +29,22 @@ namespace ohf {
     }
 
     std::string HttpURL::decode(const std::string &str) {
-        std::string encoded;
+        std::ostringstream ss;
         for (std::string::size_type i = 0; i < str.length(); i++) {
             char c = str[i];
             if (c == '%') {
                 std::string hex = str.substr(i + 1, 2);
                 try {
-                    encoded.push_back(std::stoi(hex, nullptr, 16));
+                    ss << (char) std::stoi(hex, nullptr, 16);
                 } catch (std::invalid_argument&) {
                     throw Exception(Exception::Code::INVALID_URI_HEX_CODE, "Invalid uri hex code:" + hex);
                 }
                 i += 2;
-            } else
-                encoded += c;
+            } else {
+                ss << c;
+            }
         }
-        return encoded;
+        return ss.str();
     }
 
     HttpURL::HttpURL(const std::string &url) : pathEndsWithSlash(false)

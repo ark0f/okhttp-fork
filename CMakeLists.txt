@@ -5,50 +5,52 @@ set(CMAKE_CXX_STANDARD 11)
 
 # Cross-platform files
 set(LIB_SOURCE_FILES
-        include/Config.hpp
-        lib/Client.cpp include/Client.hpp
-        include/Call.hpp # Interface
-        lib/Response.cpp include/Response.hpp
-        lib/Request.cpp lib/Request.Builder.cpp include/Request.hpp
-        lib/ResponseBody.cpp include/ResponseBody.hpp
-        lib/CacheControl.cpp lib/CacheControl.Builder.cpp include/CacheControl.hpp
-        lib/Challenge.cpp include/Challenge.hpp
-        lib/Handshake.cpp include/Handshake.hpp
-        lib/Headers.cpp lib/Headers.Builder.cpp include/Headers.hpp
-        include/Protocol.hpp # Enum
-        lib/CipherSuite.cpp include/CipherSuite.hpp
-        lib/Certificate.cpp include/Certificate.hpp
-        lib/Principal.cpp include/Principal.hpp
-        lib/Authenticator.cpp include/Authenticator.hpp
-        lib/Cache.cpp include/Cache.hpp
-        lib/CertificatePinner.cpp include/CertificatePinner.hpp
-        lib/ConnectionPool.cpp include/ConnectionPool.hpp
-        lib/ConnectionSpec.cpp include/ConnectionSpec.hpp
-        lib/CookieJar.cpp include/CookieJar.hpp # Interface
-        lib/Dispatcher.cpp include/Dispatcher.hpp
-        lib/DNS.cpp include/DNS.hpp # Interface
-        lib/HostnameVerifier.cpp include/HostnameVerifier.hpp
-        lib/Interceptor.cpp include/Interceptor.hpp
-        lib/Proxy.cpp include/Proxy.hpp
-        lib/ProxySelector.cpp include/ProxySelector.hpp
-        lib/RequestBody.cpp include/RequestBody.hpp
-        lib/HttpURL.cpp lib/HttpURL.Builder.cpp include/HttpURL.hpp
-        lib/MediaType.cpp include/MediaType.hpp
-        lib/Exception.cpp include/Exception.hpp
-        lib/TCPSocket.cpp lib/TCPSocket.Builder.cpp include/TCPSocket.hpp
-        lib/UDPSocket.cpp include/UDPSocket.hpp
-        lib/Socket.cpp lib/Socket.Builder.cpp include/Socket.hpp
-        lib/SocketStreamBuf.cpp include/SocketStreamBuf.hpp
+        include/ohf/Config.hpp
+        lib/Client.cpp include/ohf/Client.hpp
+        include/ohf/Call.hpp # Interface
+        lib/Response.cpp include/ohf/Response.hpp
+        lib/Request.cpp lib/Request.Builder.cpp include/ohf/Request.hpp
+        lib/ResponseBody.cpp include/ohf/ResponseBody.hpp
+        lib/CacheControl.cpp lib/CacheControl.Builder.cpp include/ohf/CacheControl.hpp
+        lib/Challenge.cpp include/ohf/Challenge.hpp
+        lib/Handshake.cpp include/ohf/Handshake.hpp
+        lib/Headers.cpp lib/Headers.Iterator.cpp lib/Headers.Builder.cpp include/ohf/Headers.hpp
+        include/ohf/Protocol.hpp # Enum
+        lib/CipherSuite.cpp include/ohf/CipherSuite.hpp
+        lib/Certificate.cpp include/ohf/Certificate.hpp
+        lib/Principal.cpp include/ohf/Principal.hpp
+        lib/Authenticator.cpp include/ohf/Authenticator.hpp
+        lib/Cache.cpp include/ohf/Cache.hpp
+        lib/CertificatePinner.cpp include/ohf/CertificatePinner.hpp
+        lib/ConnectionPool.cpp include/ohf/ConnectionPool.hpp
+        lib/ConnectionSpec.cpp include/ohf/ConnectionSpec.hpp
+        lib/CookieJar.cpp include/ohf/CookieJar.hpp # Interface
+        lib/Dispatcher.cpp include/ohf/Dispatcher.hpp
+        lib/DNS.cpp include/ohf/DNS.hpp # Interface
+        lib/HostnameVerifier.cpp include/ohf/HostnameVerifier.hpp
+        lib/Interceptor.cpp include/ohf/Interceptor.hpp
+        lib/Proxy.cpp include/ohf/Proxy.hpp
+        lib/ProxySelector.cpp include/ohf/ProxySelector.hpp
+        lib/RequestBody.cpp include/ohf/RequestBody.hpp
+        lib/HttpURL.cpp lib/HttpURL.Builder.cpp include/ohf/HttpURL.hpp
+        lib/MediaType.cpp include/ohf/MediaType.hpp
+        lib/Exception.cpp include/ohf/Exception.hpp
+        lib/TCPSocket.cpp lib/TCPSocket.Builder.cpp lib/TCPSocket.Server.cpp lib/TCPSocket.Server.Iterator.cpp include/ohf/TCPSocket.hpp
+        lib/UDPSocket.cpp include/ohf/UDPSocket.hpp
+        lib/Socket.cpp lib/Socket.Builder.cpp include/ohf/Socket.hpp
+        lib/SocketStreamBuf.cpp include/ohf/SocketStreamBuf.hpp
         lib/SocketImpl.hpp
-        lib/SSLSocket.cpp include/SSLSocket.hpp
-        lib/Cookie.cpp lib/Cookie.Builder.cpp include/Cookie.hpp
-        lib/InetAddress.cpp include/InetAddress.hpp
-        lib/FormBody.cpp lib/FormBody.Builder.cpp include/FormBody.hpp
-        lib/MultipartBody.cpp lib/Multipart.Part.cpp lib/Multipart.Builder.cpp include/MultipartBody.hpp
-        include/Callback.hpp # Interface
-        include/WebSocket.hpp # Interface
-        include/TLSVersion.hpp # Enum
-        lib/TimeUnit.cpp include/TimeUnit.hpp)
+        lib/SSLSocket.cpp include/ohf/SSLSocket.hpp
+        lib/Cookie.cpp lib/Cookie.Builder.cpp include/ohf/Cookie.hpp
+        lib/InetAddress.cpp include/ohf/InetAddress.hpp
+        lib/FormBody.cpp lib/FormBody.Builder.cpp include/ohf/FormBody.hpp
+        lib/MultipartBody.cpp lib/Multipart.Part.cpp lib/Multipart.Builder.cpp include/ohf/MultipartBody.hpp
+        include/ohf/Callback.hpp # Interface
+        include/ohf/WebSocket.hpp # Interface
+        include/ohf/TLSVersion.hpp # Enum
+        lib/TimeUnit.cpp include/ohf/TimeUnit.hpp)
+
+include_directories(include)
 
 # Files for different platforms
 if (WIN32)
@@ -88,18 +90,10 @@ if (WIN32)
 endif ()
 
 # Install
-if(NOT CMAKE_INSTALL_PREFIX)
-    if(WIN32)
-        set(CMAKE_INSTALL_PREFIX ${CMAKE_CURRENT_BINARY_DIR})
-    elseif(UNIX)
-        set(CMAKE_INSTALL_PREFIX /usr)
-    endif()
-endif()
-
 foreach (file ${LIB_SOURCE_FILES})
     string(REGEX MATCH ^include found ${file})
     if (found)
-        install(FILES ${file} DESTINATION ${CMAKE_INSTALL_PREFIX}/include)
+        install(FILES ${file} DESTINATION ${CMAKE_INSTALL_PREFIX}/include/ohf)
     endif ()
 endforeach ()
 install(TARGETS ohf DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)

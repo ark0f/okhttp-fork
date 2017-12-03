@@ -30,7 +30,7 @@ namespace ohf {
         ioctl(sock, FIONBIO, &mode);
     }
 
-    int SocketImpl::invalidSocket() {
+    Socket::Handle SocketImpl::invalidSocket() {
         return -1;
     }
 }

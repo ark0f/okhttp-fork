@@ -4,10 +4,10 @@
 
 #include <iomanip>
 #include <sstream>
-#include "../include/Cookie.hpp"
-#include "../lib/util/string.hpp"
-#include "../lib/util/util.hpp"
-#include "../include/Exception.hpp"
+#include <ohf/Cookie.hpp>
+#include <ohf/Exception.hpp>
+#include "util/string.hpp"
+#include "util/util.hpp"
 
 namespace ohf {
     Cookie::Cookie(HttpURL &httpURL, const std::string &setCookie) :

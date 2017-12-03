@@ -13,6 +13,12 @@ namespace ohf {
 
     class Socket {
     public:
+        #if defined(OKHTTPFORK_WINDOWS)
+            typedef unsigned int Handle;
+        #elif defined(OKHTTPFORK_UNIX)
+            typedef int Handle;
+        #endif
+
         enum class Type {
             TCP,
             UDP
@@ -31,7 +37,7 @@ namespace ohf {
             virtual Socket build() const;
 
         private:
-            int mFD;
+            Handle mFD;
             bool mBlocking;
             Socket::Type mType;
             TimeUnit mRead;
@@ -47,18 +53,20 @@ namespace ohf {
 
         virtual ~Socket();
 
-        int fd() const;
+        Handle fd() const;
 
-        void create();
+        virtual void create();
+
+        virtual void create(Handle fd);
 
         void blocking(bool mode);
 
         bool isBlocking() const;
 
-        void close();
+        virtual void close();
 
     protected:
-        int mFD;
+        Handle mFD;
         bool mBlocking;
         Type mType;
         TimeUnit mRead;

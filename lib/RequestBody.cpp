@@ -6,10 +6,12 @@
 #include <iostream>
 #include <sstream>
 #include <vector>
-#include "../include/RequestBody.hpp"
-#include "../lib/util/util.hpp"
+#include <ohf/RequestBody.hpp>
+#include "util/util.hpp"
 
 namespace ohf {
+    const RequestBody RequestBody::EMPTY;
+
     RequestBody::RequestBody(const MediaType &contentType, const char *content, size_t count) :
             mediaType(contentType),
             content(std::vector<Int8>(content, content + count))
@@ -28,6 +30,8 @@ namespace ohf {
             mediaType(contentType),
             content(util::readStream(stream))
     {}
+
+    RequestBody::RequestBody() : mediaType(MediaType::EMPTY) {}
 
     Uint32 RequestBody::contentLength() {
         return content.size();

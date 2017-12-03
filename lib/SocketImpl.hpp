@@ -2,7 +2,7 @@
 // Created by Good_Pudge.
 //
 
-#include "../include/Config.hpp"
+#include "../include/ohf/Config.hpp"
 
 #if defined(OKHTTPFORK_WINDOWS)
     #include "Win32/SocketImpl.hpp"

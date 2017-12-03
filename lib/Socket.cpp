@@ -2,9 +2,9 @@
 // Created by Good_Pudge.
 //
 
-#include "../include/Socket.hpp"
+#include <ohf/Socket.hpp>
+#include <ohf/Exception.hpp>
 #include "SocketImpl.hpp"
-#include "../include/Exception.hpp"
 
 namespace ohf {
     Socket::Socket(const Type &type) :
@@ -21,20 +21,26 @@ namespace ohf {
         close();
     }
 
-    int Socket::fd() const {
+    Socket::Handle Socket::fd() const {
         return mFD;
     }
 
     void Socket::create() {
         if(mFD != SocketImpl::invalidSocket()) return;
 
-        mFD = socket(AF_INET, mType == Type::TCP ? SOCK_STREAM : SOCK_DGRAM, 0);
-        if(mFD == SocketImpl::invalidSocket()) {
+        Socket::Handle handle = socket(AF_INET, mType == Type::TCP ? SOCK_STREAM : SOCK_DGRAM, 0);
+        if(handle == SocketImpl::invalidSocket()) {
             throw Exception(Exception::Code::FAILED_TO_CREATE_SOCKET,
                             "Failed to create socket: " + SocketImpl::getError());
         }
+        create(handle);
 
         blocking(mBlocking);
+    }
+
+    void Socket::create(Handle fd) {
+        if(mFD != SocketImpl::invalidSocket()) return;
+        mFD = fd;
     }
 
     void Socket::blocking(bool mode) {

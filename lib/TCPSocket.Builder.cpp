@@ -2,7 +2,7 @@
 // Created by Good_Pudge.
 //
 
-#include "../include/TCPSocket.hpp"
+#include <ohf/TCPSocket.hpp>
 
 namespace ohf {
     TCPSocket::Builder::Builder() : Socket::Builder(Type::TCP) {}

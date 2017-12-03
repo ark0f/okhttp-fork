@@ -2,7 +2,7 @@
 // Created by Good_Pudge.
 //
 
-#include "../include/CookieJar.hpp"
+#include <ohf/CookieJar.hpp>
 
 namespace ohf {
     /* CookieJar */

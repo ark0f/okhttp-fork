@@ -2,9 +2,9 @@
 // Created by Good_Pudge.
 //
 
-#include "../include/HttpURL.hpp"
-#include "../lib/util/string.hpp"
-#include "../include/Exception.hpp"
+#include <ohf/HttpURL.hpp>
+#include "util/string.hpp"
+#include <ohf/Exception.hpp>
 
 namespace ohf {
     HttpURL::Builder::Builder() :

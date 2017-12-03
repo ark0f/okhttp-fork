@@ -2,7 +2,7 @@
 // Created by Good_Pudge.
 //
 
-#include "../include/Exception.hpp"
+#include <ohf/Exception.hpp>
 
 namespace ohf {
     Exception::Exception(const Code &code, const std::string &what) noexcept : m_code(code), m_what(what) {}

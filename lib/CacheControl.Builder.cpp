@@ -2,7 +2,7 @@
 // Created by Good_Pudge.
 //
 
-#include "../include/CacheControl.hpp"
+#include <ohf/CacheControl.hpp>
 
 namespace ohf {
     CacheControl::Builder::Builder() :

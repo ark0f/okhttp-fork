@@ -2,8 +2,8 @@
 // Created by Good_Pudge.
 //
 
-#include "../../include/InetAddress.hpp"
-#include "../../include/Exception.hpp"
+#include "../../include/ohf/InetAddress.hpp"
+#include "../../include/ohf/Exception.hpp"
 #include "../../lib/util/util.hpp"
 
 #include <stdexcept>

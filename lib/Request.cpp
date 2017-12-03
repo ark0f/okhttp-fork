@@ -2,7 +2,7 @@
 // Created by Good_Pudge.
 //
 
-#include "../include/Request.hpp"
+#include <ohf/Request.hpp>
 
 namespace ohf {
     Request::Request(const Request::Builder *builder) :

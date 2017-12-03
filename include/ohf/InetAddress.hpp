@@ -12,6 +12,8 @@
 namespace ohf {
     class InetAddress {
     public:
+        static const InetAddress EMPTY;
+
         InetAddress(const char *x);
 
         explicit InetAddress(const std::string &x);
@@ -27,7 +29,11 @@ namespace ohf {
         std::string hostName() const;
 
         Uint32 toUint32() const;
+
+        friend std::ostream& operator<<(std::ostream &stream, const InetAddress &address);
     private:
+        InetAddress() = default;
+
         std::string mHostName;
         std::vector<Uint8> mIP;
     };

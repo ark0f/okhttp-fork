@@ -89,7 +89,7 @@ namespace ohf {
             friend class ohf::Client;
         };
 
-        Client() = default;
+        Client();
 
         ~Client();
 
@@ -103,11 +103,11 @@ namespace ohf {
 
         std::vector<ConnectionSpec> connectionSpecs();
 
-        CookieJar cookieJar();
+        CookieJar& cookieJar();
 
         Dispatcher dispatcher();
 
-        DNS dns();
+        DNS& dns();
 
         bool followRedirects();
 
@@ -123,7 +123,7 @@ namespace ohf {
 
         Call *newCall(const Request &request);
 
-        WebSocket newWebSocket(const Request &request, const WebSocket::Listener &listener);
+        WebSocket& newWebSocket(const Request &request, const WebSocket::Listener &listener);
 
         TimeUnit pingInterval();
 

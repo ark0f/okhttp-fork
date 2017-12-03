@@ -5,11 +5,12 @@
 #ifndef OKHTTPFORK_SOCKETIMPL_H
 #define OKHTTPFORK_SOCKETIMPL_H
 
+#include <ohf/Socket.hpp>
+#include <ohf/Config.hpp>
 #include <arpa/inet.h>
 #include <netinet/in.h>
 #include <unistd.h>
 #include <string>
-#include "../../include/Config.hpp"
 
 namespace ohf {
     class SocketImpl {
@@ -24,7 +25,7 @@ namespace ohf {
 
         static void setBlocking(int sock, bool blocking);
 
-        static int invalidSocket();
+        static Socket::Handle invalidSocket();
     };
 }
 

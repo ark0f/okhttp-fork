@@ -2,7 +2,7 @@
 // Created by Good_Pudge.
 //
 
-#include "../include/Cookie.hpp"
+#include <ohf/Cookie.hpp>
 
 namespace ohf {
     Cookie::Builder::Builder() :

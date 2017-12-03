@@ -2,11 +2,13 @@
 // Created by Good_Pudge.
 //
 
-#include "../include/InetAddress.hpp"
-#include "../include/Exception.hpp"
-#include "../lib/util/util.hpp"
+#include <ohf/InetAddress.hpp>
+#include <ohf/Exception.hpp>
+#include "util/util.hpp"
 
 namespace ohf {
+    const InetAddress InetAddress::EMPTY = {};
+
     InetAddress::InetAddress(const char *x) : InetAddress(std::string(x)) {
     }
 
@@ -30,5 +32,9 @@ namespace ohf {
 
     Uint32 InetAddress::toUint32() const {
         return mIP[0] << 24 | mIP[1] << 16 | mIP[2] << 8 | mIP[3];
+    }
+
+    std::ostream& operator<<(std::ostream &stream, const InetAddress &address) {
+        return stream << address.hostName();
     }
 }

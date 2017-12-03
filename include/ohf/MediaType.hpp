@@ -8,11 +8,10 @@
 #include <string>
 
 namespace ohf {
-    class RequestBody;
-    class MultipartBody;
-
     class MediaType {
     public:
+        static const MediaType EMPTY;
+
         explicit MediaType(const std::string &str);
 
         MediaType(const char *str);
@@ -42,9 +41,6 @@ namespace ohf {
                 mType;
 
         MediaType() = default;
-
-        friend class ohf::MultipartBody;
-        friend class ohf::RequestBody;
     };
 }
 

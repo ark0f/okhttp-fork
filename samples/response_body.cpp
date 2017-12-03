@@ -11,7 +11,6 @@ int main() {
         ohf::MediaType common = "text/html";
 
         ohf::ResponseBody body(common, "Hello");
-        std::cout << "Bytes: " << body.bytes() << std::endl;
         std::cout << "String: " << body.string() << std::endl;
         std::cout << "Content-Type: " << body.contentType().type() << std::endl;
         std::cout << "Content-Length: " << body.contentLength() << std::endl;

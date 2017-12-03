@@ -3,9 +3,9 @@
 //
 
 #include <sstream>
-#include "../include/FormBody.hpp"
-#include "../include/Exception.hpp"
-#include "../include/HttpURL.hpp"
+#include <ohf/FormBody.hpp>
+#include <ohf/Exception.hpp>
+#include <ohf/HttpURL.hpp>
 
 namespace ohf {
     std::string FormBody::encodedName(Uint32 index) const {

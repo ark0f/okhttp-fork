@@ -3,8 +3,8 @@
 //
 
 #include <cstring>
-#include "../include/Request.hpp"
-#include "../include/Exception.hpp"
+#include <ohf/Request.hpp>
+#include <ohf/Exception.hpp>
 
 namespace ohf {
     Request::Builder::~Builder() {
@@ -21,7 +21,7 @@ namespace ohf {
         if(mCC == nullptr)
             mCC = new CacheControl();
         if(mBody == nullptr)
-            mBody = new RequestBody();
+            mBody = new RequestBody(RequestBody::EMPTY);
 
         return {this};
     }
@@ -35,6 +35,7 @@ namespace ohf {
 
     Request::Builder& Request::Builder::delete_() {
         mMethod = "DELETE";
+        mBody = nullptr;
         return *this;
     }
 
@@ -47,11 +48,15 @@ namespace ohf {
 
     Request::Builder& Request::Builder::get() {
         mMethod = "GET";
+        mBody = nullptr;
+
         return *this;
     }
 
     Request::Builder& Request::Builder::head() {
         mMethod = "HEAD";
+        mBody = nullptr;
+
         return *this;
     }
 

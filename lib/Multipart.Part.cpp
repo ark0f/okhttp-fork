@@ -2,36 +2,36 @@
 // Created by Good_Pudge.
 //
 
-#include "../include/MultipartBody.hpp"
-#include "../include/Exception.hpp"
-
-std::string handleQuotedString(const std::string &str) {
-    std::string tmp;
-    for (const char &c : str) {
-        switch (c) {
-            case '\n':
-                tmp += "%A0";
-                break;
-            case '\r':
-                tmp += "%0D";
-                break;
-            case '"':
-                tmp += "%22";
-                break;
-            default:
-                tmp.push_back(c);
-                break;
-        }
-    }
-    return tmp;
-}
+#include "../include/ohf/MultipartBody.hpp"
+#include "../include/ohf/Exception.hpp"
 
 namespace ohf {
+    std::string handleQuotedString(const std::string &str) {
+        std::string tmp;
+        for (const char &c : str) {
+            switch (c) {
+                case '\n':
+                    tmp += "%A0";
+                    break;
+                case '\r':
+                    tmp += "%0D";
+                    break;
+                case '"':
+                    tmp += "%22";
+                    break;
+                default:
+                    tmp.push_back(c);
+                    break;
+            }
+        }
+        return tmp;
+    }
+
     MultipartBody::Part::Part(const std::string &name, const std::string &value) :
             mHeaders(Headers::Builder()
                              .add("Content-Disposition", "form-data; name=\"" + handleQuotedString(name) + '"')
                              .build()),
-            mBody(RequestBody(MediaType(), value)) {}
+            mBody(RequestBody(MediaType::EMPTY, value)) {}
 
     MultipartBody::Part::Part(const std::string &name, const std::string &filename, const RequestBody &body) :
             mHeaders(Headers::Builder()

@@ -6,10 +6,10 @@
 #include <iomanip>
 #include <sstream>
 #include <algorithm>
-#include "../include/Headers.hpp"
-#include "../include/Exception.hpp"
-#include "../lib/util/string.hpp"
-#include "../lib/util/util.hpp"
+#include <ohf/Headers.hpp>
+#include <ohf/Exception.hpp>
+#include "util/string.hpp"
+#include "util/util.hpp"
 
 namespace ohf {
     Headers::Headers(const std::map<std::string, std::string> &headers) {
@@ -26,6 +26,22 @@ namespace ohf {
                 throw Exception(Exception::Code::HEADER_VALUE_IS_EMPTY, "Header is empty: name: " + headerName);
             namesAndValues.push_back(header->second);
         }
+    }
+
+    const Headers::Iterator Headers::begin() const {
+        return {0, this};
+    }
+
+    Headers::Iterator Headers::begin() {
+        return {0, this};
+    }
+
+    const Headers::Iterator Headers::end() const {
+        return {this->size(), this};
+    }
+
+    Headers::Iterator Headers::end() {
+        return {this->size(), this};
     }
 
     std::string Headers::get(std::string name) const {
@@ -68,9 +84,10 @@ namespace ohf {
     }
 
     std::string Headers::value(Uint32 index) const {
-        if (index * 2 + 1 > namesAndValues.size())
+        Uint32 i = index * 2 + 1;
+        if (i > namesAndValues.size())
             throw Exception(Exception::Code::OUT_OF_RANGE, "Out of range: " + std::to_string(index));
-        return namesAndValues[index];
+        return namesAndValues[i];
     }
 
     std::vector<std::string> Headers::values(const std::string &name) const {
@@ -79,6 +96,10 @@ namespace ohf {
             if (*it == name) values.push_back(*(it + 1));
         }
         return values;
+    }
+
+    Headers::ValueType Headers::pair(Uint32 index) const {
+        return {this->name(index), this->value(index)};
     }
 
     std::string Headers::toString() const {
@@ -94,9 +115,9 @@ namespace ohf {
     }
 
     bool Headers::operator==(const Headers &headers) const {
-        auto nav1 = std::move(headers.namesAndValues);
+        auto nav1 = headers.namesAndValues;
         std::sort(nav1.begin(), nav1.end());
-        auto nav2 = std::move(this->namesAndValues);
+        auto nav2 = this->namesAndValues;
         std::sort(nav2.begin(), nav2.end());
 
         return nav1 == nav2;
