@@ -5,6 +5,7 @@
 #ifndef OKHTTPFORK_STRING_HPP
 #define OKHTTPFORK_STRING_HPP
 
+#include <cctype>
 #include <string>
 #include <vector>
 
@@ -12,11 +13,11 @@ namespace util {
     namespace string {
         std::vector<std::string> split(std::string s, const std::string &delimiter);
 
-        inline bool startsWith(std::string s, const std::string &prefix) {
+        inline bool startsWith(const std::string &s, const std::string &prefix) {
             return s.substr(0, prefix.length()) == prefix;
         }
 
-        inline bool endsWith(std::string s, const std::string &postfix) {
+        inline bool endsWith(const std::string &s, const std::string &postfix) {
             if (s.length() >= postfix.length())
                 return s.substr(s.length() - postfix.length(), postfix.length()) == postfix;
             return false;

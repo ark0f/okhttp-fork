@@ -61,7 +61,7 @@ namespace ohf {
         }
 
         Int32 Socket::send(const string &data) const {
-            send(data.data(), data.size());
+            return send(data.data(), data.size());
         }
 
         Int32 Socket::receive(char *data, Int32 size) const {
