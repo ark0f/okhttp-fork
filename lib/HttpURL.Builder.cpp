@@ -8,17 +8,17 @@
 
 namespace ohf {
     HttpURL::Builder::Builder() :
-            mPathEndsWithFlash(false),
+            mPathSuffix(false),
             mPort(80),
             mScheme("http")
     {}
 
     HttpURL::Builder &HttpURL::Builder::addPathSegments(const std::string &pathSegments) {
-        mPathEndsWithFlash = util::string::endsWith(pathSegments, "/");
+        mPathSuffix = util::string::endsWith(pathSegments, "/");
         std::vector<std::string> segments = util::string::split(pathSegments, "/");
         if (!segments.empty()) {
             for (const auto &segment : segments)
-                this->pathSegments.push_back(HttpURL::decode(segment));
+                mPath.push_back(HttpURL::decode(segment));
         }
         return *this;
     }
@@ -28,6 +28,7 @@ namespace ohf {
     }
 
     HttpURL::Builder &HttpURL::Builder::fragment(const std::string &fragment) {
+        mPathSuffix = true;
         mFragment = HttpURL::decode(fragment);
         return *this;
     }
@@ -43,13 +44,14 @@ namespace ohf {
     }
 
     HttpURL::Builder &HttpURL::Builder::query(const std::string &query) {
+        mPathSuffix = true;
         std::vector<std::string> queries = util::string::split(query, "&");
         for (const auto &parameter : queries) {
             std::vector<std::string> nameValue = util::string::split(parameter, "=");
             if (nameValue.size() == 2)
-                mQueryParameters[nameValue[0]] = nameValue[1];
+                mQuery[nameValue[0]] = nameValue[1];
             else if (nameValue.size() == 1)
-                mQueryParameters[nameValue[0]] = std::string();
+                mQuery[nameValue[0]] = std::string();
             else
                 throw Exception(Exception::Code::INVALID_QUERY_PARAMETER, "Invalid query parameter: " + parameter);
         }
@@ -57,18 +59,20 @@ namespace ohf {
     }
 
     HttpURL::Builder &HttpURL::Builder::removeQueryParameter(const std::string &name) {
-        auto it = mQueryParameters.find(name);
-        if (mQueryParameters.find(name) != mQueryParameters.end()) // found
-            mQueryParameters.erase(it);
+        auto it = mQuery.find(name);
+        if (mQuery.find(name) != mQuery.end())
+            mQuery.erase(it);
+        if(mQuery.empty() && mFragment.empty() && mPath.empty()) mPathSuffix = false;
         return *this;
     }
 
     HttpURL::Builder &HttpURL::Builder::removePathSegment(Uint32 index) {
-        if (index < this->pathSegments.size()) { // check out of range
-            mPathEndsWithFlash = index != this->pathSegments.size() - 1;
-            auto path_segment = std::next(this->pathSegments.begin(), index);
-            this->pathSegments.erase(path_segment);
+        if (index < this->mPath.size()) {
+            mPathSuffix = index != this->mPath.size() - 1;
+            auto path_segment = std::next(this->mPath.begin(), index);
+            this->mPath.erase(path_segment);
         }
+        if(mPath.empty()) mPathSuffix = false;
         return *this;
     }
 
@@ -78,23 +82,23 @@ namespace ohf {
     }
 
     HttpURL::Builder &HttpURL::Builder::setPathSegment(Uint32 index, std::string pathSegment) {
-        if (index < pathSegments.size()) {
+        if (index < mPath.size()) {
             if (util::string::endsWith(pathSegment, "/")) {
                 pathSegment = pathSegment.substr(0, pathSegment.length() - 1);
-                mPathEndsWithFlash = true;
+                mPathSuffix = true;
             }
-            pathSegments[index] = HttpURL::decode(pathSegment);
+            mPath[index] = HttpURL::decode(pathSegment);
         }
         return *this;
     }
 
     HttpURL::Builder &HttpURL::Builder::setQueryParameter(const std::string &name, const std::string &value) {
-        mQueryParameters[name] = HttpURL::decode(value);
+        mQuery[name] = HttpURL::decode(value);
         return *this;
     }
 
     HttpURL::Builder &HttpURL::Builder::pathEndsWithSlash(bool b) {
-        mPathEndsWithFlash = b;
+        mPathSuffix = b;
         return *this;
     }
 }

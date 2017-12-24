@@ -25,17 +25,16 @@ namespace ohf {
         }
 
         mMicroseconds = count * multiplier;
-        mSec = count / delimiter;
-        mUSec = count % delimiter;
+        mSec = static_cast<long>(count / delimiter);
+        mUSec = static_cast<long>(count % delimiter);
         mTime = count / delimiter;
     }
 
-    TimeUnit::TimeUnit(float seconds) {
-        mMicroseconds = seconds * 1000000;
+    TimeUnit::TimeUnit(float seconds) : mType(Type::SECONDS) {
+        mMicroseconds = static_cast<Int64>(seconds * 1000000);
         mSec = static_cast<long>(seconds);
-        mUSec = mMicroseconds % 1000000;
+        mUSec = static_cast<long>(mMicroseconds % 1000000);
         mTime = static_cast<std::time_t>(seconds);
-        mType = Type::SECONDS;
     }
 
     TimeUnit TimeUnit::seconds(float time) {
@@ -59,7 +58,7 @@ namespace ohf {
     }
 
     Int32 TimeUnit::milliseconds() const {
-        return mMicroseconds / 1000;
+        return static_cast<Int32>(mMicroseconds / 1000);
     }
 
     Int64 TimeUnit::microseconds() const {
@@ -72,6 +71,10 @@ namespace ohf {
 
     long TimeUnit::usec() const {
         return mUSec;
+    }
+
+    TimeUnit::Type TimeUnit::type() const {
+        return mType;
     }
 
     Int64 TimeUnit::value() const {
@@ -90,63 +93,133 @@ namespace ohf {
         return mMicroseconds / delimiter;
     }
 
-    std::string TimeUnit::toString() const {
-        std::string str = std::to_string(value());
-        switch(mType) {
+    float TimeUnit::floatValue() const {
+        float delimiter;
+        switch (mType) {
             case Type::SECONDS:
-                str += " seconds";
+                delimiter = 1000000.0f;
                 break;
             case Type::MILLISECONDS:
-                str += " milliseconds";
+                delimiter = 1000.0f;
                 break;
             case Type::MICROSECONDS:
-                str += " microseconds";
+                delimiter = 1.0f;
                 break;
         }
-        return str;
+        return mMicroseconds / delimiter;
     }
 
-    bool TimeUnit::operator==(const TimeUnit &right) const {
+    bool TimeUnit::operator ==(const TimeUnit &right) const {
         return mMicroseconds == right.mMicroseconds;
     }
 
-    bool TimeUnit::operator!=(const TimeUnit &right) const {
+    bool TimeUnit::operator !=(const TimeUnit &right) const {
         return mMicroseconds != right.mMicroseconds;
     }
 
-    bool TimeUnit::operator>=(const TimeUnit &right) const {
+    bool TimeUnit::operator >=(const TimeUnit &right) const {
         return mMicroseconds >= right.mMicroseconds;
     }
 
-    bool TimeUnit::operator<=(const TimeUnit &right) const {
+    bool TimeUnit::operator <=(const TimeUnit &right) const {
         return mMicroseconds <= right.mMicroseconds;
     }
 
-    bool TimeUnit::operator>(const TimeUnit &right) const {
+    bool TimeUnit::operator >(const TimeUnit &right) const {
         return mMicroseconds > right.mMicroseconds;
     }
 
-    bool TimeUnit::operator<(const TimeUnit &right) const {
+    bool TimeUnit::operator <(const TimeUnit &right) const {
         return mMicroseconds < right.mMicroseconds;
     }
 
-    TimeUnit TimeUnit::operator+(const TimeUnit &right) const {
+    TimeUnit TimeUnit::operator +(const TimeUnit &right) const {
         return {mMicroseconds + right.mMicroseconds, TimeUnit::Type::MICROSECONDS};
     }
 
-    TimeUnit TimeUnit::operator-(const TimeUnit &right) const {
+    TimeUnit TimeUnit::operator -(const TimeUnit &right) const {
         return {mMicroseconds - right.mMicroseconds, TimeUnit::Type::MICROSECONDS};
     }
 
-    TimeUnit TimeUnit::operator*(const TimeUnit &right) const {
+    TimeUnit TimeUnit::operator *(const TimeUnit &right) const {
         return {mMicroseconds * right.mMicroseconds, TimeUnit::Type::MICROSECONDS};
     }
 
-    TimeUnit TimeUnit::operator/(const TimeUnit &right) const {
-        return {mMicroseconds * right.mMicroseconds, TimeUnit::Type::MICROSECONDS};
+    TimeUnit TimeUnit::operator /(const TimeUnit &right) const {
+        return {mMicroseconds / right.mMicroseconds, TimeUnit::Type::MICROSECONDS};
     }
 
-    TimeUnit TimeUnit::operator^(const TimeUnit &right) const {
+    TimeUnit TimeUnit::operator %(const TimeUnit &right) const {
+        return {mMicroseconds % right.mMicroseconds, TimeUnit::Type::MICROSECONDS};
+    }
+
+    TimeUnit TimeUnit::operator &(const TimeUnit &right) const {
+        return {mMicroseconds & right.mMicroseconds, TimeUnit::Type::MICROSECONDS};
+    }
+
+    TimeUnit TimeUnit::operator |(const TimeUnit &right) const {
+        return {mMicroseconds | right.mMicroseconds, TimeUnit::Type::MICROSECONDS};
+    }
+
+    TimeUnit TimeUnit::operator ^(const TimeUnit &right) const {
         return {mMicroseconds ^ right.mMicroseconds, TimeUnit::Type::MICROSECONDS};
+    }
+
+    TimeUnit TimeUnit::operator <<(const TimeUnit &right) const {
+        return {mMicroseconds << right.mMicroseconds, TimeUnit::Type::MICROSECONDS};
+    }
+
+    TimeUnit TimeUnit::operator >>(const TimeUnit &right) const {
+        return {mMicroseconds >> right.mMicroseconds, TimeUnit::Type::MICROSECONDS};
+    }
+
+    TimeUnit& TimeUnit::operator +=(const TimeUnit &right) {
+        mMicroseconds += right.mMicroseconds;
+        return *this;
+    }
+
+    TimeUnit& TimeUnit::operator -=(const TimeUnit &right) {
+        mMicroseconds -= right.mMicroseconds;
+        return *this;
+    }
+
+    TimeUnit& TimeUnit::operator *=(const TimeUnit &right) {
+        mMicroseconds *= right.mMicroseconds;
+        return *this;
+    }
+
+    TimeUnit& TimeUnit::operator /=(const TimeUnit &right) {
+        mMicroseconds /= right.mMicroseconds;
+        return *this;
+    }
+
+    TimeUnit& TimeUnit::operator %=(const TimeUnit &right) {
+        mMicroseconds %= right.mMicroseconds;
+        return *this;
+    }
+
+    TimeUnit& TimeUnit::operator &=(const TimeUnit &right) {
+        mMicroseconds &= right.mMicroseconds;
+        return *this;
+    }
+
+    TimeUnit& TimeUnit::operator |=(const TimeUnit &right) {
+        mMicroseconds |= right.mMicroseconds;
+        return *this;
+    }
+
+    TimeUnit& TimeUnit::operator ^=(const TimeUnit &right) {
+        mMicroseconds ^= right.mMicroseconds;
+        return *this;
+    }
+
+    TimeUnit& TimeUnit::operator <<=(const TimeUnit &right) {
+        mMicroseconds <<= right.mMicroseconds;
+        return *this;
+    }
+
+    TimeUnit& TimeUnit::operator >>=(const TimeUnit &right) {
+        mMicroseconds >>= right.mMicroseconds;
+        return *this;
     }
 }

@@ -16,13 +16,13 @@ namespace ohf {
         oss.fill('0');
         oss << std::hex;
         for (char c : str) {
-            if (isalnum((unsigned char) c) || c == '-' || c == '_' || c == '.' || c == '~') {
+            if (isalnum((Uint8) c) || c == '-' || c == '_' || c == '.' || c == '~') {
                 oss << c;
                 continue;
             }
 
             oss << std::uppercase;
-            oss << '%' << std::setw(2) << (int) (unsigned char) c;
+            oss << '%' << std::setw(2) << (Uint32) (Uint8) c;
             oss << std::nouppercase;
         }
         return oss.str();
@@ -47,7 +47,7 @@ namespace ohf {
         return ss.str();
     }
 
-    HttpURL::HttpURL(const std::string &url) : pathEndsWithSlash(false)
+    HttpURL::HttpURL(const std::string &url) : mPathSuffix(false)
     {
         std::string tempUrl = url;
 
@@ -89,6 +89,7 @@ namespace ohf {
         // host
         if (offset == std::string::npos) { // if port and path not found
             mHost = tempUrl;
+            return;
         } else {
             mHost = tempUrl.substr(0, offset);
             tempUrl.erase(0, ++offset);
@@ -117,8 +118,8 @@ namespace ohf {
         // path
         if (offset != std::string::npos) {
             std::string path = tempUrl.substr(0, offset);
-            pathEndsWithSlash = util::string::endsWith(path, "/");
-            mPathSegments = util::string::split(path, "/");
+            mPathSuffix = util::string::endsWith(path, "/");
+            mPath = util::string::split(path, "/");
             tempUrl.erase(0, ++offset);
         }
 
@@ -129,9 +130,9 @@ namespace ohf {
             for (const auto &parameter : query) {
                 std::vector<std::string> nameValue = util::string::split(parameter, "=");
                 if (nameValue.size() == 2)
-                    queryParameters[nameValue[0]] = HttpURL::decode(nameValue[1]);
+                    mQuery[nameValue[0]] = HttpURL::decode(nameValue[1]);
                 else if (nameValue.size() == 1)
-                    queryParameters[nameValue[0]] = std::string();
+                    mQuery[nameValue[0]] = std::string();
                 else
                     throw Exception(Exception::Code::INVALID_QUERY_PARAMETER, "Invalid query parameter: " + parameter);
             }
@@ -142,8 +143,7 @@ namespace ohf {
             mFragment = tempUrl;
     }
 
-    HttpURL::HttpURL(const char *url) : HttpURL(std::string(url)) {
-    }
+    HttpURL::HttpURL(const char *url) : HttpURL(std::string(url)) {}
 
     Uint16 HttpURL::defaultPort(std::string scheme) {
         util::string::toLower(scheme);
@@ -171,40 +171,40 @@ namespace ohf {
     }
 
     std::string HttpURL::encodedPath() const {
-        if (mPathSegments.empty())
-            return std::string();
+        if (mPath.empty()) return "/";
 
         std::ostringstream oss;
-        for (int i = 0; i < mPathSegments.size() - 1; i++) {
-            std::string pathSegment = mPathSegments[i];
+        oss << '/';
+        for (int i = 0; i < mPath.size() - 1; i++) {
+            std::string pathSegment = mPath[i];
             oss << HttpURL::encode(pathSegment) << "/";
         }
-        oss << HttpURL::encode(mPathSegments[mPathSegments.size() - 1]);
-        if (pathEndsWithSlash)
+        oss << HttpURL::encode(mPath[mPath.size() - 1]);
+        if (mPathSuffix)
             oss << '/';
         return oss.str();
     }
 
     std::vector<std::string> HttpURL::encodedPathSegments() const {
         std::vector<std::string> path_segments;
-        for (const auto &pathSegment : mPathSegments)
+        for (const auto &pathSegment : mPath)
             path_segments.push_back(HttpURL::encode(pathSegment));
         return path_segments;
     }
 
     std::string HttpURL::encodedQuery() const {
-        if (queryParameters.empty())
+        if (mQuery.empty())
             return std::string();
 
         std::ostringstream oss;
-        for (int i = 0; i < queryParameters.size() - 1; i++) {
-            auto entry = std::next(queryParameters.begin(), i);
+        for (int i = 0; i < mQuery.size() - 1; i++) {
+            auto entry = std::next(mQuery.begin(), i);
             if (entry->second.empty())
                 oss << entry->first << '&';
             else
                 oss << entry->first << '=' << HttpURL::encode(entry->second) << '&';
         }
-        auto entry = std::next(queryParameters.begin(), queryParameters.size() - 1);
+        auto entry = std::next(mQuery.begin(), mQuery.size() - 1);
         if (entry->second.empty())
             oss << entry->first;
         else
@@ -226,49 +226,45 @@ namespace ohf {
 
     HttpURL::Builder HttpURL::newBuilder() const {
         HttpURL::Builder builder;
-        builder.pathSegments = mPathSegments;
-        builder.mQueryParameters = queryParameters;
+        builder.mPath = mPath;
+        builder.mQuery = mQuery;
         builder.mFragment = mFragment;
         builder.mHost = mHost;
         builder.mPort = mPort;
         builder.mScheme = mScheme;
-        builder.mPathEndsWithFlash = pathEndsWithSlash;
+        builder.mPathSuffix = mPathSuffix;
         return builder;
     }
 
     std::vector<std::string> HttpURL::pathSegments() const {
-        return mPathSegments;
+        return mPath;
     }
 
     Uint32 HttpURL::pathSize() const {
-        if (mPathSegments.empty())
-            return 0;
-        std::ostringstream oss;
-        for (int i = 0; i < mPathSegments.size() - 1; i++) {
-            std::string pathSegment = mPathSegments[i];
-            oss << HttpURL::encode(pathSegment) << "/";
-        }
-        oss << HttpURL::encode(mPathSegments[mPathSegments.size() - 1]);
-        return oss.str().length();
+        return encodedPath().size();
     }
 
     Uint16 HttpURL::port() const {
         return mPort;
     }
 
+    std::map<std::string, std::string> HttpURL::queryMap() {
+        return mQuery;
+    }
+
     std::string HttpURL::query() const {
-        if (queryParameters.empty())
+        if (mQuery.empty())
             return std::string();
 
         std::ostringstream oss;
-        for (int i = 0; i < queryParameters.size() - 1; i++) {
-            auto entry = std::next(queryParameters.begin(), i);
+        for (int i = 0; i < mQuery.size() - 1; i++) {
+            auto entry = std::next(mQuery.begin(), i);
             if (entry->second.empty())
                 oss << entry->first << '&';
             else
                 oss << entry->first << '=' << entry->second << '&';
         }
-        auto entry = std::next(queryParameters.begin(), queryParameters.size() - 1);
+        auto entry = std::next(mQuery.begin(), mQuery.size() - 1);
         if (entry->second.empty())
             oss << entry->first;
         else
@@ -277,22 +273,26 @@ namespace ohf {
     }
 
     std::string HttpURL::queryParameter(const std::string &name) const {
-        return queryParameters.find(name) != queryParameters.end() ? queryParameters.at(name) : std::string();
+        return mQuery.find(name) != mQuery.end() ? mQuery.at(name) : std::string();
     }
 
     std::string HttpURL::queryParameterName(Uint32 index) const {
-        return std::next(queryParameters.begin(), index)->first;
+        if(index > mQuery.size())
+            throw Exception(Exception::Code::OUT_OF_RANGE, "Out of range: " + std::to_string(index));
+        return std::next(mQuery.begin(), index)->first;
     }
 
     std::vector<std::string> HttpURL::queryParameterNames() const {
         std::vector<std::string> names;
-        for (const auto &nameValue : queryParameters)
+        for (const auto &nameValue : mQuery)
             names.push_back(nameValue.first);
         return names;
     }
 
     std::string HttpURL::queryParameterValue(Uint32 index) const {
-        return std::next(queryParameters.begin(), index)->second;
+        if(index > mQuery.size())
+            throw Exception(Exception::Code::OUT_OF_RANGE, "Out of range: " + std::to_string(index));
+        return std::next(mQuery.begin(), index)->second;
     }
 
     Uint32 HttpURL::querySize() const {
@@ -306,11 +306,13 @@ namespace ohf {
     std::string HttpURL::url() const {
         std::ostringstream oss;
 
-        oss << mScheme << "://" << mHost;
+        if(!mScheme.empty()) oss << mScheme << "://";
+
+        oss << mHost;
+
         if (mPort != 0 && defaultPort(mScheme) == 0) // if port specified but it is not default
             oss << ':' << mPort;
 
-        oss << '/';
         std::string path = encodedPath();
         if (!path.empty())
             oss << path;
@@ -326,26 +328,22 @@ namespace ohf {
         return oss.str();
     }
 
-    HttpURL* HttpURL::clone() const {
-        return new HttpURL(*this);
-    }
-
     std::string HttpURL::toString() const {
         return url();
     }
 
-    bool HttpURL::operator==(const HttpURL &url) {
-        auto ps1 = url.mPathSegments;
+    bool HttpURL::operator ==(const HttpURL &url) const {
+        auto ps1 = url.mPath;
         std::sort(ps1.begin(), ps1.end());
-        auto ps2 = std::move(this->mPathSegments);
+        auto ps2 = std::move(this->mPath);
         std::sort(ps2.begin(), ps2.end());
 
-        return url.pathEndsWithSlash == this->pathEndsWithSlash
+        return url.mPathSuffix == this->mPathSuffix
                && url.mScheme == this->mScheme
                && url.mHost == this->mHost
                && url.mFragment == this->mFragment
                && url.mPort == this->mPort
-               && url.queryParameters == this->queryParameters
+               && url.mQuery == this->mQuery
                && ps1 == ps2;
     }
 
@@ -355,9 +353,9 @@ namespace ohf {
 
     HttpURL::HttpURL(const Builder *builder) :
             mPort(builder->mPort),
-            pathEndsWithSlash(builder->mPathEndsWithFlash),
-            mPathSegments(builder->pathSegments),
-            queryParameters(builder->mQueryParameters),
+            mPathSuffix(builder->mPathSuffix),
+            mPath(builder->mPath),
+            mQuery(builder->mQuery),
             mFragment(builder->mFragment),
             mHost(builder->mHost),
             mScheme(builder->mScheme)

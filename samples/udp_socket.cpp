@@ -12,7 +12,7 @@ int main() {
 
         socket.send("www.udp-server.com", 1337, "Some request");
 
-        ohf::InetAddress address = ohf::InetAddress::EMPTY;
+        ohf::InetAddress address;
         ohf::Uint16 port; // unsigned short
         std::vector<char> response(1024);
         std::size_t received = socket.receive(address, port, response.data(), response.size());

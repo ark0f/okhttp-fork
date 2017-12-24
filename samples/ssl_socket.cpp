@@ -4,18 +4,28 @@
 
 #include <iostream>
 #include <ohf/Exception.hpp>
-#include <ohf/SSLSocket.hpp>
+#include <ohf/tcp/SSLSocket.hpp>
+#include <ohf/ssl/Initializer.hpp>
 
 int main() {
-    // Same API as TCPSocket but have function `sni(const std::string &host_name)`
+    /**
+     * Same API as tcp::Socket, but
+     * 1. have functions
+     *      void sni(const InetAddress &address)
+     *      void sni(bool b)
+     * 2. need once global initialize (for OpenSSL)
+     * 3. need ssl::Context
+     */
+
+    ohf::ssl::Initializer initializer; // no any exception
 
     try {
         ohf::HttpURL url = "https://yandex.ru";
 
-        ohf::SSLSocket sslSocket;
+        ohf::ssl::Context context(ohf::TLSVersion::SSLv23);
+        ohf::tcp::SSLSocket sslSocket(context);
         sslSocket.connect(url); // port specified by protocol `https`
-        sslSocket.sni(url.host());
-
+        sslSocket.sni(ohf::InetAddress(url.host()));
 
         std::iostream &ios = sslSocket.stream();
         ios << "GET / HTTP/1.1\r\n"
@@ -27,6 +37,7 @@ int main() {
 
         sslSocket.disconnect();
     } catch (ohf::Exception &e) {
-        std::cout << e.what() << std::endl << "\tCode: " << e.code() << std::endl;
+        std::cout << e.what() << std::endl
+                  << '\t' << "Code: " << (int) e.code() << std::endl;
     }
 }

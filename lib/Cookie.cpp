@@ -10,6 +10,8 @@
 #include "util/util.hpp"
 
 namespace ohf {
+
+
     Cookie::Cookie(HttpURL &httpURL, const std::string &setCookie) :
             m_expiresAt(TimeUnit::MINUS_ONE_SECOND),
             m_hostOnly(false),
@@ -22,7 +24,7 @@ namespace ohf {
             throw Exception(Exception::Code::INVALID_COOKIE_LINE, "Invalid cookie line: " + setCookie);
 
         std::string nameValue = parameters[0];
-        unsigned int offset = nameValue.find_first_of('=');
+        std::string::size_type offset = nameValue.find_first_of('=');
         if (offset == std::string::npos)
             throw Exception(Exception::Code::INVALID_COOKIE_NAME_VALUE, "Invalid cookie name-value: " + parameters[0]);
         m_name = nameValue.substr(0, offset);
@@ -37,7 +39,6 @@ namespace ohf {
                     m_secure = true;
                 else if (name == "httponly")
                     m_httpOnly = true;
-
             } else if (parameter.size() == 2) {
                 std::string name = parameter[0];
                 util::string::toLower(name);
@@ -48,7 +49,7 @@ namespace ohf {
                 } else if (name == "max-age") {
                     try {
                         m_expiresAt = TimeUnit::seconds(std::stoi(value));
-                    } catch (std::invalid_argument&) {
+                    } catch (const std::invalid_argument&) {
                         throw Exception(Exception::Code::INVALID_MAX_AGE, "Invalid Max-Age: " + value);
                     }
                     m_persistent = true;
@@ -88,10 +89,12 @@ namespace ohf {
     }
 
     bool Cookie::matches(HttpURL &httpURL) const {
-        if (!util::string::contains(httpURL.url(), m_domain)) return false;
+        bool domainMatch = m_hostOnly
+                ? httpURL.host() == m_domain
+                : util::string::contains(httpURL.host(), m_domain);
+        if (!domainMatch) return false;
 
-        if (m_secure && !httpURL.isHttps())
-            return false;
+        if (m_secure && !httpURL.isHttps()) return false;
 
         return m_path == httpURL.encodedPath();
     }

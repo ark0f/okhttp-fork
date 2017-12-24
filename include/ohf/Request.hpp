@@ -37,6 +37,8 @@ namespace ohf {
 
             Builder& put(const RequestBody &body);
 
+            Builder& method(const std::string &method);
+
             Builder& method(const std::string &method, const RequestBody &body);
 
             Builder& addHeader(const std::string &name, const std::string &value);
@@ -60,21 +62,21 @@ namespace ohf {
             friend class ohf::Request;
         };
 
-        RequestBody body();
+        RequestBody body() const;
 
-        CacheControl cacheControl();
+        CacheControl cacheControl() const;
 
-        std::string header(const std::string &name);
+        std::string header(const std::string &name) const;
 
-        std::vector<std::string> headers(const std::string &name);
+        std::vector<std::string> headers(const std::string &name) const;
 
-        Headers headers();
+        Headers headers() const;
 
-        std::string method();
+        std::string method() const;
 
-        HttpURL url();
+        HttpURL url() const;
 
-        bool isHttps();
+        bool isHttps() const;
 
         Builder newBuilder();
 

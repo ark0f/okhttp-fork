@@ -10,12 +10,8 @@ namespace ohf {
     Socket::Socket(const Type &type) :
             mType(type),
             mFD(SocketImpl::invalidSocket()),
-            mBlocking(true),
-            mWrite(TimeUnit::ZERO),
-            mRead(TimeUnit::ZERO)
+            mBlocking(true)
     {}
-
-    Socket::Socket() : mWrite(TimeUnit::ZERO), mRead(TimeUnit::ZERO) {}
 
     Socket::~Socket() {
         close();
@@ -31,7 +27,7 @@ namespace ohf {
         Socket::Handle handle = socket(AF_INET, mType == Type::TCP ? SOCK_STREAM : SOCK_DGRAM, 0);
         if(handle == SocketImpl::invalidSocket()) {
             throw Exception(Exception::Code::FAILED_TO_CREATE_SOCKET,
-                            "Failed to create socket: " + SocketImpl::getError());
+                    "Failed to create socket: " + SocketImpl::getError());
         }
         create(handle);
 
@@ -39,8 +35,9 @@ namespace ohf {
     }
 
     void Socket::create(Handle fd) {
-        if(mFD != SocketImpl::invalidSocket()) return;
-        mFD = fd;
+        if(mFD == SocketImpl::invalidSocket()) {
+            mFD = fd;
+        }
     }
 
     void Socket::blocking(bool mode) {
@@ -60,12 +57,4 @@ namespace ohf {
             mFD = SocketImpl::invalidSocket();
         }
     }
-
-    Socket::Socket(const Builder *builder) :
-            mType(builder->mType),
-            mFD(builder->mFD),
-            mBlocking(builder->mBlocking),
-            mWrite(builder->mWrite),
-            mRead(builder->mRead)
-    {}
 }

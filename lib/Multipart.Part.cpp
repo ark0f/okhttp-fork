@@ -31,7 +31,7 @@ namespace ohf {
             mHeaders(Headers::Builder()
                              .add("Content-Disposition", "form-data; name=\"" + handleQuotedString(name) + '"')
                              .build()),
-            mBody(RequestBody(MediaType::EMPTY, value)) {}
+            mBody(RequestBody(MediaType(), value)) {}
 
     MultipartBody::Part::Part(const std::string &name, const std::string &filename, const RequestBody &body) :
             mHeaders(Headers::Builder()

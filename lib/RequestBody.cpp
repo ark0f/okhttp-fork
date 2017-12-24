@@ -10,7 +10,7 @@
 #include "util/util.hpp"
 
 namespace ohf {
-    const RequestBody RequestBody::EMPTY;
+    RequestBody::RequestBody() : mediaType(MediaType()) {}
 
     RequestBody::RequestBody(const MediaType &contentType, const char *content, size_t count) :
             mediaType(contentType),
@@ -30,8 +30,6 @@ namespace ohf {
             mediaType(contentType),
             content(util::readStream(stream))
     {}
-
-    RequestBody::RequestBody() : mediaType(MediaType::EMPTY) {}
 
     Uint32 RequestBody::contentLength() {
         return content.size();

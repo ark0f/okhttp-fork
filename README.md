@@ -4,28 +4,33 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/7fa35ce47ad34ad991db821a9ece9c42)](https://www.codacy.com/app/Good-Pudge/okhttp-fork?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Good-Pudge/okhttp-fork&amp;utm_campaign=Badge_Grade)
 
 ## Overview
-* [Required libraries](#req_libs)
+* [Used libraries](#used_libs)
 * [Installation](#installation)
 * [Components](#components)
 * [License](#license)
 
-## <a name="req_libs"></a> Required libraries
+## <a name="used_libs"></a> Used libraries
 * [OpenSSL](https://github.com/openssl/openssl)
+* [Catch2](https://github.com/catchorg/Catch2) (automatically download single-include file into `tests/catch.hpp`)
 
 ## <a name="installation"></a> Installation
-First step:
+The first step:
 ````bash
 git clone https://github.com/Good-Pudge/OkHttpFork.git
 cd OkHttpFork
 cd build
 cmake ..
 ````
-If you want to build library as shared, use `BUILD_SHARED` option (default: OFF)
+If you want to build the library as shared, use `BUILD_SHARED` option (default: `OFF`)
 ````bash
 cmake .. -DBUILD_SHARED=ON
 ````  
+Also you can use `TESTS` option to compile tests (default: `ON`)
+````bash
+cmake .. -DTESTS=ON
+````
 
-Second step for different systems:
+The second step for different systems:
 * #### Windows:
     * MSVC:
     ````bash
@@ -36,15 +41,14 @@ Second step for different systems:
     mingw32-make -j2
     mingw32-make install
     ````
-    And will be created directory `ohf` in which there are `include` and `lib` directories
-* #### UNIX-like:
+    * UNIX-like
     ````bash
     make -j2
     sudo make install
     ````
-    And include files will be installed to `/usr/include/ohf`, library into `/usr/lib/`
+    Will installed directories in `${CMAKE_INSTALL_PREFIX}`. This are `include/ohf` and `lib`
 
-## <a name="components"></a> Components
+## <a name="components"></a> Original library components
 - [ ] Address
 - [ ] Authenticator
 - [ ] Cache
@@ -73,6 +77,7 @@ Second step for different systems:
     - [x] Builder
 - [ ] Handshake
 - [x] Headers
+    * Iterator (additional)
     - [x] Builder
 - [x] HttpURL
     - [x] Builder
@@ -97,10 +102,22 @@ Second step for different systems:
     - [x] Listener
 
 #### Additional components:
-* Socket (POSIX, Windows for now)
-* SSLSocket (extends Socket)
+* namespace `ssl`
+    * Context
+    * Initializer
+    * Socket
+    * SSL
+* namespace `tcp`
+    * Server
+        * Connection
+        * Iterator
+    * Socket
+        * StreamBuf
+    * SSLServer (extends Server)
+    * SSLSocket (extends Socket)
 * InetAddress
 * TimeUnit
+* UDPSocket
 
 ## <a name="license"></a> License
 OkHttp fork distribute with an Apache 2.0 License. See LICENSE and NOTICE for more info.

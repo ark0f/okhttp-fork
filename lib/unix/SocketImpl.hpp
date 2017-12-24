@@ -8,6 +8,7 @@
 #include <ohf/Socket.hpp>
 #include <ohf/Config.hpp>
 #include <arpa/inet.h>
+#include <netdb.h>
 #include <netinet/in.h>
 #include <unistd.h>
 #include <string>
@@ -17,13 +18,15 @@ namespace ohf {
     public:
         typedef socklen_t SocketLength;
 
+        struct Initializer {};
+
         static sockaddr_in createAddress(Uint32 address, Uint16 port);
 
-        static void close(int sock);
+        static void close(Socket::Handle sock);
 
         static std::string getError();
 
-        static void setBlocking(int sock, bool blocking);
+        static void setBlocking(Socket::Handle sock, bool blocking);
 
         static Socket::Handle invalidSocket();
     };

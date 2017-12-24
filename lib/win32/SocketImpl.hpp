@@ -15,13 +15,19 @@ namespace ohf {
     public:
         typedef int SocketLength;
 
+        struct Initializer {
+            Initializer();
+
+            ~Initializer();
+        };
+
         static sockaddr_in createAddress(Uint32 address, Uint16 port);
 
-        static void close(int sock);
+        static void close(Socket::Handle sock);
 
         static std::string getError();
 
-        static void setBlocking(int sock, bool blocking);
+        static void setBlocking(Socket::Handle sock, bool blocking);
 
         static Socket::Handle invalidSocket();
     };

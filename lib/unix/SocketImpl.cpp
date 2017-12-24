@@ -1,11 +1,10 @@
 //
-// Created by Good_Pudge.
+// Created by good-pudge on 01.11.17.
 //
 
 #include <cstring>
-#include <winsock.h>
+#include <sys/ioctl.h>
 #include "SocketImpl.hpp"
-#include "WinUtils.hpp"
 
 namespace ohf {
     sockaddr_in SocketImpl::createAddress(Uint32 address, Uint16 port) {
@@ -13,25 +12,25 @@ namespace ohf {
         std::memset(&sock_addr, 0, sizeof(sockaddr_in));
         sock_addr.sin_family = AF_INET;
         sock_addr.sin_port = htons(port);
-        sock_addr.sin_addr.S_un.S_addr = htonl(address);
+        sock_addr.sin_addr.s_addr = htonl(address);
 
         return sock_addr;
     }
 
-    void SocketImpl::close(int sock) {
-        closesocket(sock);
+    void SocketImpl::close(Socket::Handle sock) {
+        ::close(sock);
     }
 
     std::string SocketImpl::getError() {
-        return getWSAError();
+        return strerror(errno);
     }
 
-    void SocketImpl::setBlocking(int sock, bool blocking) {
+    void SocketImpl::setBlocking(Socket::Handle sock, bool blocking) {
         unsigned long mode = blocking ? 0 : 1;
-        ioctlsocket(sock, FIONBIO, &mode);
+        ioctl(sock, FIONBIO, &mode);
     }
 
     Socket::Handle SocketImpl::invalidSocket() {
-        return INVALID_SOCKET;
+        return -1;
     }
 }

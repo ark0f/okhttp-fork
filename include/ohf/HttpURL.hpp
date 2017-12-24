@@ -56,9 +56,9 @@ namespace ohf {
 
         private:
             Uint16 mPort;
-            std::map<std::string, std::string> mQueryParameters;
-            bool mPathEndsWithFlash;
-            std::vector<std::string> pathSegments;
+            std::map<std::string, std::string> mQuery;
+            bool mPathSuffix;
+            std::vector<std::string> mPath;
             std::string mFragment, mHost, mScheme;
 
             friend class ohf::HttpURL;
@@ -70,7 +70,7 @@ namespace ohf {
 
         static Uint16 defaultPort(std::string scheme);
 
-        explicit HttpURL(const std::string &tempUrl);
+        explicit HttpURL(const std::string &url);
 
         HttpURL(const char *url);
 
@@ -84,21 +84,19 @@ namespace ohf {
 
         std::string fragment() const;
 
-        // static HttpURL get(const URI &uri);
-        // static HttpURL get(const URL &url);
-        // static HttpURL get(const std::string &url);
         std::string host() const;
 
         bool isHttps() const;
 
         Builder newBuilder() const;
 
-        // Builder newBuilder(const std::string &link);
         std::vector<std::string> pathSegments() const;
 
         Uint32 pathSize() const;
 
         Uint16 port() const;
+
+        std::map<std::string, std::string> queryMap();
 
         std::string query() const;
 
@@ -110,33 +108,31 @@ namespace ohf {
 
         std::string queryParameterValue(Uint32 index) const;
 
-        // std::vector<std::string> queryParameterValues(const std::string &name);
+        // std::vector<std::string> queryParameterValues(const std::string &name) const;
+
         Uint32 querySize() const;
 
         // std::string redact();
         // HttpURL resolve(const std::string &link);
+
         std::string scheme() const;
 
         // std::string topPrivateDomain();
-        // URI uri();
-        // URL url();
-        std::string url() const;
 
-        HttpURL *clone() const;
+        std::string url() const;
 
         std::string toString() const;
 
-        bool operator==(const HttpURL &url);
+        bool operator==(const HttpURL &url) const;
 
         friend std::ostream &operator<<(std::ostream &stream, const HttpURL &httpURL);
     private:
         HttpURL(const Builder *builder);
-        //HttpURL(const HttpURL *url);
 
         Uint16 mPort;
-        bool pathEndsWithSlash;
-        std::vector<std::string> mPathSegments;
-        std::map<std::string, std::string> queryParameters;
+        bool mPathSuffix;
+        std::vector<std::string> mPath;
+        std::map<std::string, std::string> mQuery;
         std::string mFragment, mHost, mScheme;
     };
 }

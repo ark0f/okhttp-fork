@@ -17,6 +17,7 @@ namespace ohf {
             FAILED_TO_READ_STREAM,
             FAILED_TO_CREATE_SOCKET,
             UNKNOWN_HOST,
+            INVALID_ADDRESS_TYPE,
             FAILED_TO_CREATE_CONNECTION,
             NO_DATA_TO_SEND,
             FAILED_TO_SEND_DATA,
@@ -29,6 +30,10 @@ namespace ohf {
             SSL_CREATE_CONTEXT_ERROR,
             SSL_CREATE_CONNECTION_ERROR,
             SSL_ERROR,
+            SSL_ACCEPT_ERROR,
+            SSL_FAILED_TO_USE_CERTIFICATE_FILE,
+            SSL_FAILED_TO_USE_PRIVATE_KEY_FILE,
+            SSL_FAILED_TO_VERIFY_PRIVATE_KEY,
             INVALID_QUERY_PARAMETER,
             INVALID_URI,
             INVALID_PORT,
@@ -58,10 +63,14 @@ namespace ohf {
 
         const char *what() const noexcept override;
 
+        static const Exception * last() noexcept;
     private:
+        static Exception *m_last;
+
         Code m_code;
         std::string m_what;
     };
+
 }
 
 #endif //OKHTTPFORK_EXCEPTION_HPP

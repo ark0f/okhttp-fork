@@ -13,35 +13,35 @@ namespace ohf {
             mURL(*builder->mURL)
     {}
 
-    RequestBody Request::body() {
+    RequestBody Request::body() const {
         return mBody;
     }
 
-    CacheControl Request::cacheControl() {
+    CacheControl Request::cacheControl() const {
         return mCC;
     }
 
-    std::string Request::header(const std::string &name) {
+    std::string Request::header(const std::string &name) const {
         return mHeaders.get(name);
     }
 
-    std::vector<std::string> Request::headers(const std::string &name) {
+    std::vector<std::string> Request::headers(const std::string &name) const {
         return mHeaders.values(name);
     }
 
-    Headers Request::headers() {
+    Headers Request::headers() const {
         return mHeaders;
     }
 
-    std::string Request::method() {
+    std::string Request::method() const {
         return mMethod;
     }
 
-    HttpURL Request::url() {
+    HttpURL Request::url() const {
         return mURL;
     }
 
-    bool Request::isHttps() {
+    bool Request::isHttps() const {
         return mURL.isHttps();
     }
 

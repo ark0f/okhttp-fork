@@ -39,16 +39,12 @@ namespace ohf {
     {
         std::stringstream ss;
         for (int i = 0; i < names.size() - 1; i++) {
-            std::string name = names[i];
-            std::string value = values[i];
-
-            ss << HttpURL::encode(name);
-            if(!value.empty()) ss << '=' << HttpURL::encode(value);
+            ss << HttpURL::encode(names[i]);
+            ss << '=' << HttpURL::encode(values[i]);
             ss << '&';
         }
         ss << HttpURL::encode(names[names.size() - 1]);
-        std::string value = values[values.size() - 1];
-        if(!value.empty()) ss << '=' << HttpURL::encode(value);
+        ss << '=' << HttpURL::encode(values[values.size() - 1]);
 
         std::string ready = ss.str();
         content.insert(content.end(), ready.begin(), ready.end());

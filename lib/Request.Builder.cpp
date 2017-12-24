@@ -18,10 +18,10 @@ namespace ohf {
             throw Exception(Exception::Code::METHOD_IS_NOT_NAMED, "Method is not named: ");
         if(mURL == nullptr)
             throw Exception(Exception::Code::URL_IS_NOT_NAMED, "URL is not named: ");
-        if(mCC == nullptr)
+        if(mCC == nullptr) {
             mCC = new CacheControl();
-        if(mBody == nullptr)
-            mBody = new RequestBody(RequestBody::EMPTY);
+        } if(mBody == nullptr)
+            mBody = new RequestBody();
 
         return {this};
     }
@@ -81,6 +81,13 @@ namespace ohf {
         return *this;
     }
 
+    Request::Builder& Request::Builder::method(const std::string &method) {
+        mMethod = method;
+        mBody = nullptr;
+
+        return *this;
+    }
+
     Request::Builder& Request::Builder::method(const std::string &method, const RequestBody &body) {
         mMethod = method;
         mBody = body.clone();
@@ -109,7 +116,7 @@ namespace ohf {
     }
 
     Request::Builder& Request::Builder::url(const HttpURL &url) {
-        mURL = url.clone();
+        mURL = new HttpURL(url);
         return *this;
     }
 

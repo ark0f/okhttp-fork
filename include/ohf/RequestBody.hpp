@@ -16,7 +16,7 @@ namespace ohf {
 
     class RequestBody {
     public:
-        static const RequestBody EMPTY;
+        RequestBody();
 
         RequestBody(const MediaType &contentType, const char *content, size_t count);
 
@@ -31,9 +31,6 @@ namespace ohf {
         MediaType contentType();
 
         RequestBody *clone() const;
-
-    private:
-        RequestBody();
 
     protected:
         std::vector<Int8> content;

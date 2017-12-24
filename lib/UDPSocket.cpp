@@ -18,7 +18,7 @@ namespace ohf {
         sockaddr_in socket_address = SocketImpl::createAddress(address.toUint32(), port);
         if(::bind(mFD, (sockaddr *) &socket_address, sizeof(sockaddr_in)) == -1) {
             throw Exception(Exception::Code::FAILED_TO_BIND_SOCKET,
-                            "Failed to bind socket: " + SocketImpl::getError());
+                    "Failed to bind socket: " + SocketImpl::getError());
         }
     }
 
@@ -53,7 +53,7 @@ namespace ohf {
                             "Failed to receive data: " + SocketImpl::getError());
         }
 
-        address = inet_ntoa(socket_address.sin_addr);
+        address = *(Uint32 *) &socket_address.sin_addr;
         port = ntohs(socket_address.sin_port);
 
         return static_cast<size_t>(dataReceived);

@@ -36,24 +36,23 @@ namespace ohf {
         for (auto it = namesAndValues.begin(); it != namesAndValues.end(); it += 2) {
             std::string element = *it;
             util::string::toLower(element);
-            if (name == element)
-                return *(++it);
-
+            if (name == element) return *(++it);
         }
         return std::string();
     }
 
     Headers::Builder &Headers::Builder::removeAll(std::string name) {
         util::string::toLower(name);
+        std::vector<std::string> nav;
         for (auto it = namesAndValues.begin(); it != namesAndValues.end(); it += 2) {
             std::string element = *it;
             util::string::toLower(element);
-            if (name == element) {
-                namesAndValues.erase(it);
-                namesAndValues.erase(++it);
-                it -= 2;
+            if(name != element) {
+                nav.insert(nav.end(), it, it + 1);
+                nav.insert(nav.end(), it + 1, it + 2);
             }
         }
+        namesAndValues.swap(nav);
 
         return *this;
     }

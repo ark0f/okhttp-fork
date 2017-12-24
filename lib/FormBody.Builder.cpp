@@ -12,12 +12,6 @@ namespace ohf {
         return *this;
     }
 
-    FormBody::Builder& FormBody::Builder::add(const std::string &name) {
-        names.push_back(HttpURL::decode(name));
-        values.emplace_back();
-        return *this;
-    }
-
     FormBody FormBody::Builder::build() {
         return {this};
     }

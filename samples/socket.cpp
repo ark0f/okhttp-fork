@@ -4,11 +4,11 @@
 
 #include <iostream>
 #include <ohf/Exception.hpp>
-#include <ohf/TCPSocket.hpp>
+#include <ohf/tcp/Socket.hpp>
 
 int main() {
     try {
-        ohf::TCPSocket socket("www.yandex.ru", 80);
+        ohf::tcp::Socket socket("www.yandex.ru", 80);
 
         std::iostream &ios = socket.stream();
         ios << "GET / HTTP/1.1\r\n"

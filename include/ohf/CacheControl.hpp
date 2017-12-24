@@ -9,8 +9,6 @@
 #include "Headers.hpp"
 
 namespace ohf {
-    class Request;
-
     class CacheControl {
     public:
         class Builder {
@@ -50,6 +48,8 @@ namespace ohf {
             friend class ohf::CacheControl;
         };
 
+        CacheControl();
+
         explicit CacheControl(Headers &headers);
 
         bool isPrivate() const;
@@ -68,23 +68,22 @@ namespace ohf {
 
         bool onlyIfCached() const;
 
-        TimeUnit maxAgeSeconds() const;
+        TimeUnit maxAge() const;
 
-        TimeUnit maxStaleSeconds() const;
+        TimeUnit maxStale() const;
 
-        TimeUnit minFreshSeconds() const;
+        TimeUnit minFresh() const;
 
-        TimeUnit sMaxAgeSeconds() const;
+        TimeUnit sMaxAge() const;
 
         CacheControl *clone() const;
 
         std::string toString() const;
 
-        bool operator==(const CacheControl &cc);
+        bool operator==(const CacheControl &cc) const;
 
         friend std::ostream &operator<<(std::ostream &stream, const CacheControl &cacheControl);
     private:
-        CacheControl();
         CacheControl(const Builder *builder);
 
         bool
@@ -101,8 +100,6 @@ namespace ohf {
                 mSMaxAge,
                 mMaxStale,
                 mMinFresh;
-
-        friend class ohf::Request;
     };
 }
 

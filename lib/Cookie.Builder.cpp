@@ -28,7 +28,7 @@ namespace ohf {
 
     Cookie::Builder &Cookie::Builder::hostOnlyDomain(const std::string &domain) {
         m_domain = domain;
-        m_httpOnly = true;
+        m_hostOnly = true;
         return *this;
     }
 

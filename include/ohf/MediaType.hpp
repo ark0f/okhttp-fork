@@ -10,7 +10,7 @@
 namespace ohf {
     class MediaType {
     public:
-        static const MediaType EMPTY;
+        MediaType() = default;
 
         explicit MediaType(const std::string &str);
 
@@ -28,19 +28,18 @@ namespace ohf {
 
         std::string type() const;
 
-        bool operator==(const MediaType &mediaType);
+        bool operator==(const MediaType &mediaType) const;
 
         std::string toString() const;
 
         friend std::ostream &operator<<(std::ostream &stream, const MediaType &mediaType);
+
     private:
         std::string
                 mBoundary,
                 mCharset,
                 mSubType,
                 mType;
-
-        MediaType() = default;
     };
 }
 

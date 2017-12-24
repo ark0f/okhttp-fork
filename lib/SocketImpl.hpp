@@ -2,10 +2,10 @@
 // Created by Good_Pudge.
 //
 
-#include "../include/ohf/Config.hpp"
+#include <ohf/Config.hpp>
 
 #if defined(OKHTTPFORK_WINDOWS)
-    #include "Win32/SocketImpl.hpp"
+    #include "win32/SocketImpl.hpp"
 #elif defined(OKHTTPFORK_UNIX)
-    #include "UNIX/SocketImpl.hpp"
+    #include "unix/SocketImpl.hpp"
 #endif

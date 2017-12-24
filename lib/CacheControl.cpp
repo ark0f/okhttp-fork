@@ -24,7 +24,8 @@ namespace ohf {
             mMaxAge(TimeUnit::MINUS_ONE_SECOND),
             mSMaxAge(TimeUnit::MINUS_ONE_SECOND),
             mMaxStale(TimeUnit::MINUS_ONE_SECOND),
-            mMinFresh(TimeUnit::MINUS_ONE_SECOND) {
+            mMinFresh(TimeUnit::MINUS_ONE_SECOND)
+    {
         // split by "," and ", "
         std::vector<std::string> temp = split(std::move(headers.get("cache-control")), ", ");
         std::vector<std::string> cache_control;
@@ -125,19 +126,19 @@ namespace ohf {
         return mOnlyIfCached;
     }
 
-    TimeUnit CacheControl::maxAgeSeconds() const {
+    TimeUnit CacheControl::maxAge() const {
         return mMaxAge;
     }
 
-    TimeUnit CacheControl::maxStaleSeconds() const {
+    TimeUnit CacheControl::maxStale() const {
         return mMaxStale;
     }
 
-    TimeUnit CacheControl::minFreshSeconds() const {
+    TimeUnit CacheControl::minFresh() const {
         return mMinFresh;
     }
 
-    TimeUnit CacheControl::sMaxAgeSeconds() const {
+    TimeUnit CacheControl::sMaxAge() const {
         return mSMaxAge;
     }
 
@@ -188,7 +189,7 @@ namespace ohf {
         return str;
     }
 
-    bool CacheControl::operator==(const CacheControl &cc) {
+    bool CacheControl::operator==(const CacheControl &cc) const {
         return
                 // bool
                 this->mPublic == cc.mPublic

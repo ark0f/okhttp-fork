@@ -102,7 +102,7 @@ namespace ohf {
         // std::map<const char *, std::vector<const char *>> toMultimap();
         std::string value(Uint32 index) const;
 
-        std::vector<std::string> values(const std::string &name) const;
+        std::vector<std::string> values(std::string name) const;
 
         ValueType pair(Uint32 index) const;
 

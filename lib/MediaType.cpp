@@ -11,8 +11,6 @@
 #include "util/string.hpp"
 
 namespace ohf {
-    const MediaType MediaType::EMPTY = {};
-
     MediaType::MediaType(const std::string &str) {
         std::vector<std::string> values = util::string::split(str, "; ");
         if (values.empty())
@@ -62,11 +60,11 @@ namespace ohf {
         return mType;
     }
 
-    bool MediaType::operator==(const MediaType &mediaType) {
+    bool MediaType::operator==(const MediaType &mediaType) const {
         return mediaType.mBoundary == this->mBoundary
-               || mediaType.mCharset == this->mCharset
-               || mediaType.mType == this->mType
-               || mediaType.mSubType == this->mSubType;
+               && mediaType.mCharset == this->mCharset
+               && mediaType.mType == this->mType
+               && mediaType.mSubType == this->mSubType;
     }
 
     std::string MediaType::toString() const {

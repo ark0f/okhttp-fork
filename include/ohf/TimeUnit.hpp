@@ -33,14 +33,16 @@ namespace ohf {
         Int32 milliseconds() const;
         Int64 microseconds() const;
 
-        // for timeval
+        // timeval
         long sec() const;
         long usec() const;
 
         // automatic conversion
+        Type type() const;
         Int64 value() const;
-        std::string toString() const;
+        float floatValue() const;
 
+        // bool
         bool operator ==(const TimeUnit &right) const;
         bool operator !=(const TimeUnit &right) const;
         bool operator >=(const TimeUnit &right) const;
@@ -48,16 +50,40 @@ namespace ohf {
         bool operator >(const TimeUnit &right) const;
         bool operator <(const TimeUnit &right) const;
 
+        // math
         TimeUnit operator +(const TimeUnit &right) const;
         TimeUnit operator -(const TimeUnit &right) const;
         TimeUnit operator *(const TimeUnit &right) const;
         TimeUnit operator /(const TimeUnit &right) const;
+
+        TimeUnit operator %(const TimeUnit &right) const;
+
+        // bit
+        TimeUnit operator &(const TimeUnit &right) const;
+        TimeUnit operator |(const TimeUnit &right) const;
         TimeUnit operator ^(const TimeUnit &right) const;
+        TimeUnit operator <<(const TimeUnit &right) const;
+        TimeUnit operator >>(const TimeUnit &right) const;
+
+        // self math
+        TimeUnit& operator +=(const TimeUnit &right);
+        TimeUnit& operator -=(const TimeUnit &right);
+        TimeUnit& operator *=(const TimeUnit &right);
+        TimeUnit& operator /=(const TimeUnit &right);
+
+        TimeUnit& operator %=(const TimeUnit &right);
+
+        // self bit
+        TimeUnit& operator &=(const TimeUnit &right);
+        TimeUnit& operator |=(const TimeUnit &right);
+        TimeUnit& operator ^=(const TimeUnit &right);
+        TimeUnit& operator <<=(const TimeUnit &right);
+        TimeUnit& operator >>=(const TimeUnit &right);
     private:
         TimeUnit(float seconds);
 
         Type mType;
-        std::time_t mTime; // 2036
+        std::time_t mTime; // 2038
         Int64 mMicroseconds;
         long mSec;
         long mUSec;

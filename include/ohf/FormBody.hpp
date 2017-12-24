@@ -13,7 +13,6 @@ namespace ohf {
         class Builder {
         public:
             Builder &add(const std::string &name, const std::string &value);
-            Builder &add(const std::string &name);
 
             FormBody build();
 

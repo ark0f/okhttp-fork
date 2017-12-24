@@ -80,7 +80,7 @@ namespace ohf {
     }
 
     Uint32 Headers::size() const {
-        return namesAndValues.size() / 2;
+        return static_cast<Uint32>(namesAndValues.size() / 2);
     }
 
     std::string Headers::value(Uint32 index) const {
@@ -90,10 +90,13 @@ namespace ohf {
         return namesAndValues[i];
     }
 
-    std::vector<std::string> Headers::values(const std::string &name) const {
+    std::vector<std::string> Headers::values(std::string name) const {
+        util::string::toLower(name);
         std::vector<std::string> values;
         for (auto it = namesAndValues.begin(); it != namesAndValues.end(); it += 2) {
-            if (*it == name) values.push_back(*(it + 1));
+            std::string it_name = *it;
+            util::string::toLower(it_name);
+            if (it_name == name) values.push_back(*(it + 1));
         }
         return values;
     }
