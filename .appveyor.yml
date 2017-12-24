@@ -1,34 +1,33 @@
 init:
-  - git config --global core.autocrlf input
+    - git config --global core.autocrlf input
 
 clone_folder: c:\projects\okhttp-fork
 shallow_clone: true
 
 build:
-  parallel: true
+    parallel: true
 
 matrix:
-  fast_finish: false
+    fast_finish: false
 
 environment:
-  OPENSSL_INCLUDE_DIR: C:\OpenSSL-Win64\include
-  OPENSSL_CRYPTO_LIBRARY: C:\OpenSSL-Win64\lib
-  matrix:
-    - BUILD_SHARED: ON
-      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-    - BUILD_SHARED: ON
-      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
-    - BUILD_SHARED: ON
-      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-    - BUILD_SHARED: OFF
-      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
+    OPENSSL_ROOT_DIR: C:\OpenSSL-Win64
+    matrix:
+        - BUILD_SHARED: ON
+          APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+        - BUILD_SHARED: ON
+          APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
+        - BUILD_SHARED: OFF
+          APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+        - BUILD_SHARED: OFF
+          APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
 
 configuration:
-  - Debug
-  - Release
+    - Debug
+    - Release
 
 build_script:
-  - mkdir build
-  - cd build
-  - cmake .. -DCMAKE_BUILD_TYPE=%CONFIGURATION% -DBUILD_SHARED=%BUILD_SHARED%
-  - cmake --build .
+    - mkdir build
+    - cd build
+    - cmake .. -DCMAKE_BUILD_TYPE=%CONFIGURATION% -DBUILD_SHARED=%BUILD_SHARED%
+    - cmake --build .

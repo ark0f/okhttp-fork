@@ -70,6 +70,7 @@ namespace ohf {
                 throw Exception(Exception::Code::FAILED_TO_RECEIVE_DATA,
                                 "Failed to receive data: " + SocketImpl::getError());
             }
+            return received;
         }
 
         vector<Int8> Socket::receive(Int32 size) const {
