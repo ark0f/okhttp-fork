@@ -5,6 +5,7 @@
 #ifndef OKHTTPFORK_STRING_HPP
 #define OKHTTPFORK_STRING_HPP
 
+#include <string>
 #include <vector>
 
 namespace util {
@@ -26,7 +27,7 @@ namespace util {
         }
 
         inline void toLower(std::string &s) {
-            for (char &i : s) i = tolower(i);
+            for (char &i : s) i = std::tolower(i);
         }
 
         inline std::string::size_type firstIndexOf(const std::string &str, const std::string &find) {
