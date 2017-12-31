@@ -6,6 +6,7 @@
 #include <ohf/FormBody.hpp>
 #include <ohf/Exception.hpp>
 #include <ohf/HttpURL.hpp>
+#include <ohf/RangeException.hpp>
 
 namespace ohf {
     std::string FormBody::encodedName(Uint32 index) const {
@@ -18,13 +19,13 @@ namespace ohf {
 
     std::string FormBody::name(Uint32 index) const {
         if (index > names.size())
-            throw Exception(Exception::Code::OUT_OF_RANGE, "Out of range: " + std::to_string(index));
+            throw RangeException(index);
         return names[index];
     }
 
     std::string FormBody::value(Uint32 index) const {
         if (index > values.size())
-            throw Exception(Exception::Code::OUT_OF_RANGE, "Out of range: " + std::to_string(index));
+            throw RangeException(index);
         return values[index];
     }
 

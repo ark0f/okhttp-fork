@@ -8,6 +8,7 @@
 namespace ohf {
     enum class TLSVersion {
         SSLv23,
+        SSLv2,
         SSLv3,
         TLSv1,
         TLSv1_1,

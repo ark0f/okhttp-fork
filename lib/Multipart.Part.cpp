@@ -3,7 +3,7 @@
 //
 
 #include "../include/ohf/MultipartBody.hpp"
-#include "../include/ohf/Exception.hpp"
+#include "ohf/Exception.hpp"
 
 namespace ohf {
     std::string handleQuotedString(const std::string &str) {

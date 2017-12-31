@@ -34,6 +34,7 @@ namespace ohf {
             SSL_FAILED_TO_USE_CERTIFICATE_FILE,
             SSL_FAILED_TO_USE_PRIVATE_KEY_FILE,
             SSL_FAILED_TO_VERIFY_PRIVATE_KEY,
+            SSL_PROTOCOL_DOESNT_SUPPORTED,
             INVALID_QUERY_PARAMETER,
             INVALID_URI,
             INVALID_PORT,
@@ -52,7 +53,8 @@ namespace ohf {
             HEADER_NAME_IS_EMPTY,
             HEADER_VALUE_IS_EMPTY,
             METHOD_IS_NOT_NAMED,
-            URL_IS_NOT_NAMED
+            URL_IS_NOT_NAMED,
+            INVALID_EXCEPTION_CODE
         };
 
         Exception(const Code &code, const std::string &what) noexcept;
@@ -63,10 +65,11 @@ namespace ohf {
 
         const char *what() const noexcept override;
 
-        static const Exception * last() noexcept;
+        static const Exception *last() noexcept;
     private:
         static Exception *m_last;
 
+    protected:
         Code m_code;
         std::string m_what;
     };

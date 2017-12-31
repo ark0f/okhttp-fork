@@ -7,6 +7,7 @@ notifications:
         on_failure: always
 
 language: cpp
+cache: ccache
 
 os:
     - linux
@@ -33,5 +34,5 @@ script:
     - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-5 90
     - mkdir build
     - cd build
-    - cmake .. -DCMAKE_BUILD_TYPE=$BUILD_CONFIGURATION -DBUILD_SHARED=$BUILD_SHARED
+    - cmake .. -DCMAKE_BUILD_TYPE=$BUILD_CONFIGURATION -DBUILD_SHARED=$BUILD_SHARED -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
     - sudo make install -j4

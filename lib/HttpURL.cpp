@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <ohf/HttpURL.hpp>
 #include <ohf/Exception.hpp>
+#include <ohf/RangeException.hpp>
 #include "util/string.hpp"
 
 namespace ohf {
@@ -278,7 +279,7 @@ namespace ohf {
 
     std::string HttpURL::queryParameterName(Uint32 index) const {
         if(index > mQuery.size())
-            throw Exception(Exception::Code::OUT_OF_RANGE, "Out of range: " + std::to_string(index));
+            throw RangeException(index);
         return std::next(mQuery.begin(), index)->first;
     }
 
@@ -291,7 +292,7 @@ namespace ohf {
 
     std::string HttpURL::queryParameterValue(Uint32 index) const {
         if(index > mQuery.size())
-            throw Exception(Exception::Code::OUT_OF_RANGE, "Out of range: " + std::to_string(index));
+            throw RangeException(index);
         return std::next(mQuery.begin(), index)->second;
     }
 

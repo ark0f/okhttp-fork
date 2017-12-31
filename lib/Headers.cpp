@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <ohf/Headers.hpp>
 #include <ohf/Exception.hpp>
+#include <ohf/RangeException.hpp>
 #include "util/string.hpp"
 #include "util/util.hpp"
 
@@ -61,7 +62,7 @@ namespace ohf {
 
     std::string Headers::name(Uint32 index) const {
         if (index * 2 > namesAndValues.size())
-            throw Exception(Exception::Code::OUT_OF_RANGE, "Out of range: " + std::to_string(index));
+            throw RangeException(index);
         return namesAndValues[index * 2];
     }
 
@@ -86,7 +87,7 @@ namespace ohf {
     std::string Headers::value(Uint32 index) const {
         Uint32 i = index * 2 + 1;
         if (i > namesAndValues.size())
-            throw Exception(Exception::Code::OUT_OF_RANGE, "Out of range: " + std::to_string(index));
+            throw RangeException(index);
         return namesAndValues[i];
     }
 

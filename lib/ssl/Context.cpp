@@ -3,9 +3,8 @@
 //
 
 #include <ohf/ssl/Context.hpp>
-#include <ohf/Exception.hpp>
+#include <ohf/ssl/Exception.hpp>
 #include "Util.hpp"
-
 
 namespace ohf {
     namespace ssl {
@@ -15,6 +14,11 @@ namespace ohf {
                 case TLSVersion::SSLv23:
                     method = SSLv23_method();
                     break;
+            #ifdef SSL2_VERSION
+                case TLSVersion::SSLv2:
+                    method = SSLv2_method();
+                    break;
+            #endif
                 case TLSVersion::SSLv3:
                     method = SSLv3_method();
                     break;
@@ -27,31 +31,40 @@ namespace ohf {
                 case TLSVersion::TLSv1_2:
                     method = TLSv1_2_method();
                     break;
+                default:
+                    throw Exception(Exception::Code::SSL_PROTOCOL_DOESNT_SUPPORTED);
             }
 
             SSL_CTX *&context = pImpl->context;
             context = SSL_CTX_new(method);
             if(!context) {
-                throw Exception(Exception::Code::SSL_CREATE_CONTEXT_ERROR,
-                        "SSL create context error: " + getOpenSSLError());
+                throw Exception(Exception::Code::SSL_CREATE_CONTEXT_ERROR);
             }
         }
 
         Context::Context(DTLSVersion version) : pImpl(new impl) {
             const SSL_METHOD *method;
             switch (version) {
+            #ifdef DTLS1_VERSION
                 case DTLSVersion::TLSv1:
                     method = DTLSv1_method();
                     break;
+            #endif
+
+            #ifdef DTLS1_2_VERSION
                 case DTLSVersion::TLSv1_2:
                     method = DTLSv1_2_method();
                     break;
+            #endif
+                default:
+                    throw Exception(Exception::Code::SSL_PROTOCOL_DOESNT_SUPPORTED);
+
             }
+
             SSL_CTX* &context = pImpl->context;
             context = SSL_CTX_new(method);
             if(!context) {
-                throw Exception(Exception::Code::SSL_CREATE_CONTEXT_ERROR,
-                                "SSL create context error: " + getOpenSSLError());
+                throw Exception(Exception::Code::SSL_CREATE_CONTEXT_ERROR);
             }
         }
 
@@ -85,18 +98,15 @@ namespace ohf {
                   keyTI = SSL_FILETYPE_PEM;
 
             if(SSL_CTX_use_certificate_file(pImpl->context, file.c_str(), fileTI) <= 0) {
-                throw Exception(Exception::Code::SSL_FAILED_TO_USE_CERTIFICATE_FILE,
-                        "SSL failed to use certificate file: " + getOpenSSLError());
+                throw Exception(Exception::Code::SSL_FAILED_TO_USE_CERTIFICATE_FILE);
             }
 
             if(SSL_CTX_use_PrivateKey_file(pImpl->context, key.c_str(), keyTI) <= 0) {
-                throw Exception(Exception::Code::SSL_FAILED_TO_USE_PRIVATE_KEY_FILE,
-                        "SSL failed to use private key file: " + getOpenSSLError());
+                throw Exception(Exception::Code::SSL_FAILED_TO_USE_PRIVATE_KEY_FILE);
             }
 
             if(!SSL_CTX_check_private_key(pImpl->context)) {
-                throw Exception(Exception::Code::SSL_FAILED_TO_VERIFY_PRIVATE_KEY,
-                        "SSL failed to verify private key: " + getOpenSSLError());
+                throw Exception(Exception::Code::SSL_FAILED_TO_VERIFY_PRIVATE_KEY);
             }
         }
     }

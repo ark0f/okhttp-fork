@@ -5,6 +5,7 @@
 #include <sstream>
 #include <ohf/MultipartBody.hpp>
 #include <ohf/Exception.hpp>
+#include <ohf/RangeException.hpp>
 
 namespace ohf {
     MediaType MultipartBody::MIXED = "multipart/mixed";
@@ -19,7 +20,7 @@ namespace ohf {
 
     MultipartBody::Part MultipartBody::part(int index) {
         if (index > mParts.size())
-            throw Exception(Exception::Code::OUT_OF_RANGE, "Out of range: " + std::to_string(index));
+            throw RangeException(index);
         return mParts[index];
     }
 

@@ -11,6 +11,8 @@
 
 namespace ohf {
     namespace ssl {
+        class Exception;
+
         class SSL {
         public:
             explicit SSL(const Context &context);
@@ -37,6 +39,8 @@ namespace ohf {
             impl *pImpl;
 
             const Context &context;
+
+            friend class ohf::ssl::Exception;
         };
     }
 }

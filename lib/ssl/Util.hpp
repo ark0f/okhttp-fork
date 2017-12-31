@@ -9,6 +9,7 @@
 #include <ohf/ssl/Context.hpp>
 
 #include <openssl/ssl.h>
+#include <openssl/err.h>
 
 namespace ohf {
     namespace ssl {
@@ -20,7 +21,17 @@ namespace ohf {
             ::SSL_CTX *context;
         };
 
-        std::string getOpenSSLError();
+        inline std::string getOpenSSLError() {
+            std::string error;
+            unsigned long error_code;
+            while ((error_code = ERR_get_error())) {
+                char *str = ERR_error_string(error_code, nullptr);
+                if (!str) return error;
+
+                error += str;
+            }
+            return error;
+        }
     }
 }
 
