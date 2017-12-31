@@ -25,6 +25,8 @@ namespace ohf {
             ssl::Socket::create();
             tcp::Socket::create(ssl::Socket::mFD);
 
+            if(SNICalled) ssl->setTLSExtHostName(address.hostName());
+
             tcp::Socket::connect(address, port);
             ssl->connect();
         }

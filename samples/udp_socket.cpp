@@ -3,7 +3,7 @@
 //
 
 #include <ohf/Exception.hpp>
-#include <ohf/UDPSocket.hpp>
+#include <ohf/udp/Socket.hpp>
 #include <iostream>
 
 int main() {

@@ -116,10 +116,10 @@ namespace ohf {
         }
 
         // path
+        std::string path = tempUrl.substr(0, offset);
+        mPathSuffix = util::string::endsWith(path, "/");
+        mPath = util::string::split(path, "/");
         if (offset != std::string::npos) {
-            std::string path = tempUrl.substr(0, offset);
-            mPathSuffix = util::string::endsWith(path, "/");
-            mPath = util::string::split(path, "/");
             tempUrl.erase(0, ++offset);
         }
 

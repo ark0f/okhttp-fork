@@ -37,6 +37,24 @@ namespace ohf {
             }
         }
 
+        Context::Context(DTLSVersion version) : pImpl(new impl) {
+            const SSL_METHOD *method;
+            switch (version) {
+                case DTLSVersion::TLSv1:
+                    method = DTLSv1_method();
+                    break;
+                case DTLSVersion::TLSv1_2:
+                    method = DTLSv1_2_method();
+                    break;
+            }
+            SSL_CTX* &context = pImpl->context;
+            context = SSL_CTX_new(method);
+            if(!context) {
+                throw Exception(Exception::Code::SSL_CREATE_CONTEXT_ERROR,
+                                "SSL create context error: " + getOpenSSLError());
+            }
+        }
+
         Context::~Context() {
             SSL_CTX_free(pImpl->context);
             delete pImpl;

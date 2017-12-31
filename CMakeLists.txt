@@ -5,31 +5,18 @@ set(CMAKE_CXX_STANDARD 11)
 
 include_directories(include)
 
-file(GLOB_RECURSE INCLUDE RELATIVE "${PROJECT_SOURCE_DIR}" "include/*")
-file(GLOB LIB RELATIVE "${PROJECT_SOURCE_DIR}" "lib/*") # namespace ohf
-
-#[[file(GLOB LIB_APPEND RELATIVE "${PROJECT_SOURCE_DIR}" "lib/ssl/*") # namespace ohf::ssl
-list(APPEND LIB ${LIB_APPEND})
-file(GLOB LIb_APPEND RELATIVE "${PROJECT_SOURCE_DIR}" "lib/tcp/*") # namespace ohf::tcp
-list(APPEND LIB ${LIB_APPEND})
-file(GLOB LIB_APPEND RELATIVE "${PROJECT_SOURCE_DIR}" "lib/util/*")
-list(APPEND LIB ${LIB_APPEND})]]
-file(GLOB_RECURSE LIB RELATIVE "${PROJECT_SOURCE_DIR}" "lib/*")
+file(GLOB_RECURSE INCLUDE RELATIVE ${PROJECT_SOURCE_DIR} "include/*")
+file(GLOB_RECURSE LIB RELATIVE ${PROJECT_SOURCE_DIR} "lib/*")
 
 # Files for different systems
 if(WIN32)
-    file(GLOB FILES RELATIVE "${PROJECT_SOURCE_DIR}" "lib/unix/*")
+    file(GLOB FILES RELATIVE ${PROJECT_SOURCE_DIR} "lib/unix/*")
 elseif(UNIX)
-    file(GLOB FILES RELATIVE "${PROJECT_SOURCE_DIR}" "lib/win32/*")
+    file(GLOB FILES RELATIVE ${PROJECT_SOURCE_DIR} "lib/win32/*")
 endif()
 list(REMOVE_ITEM LIB ${FILES})
 
-option(BUILD_SHARED "Type of the library: static or shared" OFF)
-if (BUILD_SHARED)
-    add_library(ohf SHARED ${INCLUDE} ${LIB})
-else()
-    add_library(ohf STATIC ${INCLUDE} ${LIB})
-endif()
+add_library(ohf ${INCLUDE} ${LIB})
 
 # Libraries
 # OpenSSL
@@ -45,14 +32,16 @@ if (WIN32)
 endif()
 
 # Install
-set_target_properties(ohf PROPERTIES PUBLIC_HEADER "${INCLUDE}")
+set(INSTALL_DIRS "ssl" "tcp" "udp" ".")
+foreach(dir ${INSTALL_DIRS})
+    install(DIRECTORY "include/ohf/${dir}" DESTINATION "${CMAKE_INSTALL_PREFIX}/include/ohf")
+endforeach()
 install(TARGETS ohf
-        PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_PREFIX}/include
-        LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
-        ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
+        LIBRARY DESTINATION "${CMAKE_INSTALL_PREFIX}/lib"
+        ARCHIVE DESTINATION "${CMAKE_INSTALL_PREFIX}/lib")
 
 # Tests
-option(TESTS "Unit-tests for the library using Catch2" ON)
+option(TESTS "Unit-tests for ${PROJECT_NAME} using Catch2" ON)
 if(TESTS)
     add_subdirectory(tests)
 endif()

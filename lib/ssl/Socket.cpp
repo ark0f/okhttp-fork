@@ -10,7 +10,7 @@ namespace ohf {
         Socket::Socket(Type type, const Context &context) :
                 ohf::Socket(type),
                 context(context),
-                SNICalled(false)
+                SNICalled(true)
         {}
 
         void Socket::create(Handle fd) {
@@ -36,6 +36,10 @@ namespace ohf {
         void Socket::sni(const InetAddress &address) {
             sni(true);
             if(ssl) ssl->setTLSExtHostName(address.hostName());
+        }
+
+        bool Socket::isSNI() {
+            return SNICalled;
         }
     }
 }

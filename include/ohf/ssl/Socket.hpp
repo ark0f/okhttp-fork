@@ -24,6 +24,8 @@ namespace ohf {
 
             void sni(const InetAddress &address);
 
+            bool isSNI();
+
         protected:
             bool SNICalled;
             const Context &context;

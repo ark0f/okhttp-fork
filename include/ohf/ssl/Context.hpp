@@ -6,6 +6,7 @@
 #define OKHTTPFORK_SSL_CONTEXT_HPP
 
 #include <ohf/TLSVersion.hpp>
+#include <ohf/DTLSVersion.hpp>
 #include <string>
 
 namespace ohf {
@@ -20,6 +21,8 @@ namespace ohf {
             };
 
             explicit Context(TLSVersion version);
+
+            explicit Context(DTLSVersion version);
 
             ~Context();
 
