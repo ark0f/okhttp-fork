@@ -10,7 +10,7 @@
 
 namespace ohf {
     InetAddress InetAddress::BROADCAST = InetAddress(INADDR_BROADCAST);
-    InetAddress InetAddress::ANY = (Uint32) INADDR_ANY;
+    InetAddress InetAddress::ANY = InetAddress((Uint32) INADDR_ANY);
 
     std::string ip2s(const std::vector<ohf::Uint8> &ip) {
         std::string readyIP;
