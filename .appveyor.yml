@@ -33,5 +33,5 @@ build_script:
     - cmake --build .
 
 test_script:
-    - cd "build/tests"
+    - cd "tests"
     - .\ohf_tests
