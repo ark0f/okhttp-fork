@@ -13,13 +13,13 @@ matrix:
 environment:
     OPENSSL_ROOT_DIR: C:\OpenSSL-Win64
     matrix:
-        - BUILD_SHARED: ON
+        - BUILD_SHARED_LIBS: ON
           APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-        - BUILD_SHARED: ON
+        - BUILD_SHARED_LIBS: ON
           APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
-        - BUILD_SHARED: OFF
+        - BUILD_SHARED_LIBS: OFF
           APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-        - BUILD_SHARED: OFF
+        - BUILD_SHARED_LIBS: OFF
           APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
 
 configuration:
@@ -29,5 +29,5 @@ configuration:
 build_script:
     - mkdir build
     - cd build
-    - cmake .. -DCMAKE_BUILD_TYPE=%CONFIGURATION% -DBUILD_SHARED=%BUILD_SHARED% -DDTLS=ON
+    - cmake .. -DCMAKE_BUILD_TYPE=%CONFIGURATION% -DBUILD_SHARED_LIBS=%BUILD_SHARED_LIBS% -DDTLS=ON
     - cmake --build .

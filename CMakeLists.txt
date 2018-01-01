@@ -37,10 +37,7 @@ if (WIN32)
 endif()
 
 # Install
-set(INSTALL_DIRS "ssl" "tcp" "udp" ".")
-foreach(dir ${INSTALL_DIRS})
-    install(DIRECTORY "include/ohf/${dir}" DESTINATION "${CMAKE_INSTALL_PREFIX}/include/ohf")
-endforeach()
+install(DIRECTORY "include/ohf/" DESTINATION "${CMAKE_INSTALL_PREFIX}/include/ohf")
 install(TARGETS ohf
         LIBRARY DESTINATION "${CMAKE_INSTALL_PREFIX}/lib"
         ARCHIVE DESTINATION "${CMAKE_INSTALL_PREFIX}/lib")
