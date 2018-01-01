@@ -31,3 +31,7 @@ build_script:
     - cd build
     - cmake .. -DCMAKE_BUILD_TYPE=%CONFIGURATION% -DBUILD_SHARED_LIBS=%BUILD_SHARED_LIBS% -DDTLS=ON
     - cmake --build .
+
+test_script:
+    - cd "build/tests"
+    - .\ohf_tests
