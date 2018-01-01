@@ -17,9 +17,9 @@ namespace ohf {
 
         InetAddress() = default;
 
-        InetAddress(Uint32 address);
-
         InetAddress(const char *x);
+
+        explicit InetAddress(Uint32 address);
 
         explicit InetAddress(const std::string &x);
 

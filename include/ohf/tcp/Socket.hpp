@@ -42,7 +42,7 @@ namespace ohf {
                 friend class ohf::tcp::Socket;
             };
 
-            Socket(const IO &io = {1024, 1024});
+            explicit Socket(const IO &io = {1024, 1024});
 
             virtual void connect(const InetAddress &address, Uint16 port);
 

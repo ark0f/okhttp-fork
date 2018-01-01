@@ -9,7 +9,7 @@
 #include "SocketImpl.hpp"
 
 namespace ohf {
-    InetAddress InetAddress::BROADCAST = INADDR_BROADCAST;
+    InetAddress InetAddress::BROADCAST = InetAddress(INADDR_BROADCAST);
     InetAddress InetAddress::ANY = (Uint32) INADDR_ANY;
 
     std::string ip2s(const std::vector<ohf::Uint8> &ip) {
@@ -34,9 +34,9 @@ namespace ohf {
 
     SocketImpl::Initializer socket_init;
 
-    InetAddress::InetAddress(Uint32 address) : mIP(uint32tov(address)) {}
-
     InetAddress::InetAddress(const char *x) : InetAddress(std::string(x)) {}
+
+    InetAddress::InetAddress(Uint32 address) : mIP(uint32tov(address)) {}
 
     InetAddress::InetAddress(const std::string &x) : InetAddress(getAllByName(x)[0]) {}
 
