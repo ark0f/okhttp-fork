@@ -1,5 +1,5 @@
 notifications:
-    - provider: email
+    - provider: Email
       on_build_success: false
 
 init:
