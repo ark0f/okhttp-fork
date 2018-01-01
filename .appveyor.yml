@@ -1,5 +1,6 @@
 notifications:
-    on_build_success: false
+    - provider: email
+      on_build_success: false
 
 init:
     - git config --global core.autocrlf input
