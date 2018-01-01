@@ -2,8 +2,8 @@
 // Created by Good_Pudge.
 //
 
-#ifndef OKHTTPFORK_OOREXCEPTION_HPP
-#define OKHTTPFORK_OOREXCEPTION_HPP
+#ifndef OKHTTPFORK_RANGEEXCEPTION_HPP
+#define OKHTTPFORK_RANGEEXCEPTION_HPP
 
 #include <ohf/Config.hpp>
 #include "Exception.hpp"
@@ -20,4 +20,4 @@ namespace ohf {
     };
 }
 
-#endif // OKHTTPFORK_OOREXCEPTION_HPP
+#endif // OKHTTPFORK_RANGEEXCEPTION_HPP

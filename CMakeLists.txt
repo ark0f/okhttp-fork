@@ -3,6 +3,11 @@ project(OkHttpFork)
 
 set(CMAKE_CXX_STANDARD 11)
 
+option(DTLS "Access to use DTLS" OFF)
+if(DTLS)
+    add_definitions(-DOKHTTPFORK_DTLS)
+endif()
+
 include_directories(include)
 
 file(GLOB_RECURSE INCLUDE RELATIVE ${PROJECT_SOURCE_DIR} "include/*")

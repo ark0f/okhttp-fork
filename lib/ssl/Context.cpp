@@ -14,7 +14,7 @@ namespace ohf {
                 case TLSVersion::SSLv23:
                     method = SSLv23_method();
                     break;
-            #ifdef SSL2_VERSION
+            #ifndef OPENSSL_NO_SSL2
                 case TLSVersion::SSLv2:
                     method = SSLv2_method();
                     break;
@@ -45,13 +45,10 @@ namespace ohf {
         Context::Context(DTLSVersion version) : pImpl(new impl) {
             const SSL_METHOD *method;
             switch (version) {
-            #ifdef DTLS1_VERSION
+            #ifdef OKHTTPFORK_DTLS
                 case DTLSVersion::TLSv1:
                     method = DTLSv1_method();
                     break;
-            #endif
-
-            #ifdef DTLS1_2_VERSION
                 case DTLSVersion::TLSv1_2:
                     method = DTLSv1_2_method();
                     break;
