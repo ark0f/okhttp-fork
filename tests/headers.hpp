@@ -22,7 +22,7 @@ TEST_CASE("Headers") {
     }
 
     ohf::Headers headers = builder.build();
-    REQUIRE(headers.getDate().seconds() == 1445401728.0);
+    REQUIRE(headers.getDate().seconds() == 1445441280.0f);
     REQUIRE(headers.get("Some") == "one");
     REQUIRE(headers.name(0) == "Some");
     REQUIRE(headers.value(0) == "one");
