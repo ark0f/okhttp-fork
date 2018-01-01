@@ -53,7 +53,7 @@ namespace ohf {
                                 "Failed to receive data: " + SocketImpl::getError());
             }
 
-            address = *(Uint32 *) &socket_address.sin_addr;
+            address = InetAddress(*(Uint32 *) &socket_address.sin_addr);
             port = ntohs(socket_address.sin_port);
 
             return dataReceived;
