@@ -41,7 +41,7 @@ The second step for different systems:
     mingw32-make -j2
     mingw32-make install
     ````
-    * UNIX-like
+* #### UNIX-like
     ````bash
     make -j2
     sudo make install

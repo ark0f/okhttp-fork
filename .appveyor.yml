@@ -34,4 +34,4 @@ build_script:
 
 test_script:
     - cd "tests"
-    - .\ohf_tests
+    - .\ohf_tests.exe
