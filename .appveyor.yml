@@ -29,5 +29,5 @@ configuration:
 build_script:
     - mkdir build
     - cd build
-    - cmake .. -DCMAKE_BUILD_TYPE=%CONFIGURATION% -DBUILD_SHARED=%BUILD_SHARED%
+    - cmake .. -DCMAKE_BUILD_TYPE=%CONFIGURATION% -DBUILD_SHARED=%BUILD_SHARED% -DDTLS=ON
     - cmake --build .
