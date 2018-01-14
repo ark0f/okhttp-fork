@@ -6,8 +6,8 @@
 
 namespace ohf {
     namespace tcp {
-        SSLSocket::SSLSocket(const ssl::Context &context, const IO &io) :
-                tcp::Socket(io),
+        SSLSocket::SSLSocket(const ssl::Context &context, StreamBuf *buffer) :
+                tcp::Socket(buffer),
                 ssl::Socket(Type::TCP, context)
         {}
 
@@ -25,22 +25,22 @@ namespace ohf {
             ssl::Socket::create();
             tcp::Socket::create(ssl::Socket::mFD);
 
-            if(SNICalled) ssl->setTLSExtHostName(address.hostName());
+            if(SNICalled) mSSL->setTLSExtHostName(address.hostName());
 
             tcp::Socket::connect(address, port);
-            ssl->connect();
+            mSSL->connect();
         }
 
         Int32 SSLSocket::send(const char *data, Int32 size) const {
-            return ssl->write(data, size);
+            return mSSL->write(data, size);
         }
 
         Int32 SSLSocket::receive(char *data, Int32 size) const {
-            return ssl->read(data, size);
+            return mSSL->read(data, size);
         }
 
         void SSLSocket::accept() const {
-            ssl->accept();
+            mSSL->accept();
         }
     }
 }

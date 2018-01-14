@@ -65,9 +65,8 @@ namespace ohf {
 
             ss << "\r\n";
         }
-        ss << "--" << mBoundary << "--\r\n";
-        ss << "\r\n";
+        ss << "--" << mBoundary << "--";
         std::string readyContent = ss.str();
-        content = std::vector<char>(readyContent.begin(), readyContent.end());
+        content = std::vector<Int8>(readyContent.begin(), readyContent.end());
     }
 }

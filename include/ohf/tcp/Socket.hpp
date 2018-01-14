@@ -13,36 +13,28 @@
 #include <ohf/Socket.hpp>
 #include <ohf/TimeUnit.hpp>
 #include <ohf/InetAddress.hpp>
+#include <ohf/IOStreamBuf.hpp>
 
 namespace ohf {
     namespace tcp {
         class Socket : public ohf::Socket {
         public:
-            struct IO { // for stream
-                Int32 reading;
-                Int32 writing;
-            };
-
-            class StreamBuf : public std::streambuf {
+            class StreamBuf : public IOStreamBuf {
             public:
-                explicit StreamBuf(const IO &io, tcp::Socket *socket);
+                StreamBuf(Int32 write, Int32 read);
 
-            protected:
-                int sync() override;
-
-                int overflow(int c) override;
-
-                int underflow() override;
+                void socket(tcp::Socket *socket);
 
             private:
-                tcp::Socket *socket;
-                std::vector<Int8> rb; // reading buffer
-                std::vector<Int8> wb; // writing buffer
+                tcp::Socket *mSocket;
 
-                friend class ohf::tcp::Socket;
+            protected:
+                Int32 write(const char *data, Int32 length) override;
+
+                Int32 read(char *data, Int32 length) override;
             };
 
-            explicit Socket(const IO &io = {1024, 1024});
+            explicit Socket(StreamBuf *buffer = new StreamBuf(1024, 1024));
 
             virtual void connect(const InetAddress &address, Uint16 port);
 

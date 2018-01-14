@@ -7,6 +7,8 @@
 
 #include <ohf/ssl/SSL.hpp>
 #include <ohf/ssl/Context.hpp>
+#include <ohf/ssl/X509Certificate.hpp>
+#include <ohf/ssl/CipherSuite.hpp>
 
 #include <openssl/ssl.h>
 #include <openssl/err.h>
@@ -18,7 +20,15 @@ namespace ohf {
         };
 
         struct Context::impl {
-            ::SSL_CTX *context;
+            SSL_CTX *context;
+        };
+
+        struct X509Certificate::impl {
+            X509 *certificate;
+        };
+
+        struct CipherSuite::impl {
+            const SSL_CIPHER *cipher;
         };
 
         inline std::string getOpenSSLError() {

@@ -9,51 +9,55 @@
 #include "util/util.hpp"
 
 namespace ohf {
-    ResponseBody::ResponseBody(const MediaType &mediaType, const char *content, size_t count) :
+    ResponseBody::ResponseBody(const MediaType &mediaType, const char *content, size_t count, StreamBuf *buffer) :
             mediaType(mediaType),
-            mContent(std::vector<Int8>(content, content + count))
+            content(content, content + count),
+            is(std::make_shared<std::istream>(buffer))
     {
-        std::copy(mContent.begin(), mContent.end(), std::ostream_iterator<char>(ss));
+        buffer->vector(this->content);
     }
 
-    ResponseBody::ResponseBody(const MediaType &mediaType, const std::vector<Int8> &content) :
+    ResponseBody::ResponseBody(const MediaType &mediaType, const std::vector<Int8> &content, StreamBuf *buffer) :
             mediaType(mediaType),
-            mContent(content)
+            content(content),
+            is(std::make_shared<std::istream>(buffer))
     {
-        std::copy(mContent.begin(), mContent.end(), std::ostream_iterator<char>(ss));
+        buffer->vector(this->content);
     }
 
-    ResponseBody::ResponseBody(const MediaType &mediaType, const std::string &content) :
+    ResponseBody::ResponseBody(const MediaType &mediaType, const std::string &content, StreamBuf *buffer) :
             mediaType(mediaType),
-            mContent(content.begin(), content.end())
+            content(content.begin(), content.end()),
+            is(std::make_shared<std::istream>(buffer))
     {
-        std::copy(mContent.begin(), mContent.end(), std::ostream_iterator<char>(ss));
+        buffer->vector(this->content);
     }
 
-    ResponseBody::ResponseBody(const MediaType &mediaType, std::istream &stream) :
+    ResponseBody::ResponseBody(const MediaType &mediaType, std::istream &stream, StreamBuf *buffer) :
             mediaType(mediaType),
-            mContent(util::readStream(stream))
+            content(util::readStream(stream)),
+            is(std::make_shared<std::istream>(buffer))
     {
-        std::copy(mContent.begin(), mContent.end(), std::ostream_iterator<char>(ss));
+        buffer->vector(this->content);
     }
 
     std::vector<Int8> ResponseBody::bytes() {
-        return mContent;
+        return content;
+    }
+
+    std::string ResponseBody::string() {
+        return std::string(content.begin(), content.end());
     }
 
     std::istream &ResponseBody::stream() {
-        return ss;
+        return *is;
     }
 
-    unsigned int ResponseBody::contentLength() {
-        return mContent.size();
+    Uint64 ResponseBody::contentLength() {
+        return content.size();
     }
 
     MediaType ResponseBody::contentType() {
         return mediaType;
-    }
-
-    std::string ResponseBody::string() {
-        return std::string(mContent.begin(), mContent.end());
     }
 }

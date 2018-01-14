@@ -10,10 +10,11 @@ using namespace std;
 
 namespace ohf {
     namespace tcp {
-        Socket::Socket(const IO &io) :
+        Socket::Socket(StreamBuf *buffer) :
                 ohf::Socket(Type::TCP),
-                mIOS(make_shared<iostream>(new StreamBuf(io, this)))
+                mIOS(make_shared<iostream>(buffer))
         {
+            buffer->socket(this);
             mIOS->exceptions(ios::badbit); // rethrow exceptions
         }
 

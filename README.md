@@ -77,7 +77,7 @@ The second step for different systems:
     - [x] Builder
 - [ ] Handshake
 - [x] Headers
-    * Iterator (additional)
+    * Iterator
     - [x] Builder
 - [x] HttpURL
     - [x] Builder
@@ -96,6 +96,7 @@ The second step for different systems:
 - [ ] Response
     - [ ] Builder
 - [x] ResponseBody
+    * StreamBuf
 - [ ] Route
 - [x] WebSocket
     - [x] Factory
@@ -115,6 +116,9 @@ The second step for different systems:
         * StreamBuf
     * SSLServer (extends Server)
     * SSLSocket (extends Socket)
+* namespace `udp`
+    * Socket
+* IOStreamBuf
 * InetAddress
 * TimeUnit
 * UDPSocket

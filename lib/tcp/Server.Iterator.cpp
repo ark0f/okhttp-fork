@@ -3,7 +3,6 @@
 //
 
 #include <ohf/tcp/Server.hpp>
-#include "../SocketImpl.hpp"
 
 namespace ohf {
     namespace tcp {
@@ -26,8 +25,7 @@ namespace ohf {
         }
 
         bool Server::Iterator::operator!=(const Iterator &right) const {
-            return server->fd() != SocketImpl::invalidSocket()
-                   || right.server->fd() != SocketImpl::invalidSocket();
+            return server->isValid() || right.server->isValid();
         }
     }
 }

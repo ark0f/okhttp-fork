@@ -17,14 +17,14 @@ namespace ohf {
             if(fd != SocketImpl::invalidSocket()) {
                 ohf::Socket::create(fd);
 
-                ssl = new SSL(context);
-                ssl->setHandle(mFD);
+                mSSL = std::make_shared<SSL>(context);
+                mSSL->setHandle(mFD);
             }
         }
 
         void Socket::close() {
             if(mFD != SocketImpl::invalidSocket()) {
-                delete ssl;
+                mSSL.reset();
                 ohf::Socket::close();
             }
         }
@@ -35,11 +35,15 @@ namespace ohf {
 
         void Socket::sni(const InetAddress &address) {
             sni(true);
-            if(ssl) ssl->setTLSExtHostName(address.hostName());
+            if(mSSL) mSSL->setTLSExtHostName(address.hostName());
         }
 
-        bool Socket::isSNI() {
+        bool Socket::isSNI() const {
             return SNICalled;
+        }
+
+        const SSL& Socket::ssl() const {
+            return *mSSL;
         }
     }
 }

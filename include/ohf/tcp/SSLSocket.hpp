@@ -14,7 +14,7 @@ namespace ohf {
 
         class SSLSocket : public tcp::Socket, public ssl::Socket {
         public:
-            explicit SSLSocket(const ssl::Context &context, const IO &io = {1024, 1024});
+            explicit SSLSocket(const ssl::Context &context, StreamBuf *buffer = new StreamBuf(1024, 1024));
 
             using tcp::Socket::create;
             void create(Handle handle) override;

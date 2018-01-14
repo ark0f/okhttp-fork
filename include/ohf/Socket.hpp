@@ -41,6 +41,10 @@ namespace ohf {
 
         virtual void close();
 
+        bool isValid() const;
+
+        explicit operator bool();
+
     protected:
         Handle mFD;
         bool mBlocking;

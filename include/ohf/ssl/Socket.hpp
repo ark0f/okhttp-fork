@@ -7,6 +7,7 @@
 
 #include <ohf/Socket.hpp>
 #include <ohf/InetAddress.hpp>
+#include <memory>
 #include "SSL.hpp"
 
 namespace ohf {
@@ -24,12 +25,13 @@ namespace ohf {
 
             void sni(const InetAddress &address);
 
-            bool isSNI();
+            bool isSNI() const;
 
+            const SSL &ssl() const;
         protected:
             bool SNICalled;
             const Context &context;
-            SSL *ssl;
+            std::shared_ptr<SSL> mSSL;
         };
     }
 }

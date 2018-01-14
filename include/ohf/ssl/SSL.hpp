@@ -7,7 +7,8 @@
 
 #include <ohf/Socket.hpp>
 #include <vector>
-#include "Context.hpp"
+#include <ohf/ssl/Context.hpp>
+#include <ohf/ssl/CipherSuite.hpp>
 
 namespace ohf {
     namespace ssl {
@@ -19,21 +20,26 @@ namespace ohf {
 
             ~SSL();
 
-            void setHandle(Socket::Handle handle);
+            void setHandle(Socket::Handle handle) const;
 
-            Socket::Handle getHandle();
+            Socket::Handle getHandle() const;
 
-            void setTLSExtHostName(const std::string &hostname);
+            void setTLSExtHostName(const std::string &hostname) const;
 
-            void connect();
+            void connect() const;
             
-            Int32 write(const char *data, Int32 size);
+            Int32 write(const char *data, Int32 size) const;
 
-            Int32 read(char *data, Int32 size);
+            Int32 read(char *data, Int32 size) const;
 
-            void accept();
+            void accept() const;
+
+            CipherSuite currentCipher() const;
+
+            std::vector<CipherSuite> ciphers() const;
+
         private:
-            void checkIO(Int32 length);
+            void checkIO(Int32 length) const;
 
             struct impl;
             impl *pImpl;

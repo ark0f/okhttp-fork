@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 2.8)
 project(OkHttpFork)
 
+if(MSVC)
+    set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS 1)
+endif()
+
 set(CMAKE_CXX_STANDARD 11)
 
 option(DTLS "Access to use DTLS" OFF)

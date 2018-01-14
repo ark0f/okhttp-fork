@@ -22,7 +22,7 @@ namespace ohf {
     }
 
     void Socket::create() {
-        if(mFD != SocketImpl::invalidSocket()) return;
+        if(isValid()) return;
 
         Socket::Handle handle = socket(AF_INET, mType == Type::TCP ? SOCK_STREAM : SOCK_DGRAM, 0);
         if(handle == SocketImpl::invalidSocket()) {
@@ -35,13 +35,13 @@ namespace ohf {
     }
 
     void Socket::create(Handle fd) {
-        if(mFD == SocketImpl::invalidSocket()) {
+        if(!isValid()) {
             mFD = fd;
         }
     }
 
     void Socket::blocking(bool mode) {
-        if(mFD != SocketImpl::invalidSocket()) {
+        if(isValid()) {
             SocketImpl::setBlocking(mFD, mode);
         }
         mBlocking = mode;
@@ -52,9 +52,17 @@ namespace ohf {
     }
 
     void Socket::close() {
-        if(mFD != SocketImpl::invalidSocket()) {
+        if(isValid()) {
             SocketImpl::close(mFD);
             mFD = SocketImpl::invalidSocket();
         }
+    }
+
+    bool Socket::isValid() const {
+        return mFD != SocketImpl::invalidSocket();
+    }
+
+    Socket::operator bool() {
+        return isValid();
     }
 }
