@@ -65,7 +65,7 @@ namespace ohf {
 
         class Builder {
         public:
-            Builder &add(const std::string &line);
+            Builder &add(std::string line);
 
             Builder &add(const std::string &name, const std::string &value);
 
