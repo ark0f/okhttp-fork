@@ -15,6 +15,7 @@ int main() {
             << "Host: www.yandex.ru\r\n"
             << "Connection: close\r\n"
             << "\r\n";
+        ios.flush();
 
         std::cout << ios.rdbuf() << std::endl; // better if you don't do it
         socket.disconnect(); // or close() or destructor do it

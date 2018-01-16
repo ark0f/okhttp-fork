@@ -7,21 +7,25 @@
 #include "util/string.hpp"
 
 namespace ohf {
-    Headers::Builder &Headers::Builder::add(const std::string &line) {
-        std::vector<std::string> nameValue = util::string::split(line, ": ");
-        if (nameValue.size() != 2)
-            throw Exception(Exception::Code::INVALID_HEADER_LINE, "Invalid header line: " + line);
-        this->add(nameValue[0], nameValue[1]);
+    Headers::Builder &Headers::Builder::add(std::string line) {
+        Uint64 offset = line.find(": ");
+
+        std::string name = line.substr(0, offset);
+        line.erase(0, offset + 2);
+
+        std::string value = line.substr(0, line.length());
+        
+        this->add(name, value);
         return *this;
     }
 
     Headers::Builder &Headers::Builder::add(const std::string &name, const std::string &value) {
-        if (name.empty())
-            throw Exception(Exception::Code::HEADER_NAME_IS_EMPTY, "Header is empty: value: " + value);
-        namesAndValues.push_back(name);
+        if (name.empty() || value.empty()) {
+            throw Exception(Exception::Code::HEADER_NAME_IS_EMPTY, "Header is empty: name: \"" + name
+                                                                   + "\" value: \"" + value + "\"");
+        }
 
-        if (value.empty())
-            throw Exception(Exception::Code::HEADER_VALUE_IS_EMPTY, "Header is empty: name: " + name);
+        namesAndValues.push_back(name);
         namesAndValues.push_back(value);
 
         return *this;
