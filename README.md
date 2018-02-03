@@ -15,14 +15,18 @@
 
 ## <a name="used_libs"></a> Used libraries
 * [OpenSSL](https://github.com/openssl/openssl)
-* [Catch2](https://github.com/catchorg/Catch2) (automatically downloading single-include file into `tests/catch.hpp`)
+* [Catch2](https://github.com/catchorg/Catch2) (submodule in `tests`)
 
 ## <a name="compilers"></a> Compilers
 You can use any compiler that support full C++11 standard. These are tested by me and CI:
-* GCC >= 5 (issue: `mktime`)
-* MSVC >= 2013 (issue: `noexcept`)
+* GCC >= 5
+* MSVC >= 2015
 * MinGW (7.2.0)
 * Clang (3.8 and Travis CI default version)
+
+These compilers tested and aren't supported:
+* GCC 4.9.2 (issue: `mktime`)
+* MSVC 2013 (issue: `noexcept`)
 
 ## <a name="installation"></a> Installation
 The first step:
@@ -32,9 +36,9 @@ cd OkHttpFork
 cd build
 cmake ..
 ````
-If you want to build the library as shared, use `BUILD_SHARED` option (default: `OFF`)
+If you want to build the library as shared, use `BUILD_SHARED_LIBS` option (default: `OFF`)
 ````bash
-cmake .. -DBUILD_SHARED=ON
+cmake .. -DBUILD_SHARED_LIBS=ON
 ````  
 Also you can use `TESTS` option to compile tests (default: `ON`)
 ````bash

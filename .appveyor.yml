@@ -28,10 +28,7 @@ environment:
 
 matrix:
     allow_failures:
-        - SHARED: OFF
-          APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-        - SHARED: OFF
-          APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
+        - SHARED: ON
 
 configuration:
     - Debug
