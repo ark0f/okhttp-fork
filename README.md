@@ -1,17 +1,28 @@
 ## OkHttp fork for C++ 
-[![Build Status](https://travis-ci.org/Good-Pudge/okhttp-fork.svg?branch=master)](https://travis-ci.org/Good-Pudge/okhttp-fork)
-[![Build status](https://ci.appveyor.com/api/projects/status/sfpb0w34urnfn59l?svg=true)](https://ci.appveyor.com/project/Good-Pudge/okhttp-fork)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/7fa35ce47ad34ad991db821a9ece9c42)](https://www.codacy.com/app/Good-Pudge/okhttp-fork?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Good-Pudge/okhttp-fork&amp;utm_campaign=Badge_Grade)
+|           | master                                                                                                                                                                       | dev                                                                                                                                                                       |
+|:---------:|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |:------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Travis CI | [![Build Status](https://travis-ci.org/Good-Pudge/okhttp-fork.svg?branch=master)](https://travis-ci.org/Good-Pudge/okhttp-fork)                                              | [![Build Status](https://travis-ci.org/Good-Pudge/okhttp-fork.svg?branch=dev)](https://travis-ci.org/Good-Pudge/okhttp-fork)                                              |
+| AppVeyor  | [![Build status](https://ci.appveyor.com/api/projects/status/github/Good-Pudge/okhttp-fork?branch=master&svg=true)](https://ci.appveyor.com/project/Good-Pudge/okhttp-fork)  | [![Build status](https://ci.appveyor.com/api/projects/status/github/Good-Pudge/okhttp-fork?branch=dev&svg=true)](https://ci.appveyor.com/project/Good-Pudge/okhttp-fork)  |
+| Codacy    | [![Codacy Badge](https://api.codacy.com/project/badge/Grade/7fa35ce47ad34ad991db821a9ece9c42?branch=master)](https://www.codacy.com/app/Good-Pudge/okhttp-fork)              | [![Codacy Badge](https://api.codacy.com/project/badge/Grade/7fa35ce47ad34ad991db821a9ece9c42?branch=dev)](https://www.codacy.com/app/Good-Pudge/okhttp-fork)              |
+
 
 ## Overview
 * [Used libraries](#used_libs)
+* [Supported compilers](#compilers)
 * [Installation](#installation)
 * [Components](#components)
 * [License](#license)
 
 ## <a name="used_libs"></a> Used libraries
 * [OpenSSL](https://github.com/openssl/openssl)
-* [Catch2](https://github.com/catchorg/Catch2) (automatically download single-include file into `tests/catch.hpp`)
+* [Catch2](https://github.com/catchorg/Catch2) (automatically downloading single-include file into `tests/catch.hpp`)
+
+## <a name="compilers"></a> Compilers
+You can use any compiler that support full C++11 standard. These are tested by me and CI:
+* GCC >= 5 (issue: `mktime`)
+* MSVC >= 2013 (issue: `noexcept`)
+* MinGW (7.2.0)
+* Clang (3.8 and Travis CI default version)
 
 ## <a name="installation"></a> Installation
 The first step:
@@ -28,6 +39,10 @@ cmake .. -DBUILD_SHARED=ON
 Also you can use `TESTS` option to compile tests (default: `ON`)
 ````bash
 cmake .. -DTESTS=ON
+````
+And if you need DTLS, use `DTLS` option (default: `OFF`)
+````bash
+cmake .. -DDTLS=ON
 ````
 
 The second step for different systems:
@@ -46,7 +61,7 @@ The second step for different systems:
     make -j2
     sudo make install
     ````
-    Will installed directories in `${CMAKE_INSTALL_PREFIX}`. This are `include/ohf` and `lib`
+Will installed directories in `${CMAKE_INSTALL_PREFIX}`. This are `include/ohf` and `lib`
 
 ## <a name="components"></a> Original library components
 - [ ] Address
@@ -59,7 +74,6 @@ The second step for different systems:
 - [x] Callback
 - [ ] CertificatePinner
     - [ ] Builder
-- [ ] Challenge
 - [ ] CipherSuite
 - [ ] Connection
 - [ ] ConnectionPool
@@ -93,8 +107,8 @@ The second step for different systems:
 - [x] Request
     - [x] Builder
 - [x] RequestBody
-- [ ] Response
-    - [ ] Builder
+- [x] Response
+    - [x] Builder
 - [x] ResponseBody
     * StreamBuf
 - [ ] Route
@@ -102,12 +116,13 @@ The second step for different systems:
     - [x] Factory
     - [x] Listener
 
-#### Additional components:
+#### Additional and moved components:
 * namespace `ssl`
     * Context
     * Initializer
     * Socket
     * SSL
+    * Challenge
 * namespace `tcp`
     * Server
         * Connection

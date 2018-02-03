@@ -7,8 +7,8 @@
 
 namespace ohf {
     FormBody::Builder& FormBody::Builder::add(const std::string &name, const std::string &value) {
-        names.push_back(HttpURL::decode(name));
-        values.push_back(HttpURL::decode(value));
+        namesValues.push_back(name);
+        namesValues.push_back(value);
         return *this;
     }
 

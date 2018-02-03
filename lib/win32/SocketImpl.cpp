@@ -31,12 +31,31 @@ namespace ohf {
     }
 
     std::string SocketImpl::getError() {
+#ifdef UNICODE
+        wchar_t *error;
+        FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
+                      nullptr,
+                      WSAGetLastError(),
+                      MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_US),
+                      (LPWSTR) &error,
+                      0,
+                      nullptr);
+
+        Int32 size = WideCharToMultiByte(CP_UTF8, 0, error, (Int32) wcslen(error), nullptr, 0, nullptr, nullptr);
+        std::string str(size, 0);
+        WideCharToMultiByte             (CP_UTF8, 0, error, (Int32) wcslen(error), &str[0], size, nullptr, nullptr);
+        return str;
+#else
         char *error;
         FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
-                      nullptr, WSAGetLastError(),
+                      nullptr,
+                      WSAGetLastError(),
                       MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_US),
-                      (LPSTR) &error, 0, nullptr);
+                      (LPSTR) &error,
+                      0,
+                      nullptr);
         return error;
+#endif
     }
 
     void SocketImpl::setBlocking(Socket::Handle sock, bool blocking) {

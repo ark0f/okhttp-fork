@@ -18,36 +18,36 @@ namespace ohf {
     }
 
     std::string FormBody::name(Uint32 index) const {
-        if (index > names.size())
-            throw RangeException(index);
-        return names[index];
+        Uint32 i = index * 2;
+        if(i >= namesValues.size())
+            throw RangeException(i);
+        return namesValues[i];
     }
 
     std::string FormBody::value(Uint32 index) const {
-        if (index > values.size())
-            throw RangeException(index);
-        return values[index];
+        Uint32 i = index * 2 + 1;
+        if (i >= namesValues.size())
+            throw RangeException(i);
+        return namesValues[i];
     }
 
     Uint32 FormBody::size() const {
-        return names.size();
+        return (Uint32) namesValues.size() / 2;
     }
 
     FormBody::FormBody(const Builder *builder) :
-            RequestBody("application/x-www-form-urlencoded", std::vector<char>()),
-            names(builder->names),
-            values(builder->values)
+            RequestBody("application/x-www-form-urlencoded", std::vector<Int8>()),
+            namesValues(builder->namesValues)
     {
         std::stringstream ss;
-        for (int i = 0; i < names.size() - 1; i++) {
-            ss << HttpURL::encode(names[i]);
-            ss << '=' << HttpURL::encode(values[i]);
+        for (Uint32 i = 0; i < size(); i++) {
+            ss << HttpURL::encode(name(i));
+            ss << '=' << HttpURL::encode(value(i));
             ss << '&';
         }
-        ss << HttpURL::encode(names[names.size() - 1]);
-        ss << '=' << HttpURL::encode(values[values.size() - 1]);
 
         std::string ready = ss.str();
+        ready.erase(ready.length() - 1);
         content.insert(content.end(), ready.begin(), ready.end());
     }
 }

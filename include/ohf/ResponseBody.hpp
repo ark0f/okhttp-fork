@@ -30,26 +30,26 @@ namespace ohf {
         };
 
         ResponseBody(const MediaType &mediaType, const char *content, size_t count,
-                     StreamBuf *buffer = new StreamBuf(1024, 1024));
+                     std::streambuf *buffer = new StreamBuf(1024, 1024));
 
         ResponseBody(const MediaType &mediaType, const std::vector<Int8> &content,
-                     StreamBuf *buffer = new StreamBuf(1024, 1024));
+                     std::streambuf *buffer = new StreamBuf(1024, 1024));
 
         ResponseBody(const MediaType &mediaType, const std::string &content,
-                     StreamBuf *buffer = new StreamBuf(1024, 1024));
+                     std::streambuf *buffer = new StreamBuf(1024, 1024));
 
         ResponseBody(const MediaType &mediaType, std::istream &stream,
-                     StreamBuf *buffer = new StreamBuf(1024, 1024));
+                     std::streambuf *buffer = new StreamBuf(1024, 1024));
 
-        std::vector<Int8> bytes();
+        std::vector<Int8> bytes() const;
 
-        std::string string();
+        std::string string() const;
 
-        std::istream &stream();
+        std::istream &stream() const;
 
-        Uint64 contentLength();
+        Uint64 contentLength() const;
 
-        MediaType contentType();
+        MediaType contentType() const;
 
     private:
         std::shared_ptr<std::istream> is;

@@ -278,7 +278,7 @@ namespace ohf {
     }
 
     std::string HttpURL::queryParameterName(Uint32 index) const {
-        if(index > mQuery.size())
+        if(index >= mQuery.size())
             throw RangeException(index);
         return std::next(mQuery.begin(), index)->first;
     }
@@ -291,7 +291,7 @@ namespace ohf {
     }
 
     std::string HttpURL::queryParameterValue(Uint32 index) const {
-        if(index > mQuery.size())
+        if(index >= mQuery.size())
             throw RangeException(index);
         return std::next(mQuery.begin(), index)->second;
     }

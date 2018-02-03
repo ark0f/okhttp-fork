@@ -13,7 +13,7 @@
 namespace ohf {
     class Headers {
     public:
-        typedef std::pair<std::string, std::string> ValueType;
+        typedef std::pair<std::string, std::string> Pair;
 
         class Iterator {
         public:
@@ -21,13 +21,13 @@ namespace ohf {
 
             bool isOutOfRange() const;
 
-            const ValueType& operator *() const;
+            const Pair& operator *() const;
 
-            const ValueType& operator *();
+            const Pair& operator *();
 
-            const ValueType* operator ->() const;
+            const Pair* operator ->() const;
 
-            const ValueType* operator ->();
+            const Pair* operator ->();
 
             const Iterator operator ++(Int32) const;
 
@@ -49,10 +49,10 @@ namespace ohf {
 
             bool operator !=(const Iterator &right) const;
         private:
-            void swapType();
+            void swapPair();
 
             mutable bool outOfRange;
-            ValueType type;
+            Pair type;
             Uint32 index;
             const Headers *headers;
         };
@@ -78,8 +78,7 @@ namespace ohf {
             Builder &set(const std::string &name, const std::string &value);
 
         private:
-            // std::map<std::string, std::vector<std::string>> headers;
-            std::vector<std::string> namesAndValues;
+            std::vector<std::string> namesValues;
 
             friend class ohf::Headers;
         };
@@ -99,22 +98,23 @@ namespace ohf {
         // static Headers of(...);
         Uint32 size() const;
 
-        // std::map<const char *, std::vector<const char *>> toMultimap();
         std::string value(Uint32 index) const;
 
         std::vector<std::string> values(std::string name) const;
 
-        ValueType pair(Uint32 index) const;
+        Pair pair(Uint32 index) const;
 
         std::string toString() const;
 
-        bool operator==(const Headers &headers) const;
+        std::string operator [](const std::string &name) const;
+
+        bool operator ==(const Headers &headers) const;
 
         friend std::ostream &operator<<(std::ostream &stream, const Headers &headers);
     private:
         Headers(const Builder *builder);
 
-        std::vector<std::string> namesAndValues;
+        std::vector<std::string> namesValues;
     };
 }
 

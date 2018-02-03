@@ -12,7 +12,7 @@ using namespace util;
 using namespace util::string;
 
 namespace ohf {
-    CacheControl::CacheControl(Headers &headers) :
+    CacheControl::CacheControl(const Headers &headers) :
             mPublic(false),
             mPrivate(false),
             mNoCache(false),
@@ -26,17 +26,8 @@ namespace ohf {
             mMaxStale(TimeUnit::MINUS_ONE_SECOND),
             mMinFresh(TimeUnit::MINUS_ONE_SECOND)
     {
-        // split by "," and ", "
-        std::vector<std::string> temp = split(std::move(headers.get("cache-control")), ", ");
-        std::vector<std::string> cache_control;
-        for (const auto &e : temp) {
-            std::vector<std::string> v = split(e, ",");
-            if (v.size() == 1)
-                cache_control.push_back(v[0]);
-            else
-                for (const auto &element : v)
-                    cache_control.push_back(element);
-        }
+        std::vector<std::string> cache_control = split(headers.get("cache-control"),
+                                                       std::vector<std::string>{",", ", "});
 
         for (auto &element : cache_control) {
             util::string::toLower(element);
@@ -67,25 +58,25 @@ namespace ohf {
                 if (key == "max-age")
                     try {
                         mMaxAge = TimeUnit::seconds(std::stoi(value));
-                    } catch (std::invalid_argument&) {
+                    } catch (const std::invalid_argument&) {
                         throw Exception(Exception::Code::INVALID_MAX_AGE, "Invalid Max-Age: " + value);
                     }
                 else if (key == "s-maxage" && mPublic)
                     try {
                         mSMaxAge = TimeUnit::seconds(std::stoi(value));
-                    } catch (std::invalid_argument&) {
+                    } catch (const std::invalid_argument&) {
                         throw Exception(Exception::Code::INVALID_S_MAX_AGE, "Invalid S-MaxAge: " + value);
                     }
                 else if (key == "max-stale")
                     try {
                         mMaxStale = TimeUnit::seconds(std::stoi(value));
-                    } catch (std::invalid_argument&) {
+                    } catch (const std::invalid_argument&) {
                         throw Exception(Exception::Code::INVALID_MAX_STALE, "Invalid Max-Stale: " + value);
                     }
                 else if (key == "min-fresh")
                     try {
                         mMinFresh = TimeUnit::seconds(std::stoi(value));
-                    } catch (std::invalid_argument&) {
+                    } catch (const std::invalid_argument&) {
                         throw Exception(Exception::Code::INVALID_MIN_FRESH, "Invalid min fresh: " + value);
                     }
                 // stale-while-revalidate=<seconds> ?
@@ -150,6 +141,7 @@ namespace ohf {
     {}
 
     CacheControl::CacheControl(const Builder *builder) :
+            // bool
             mPublic(false),
             mPrivate(false),
             mMustRevalidate(false),
@@ -164,10 +156,6 @@ namespace ohf {
             mMaxStale(builder->mMaxStale),
             mMinFresh(builder->mMinFresh)
     {}
-
-    CacheControl* CacheControl::clone() const {
-        return new CacheControl(*this);
-    }
 
     std::string CacheControl::toString() const {
         std::stringstream ss;
@@ -189,7 +177,7 @@ namespace ohf {
         return str;
     }
 
-    bool CacheControl::operator==(const CacheControl &cc) const {
+    bool CacheControl::operator ==(const CacheControl &cc) const {
         return
                 // bool
                 this->mPublic == cc.mPublic
@@ -207,7 +195,7 @@ namespace ohf {
                 || this->mMinFresh == cc.mMinFresh;
     }
 
-    std::ostream &operator<<(std::ostream &stream, const CacheControl &cc) {
+    std::ostream &operator <<(std::ostream &stream, const CacheControl &cc) {
         return stream << cc.toString();
     }
 }

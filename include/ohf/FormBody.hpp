@@ -17,7 +17,7 @@ namespace ohf {
             FormBody build();
 
         private:
-            std::vector<std::string> names, values;
+            std::vector<std::string> namesValues;
 
             friend class ohf::FormBody;
         };
@@ -35,7 +35,7 @@ namespace ohf {
     private:
         FormBody(const Builder *builder);
 
-        std::vector<std::string> names, values;
+        std::vector<std::string> namesValues;
     };
 }
 

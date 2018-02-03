@@ -222,4 +222,16 @@ namespace ohf {
         mMicroseconds >>= right.mMicroseconds;
         return *this;
     }
+
+    TimeUnit operator "" _s(long double seconds) {
+        return TimeUnit::seconds(static_cast<float>(seconds));
+    }
+
+    TimeUnit operator "" _ms(Uint64 milliseconds) {
+        return TimeUnit::milliseconds(static_cast<Int32>(milliseconds));
+    }
+
+    TimeUnit operator "" _us(Uint64 microseconds) {
+        return TimeUnit::microseconds(static_cast<Int64>(microseconds));
+    }
 }

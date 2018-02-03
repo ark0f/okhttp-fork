@@ -10,12 +10,12 @@ namespace ohf {
             index(index),
             headers(headers)
     {
-        swapType();
+        swapPair();
     }
 
-    void Headers::Iterator::swapType() {
-        if(headers && index < headers->size()) {
-            ValueType valueType = headers->pair(index);
+    void Headers::Iterator::swapPair() {
+        if(headers != nullptr && 0 <= index < headers->size()) {
+            Pair &&valueType = headers->pair(index);
             type.swap(valueType);
             outOfRange = false;
         } else {
@@ -28,20 +28,20 @@ namespace ohf {
     }
 
     // operator *
-    const Headers::ValueType& Headers::Iterator::operator*() const {
+    const Headers::Pair& Headers::Iterator::operator*() const {
         return type;
     }
 
-    const Headers::ValueType & Headers::Iterator::operator *() {
+    const Headers::Pair & Headers::Iterator::operator *() {
         return type;
     }
 
     // operator ->
-    const Headers::ValueType* Headers::Iterator::operator->() const {
+    const Headers::Pair* Headers::Iterator::operator->() const {
         return &type;
     }
 
-    const Headers::ValueType* Headers::Iterator::operator->() {
+    const Headers::Pair* Headers::Iterator::operator->() {
         return &type;
     }
 
@@ -53,7 +53,7 @@ namespace ohf {
     const Headers::Iterator& Headers::Iterator::operator++() {
         index++;
 
-        swapType();
+        swapPair();
 
         return *this;
     }
@@ -66,7 +66,7 @@ namespace ohf {
     const Headers::Iterator& Headers::Iterator::operator--() {
         index--;
 
-        swapType();
+        swapPair();
 
         return *this;
     }
@@ -85,7 +85,7 @@ namespace ohf {
     const Headers::Iterator& Headers::Iterator::operator+=(Uint32 index) {
         this->index += index;
 
-        swapType();
+        swapPair();
 
         return *this;
     }
@@ -94,7 +94,7 @@ namespace ohf {
     const Headers::Iterator& Headers::Iterator::operator-=(Uint32 index) {
         this->index -= index;
 
-        swapType();
+        swapPair();
 
         return *this;
     }

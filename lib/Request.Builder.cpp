@@ -18,16 +18,16 @@ namespace ohf {
             throw Exception(Exception::Code::METHOD_IS_NOT_NAMED, "Method is not named: ");
         if(mURL == nullptr)
             throw Exception(Exception::Code::URL_IS_NOT_NAMED, "URL is not named: ");
-        if(mCC == nullptr) {
+        if(mCC == nullptr)
             mCC = new CacheControl();
-        } if(mBody == nullptr)
+        if(mBody == nullptr)
             mBody = new RequestBody();
 
         return {this};
     }
 
     Request::Builder& Request::Builder::cacheControl(const CacheControl &cacheControl) {
-        mCC = cacheControl.clone();
+        mCC = new CacheControl(cacheControl);
         std::string value = mCC->toString();
         if(value.empty()) return removeHeader("Cache-Control");
         return header("Cache-Control", value);
@@ -123,8 +123,8 @@ namespace ohf {
     Request::Builder::Builder(Request *request) :
             mMethod(request->mMethod),
             mHeaders(request->mHeaders.newBuilder()),
-            mCC(&request->mCC),
-            mURL(&request->mURL),
-            mBody(&request->mBody)
+            mCC(new CacheControl(request->mCC)),
+            mURL(new HttpURL(request->mURL)),
+            mBody(new RequestBody(request->mBody))
     {}
 }

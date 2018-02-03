@@ -10,8 +10,6 @@
 #include "util/util.hpp"
 
 namespace ohf {
-
-
     Cookie::Cookie(HttpURL &httpURL, const std::string &setCookie) :
             m_expiresAt(TimeUnit::MINUS_ONE_SECOND),
             m_hostOnly(false),
@@ -60,8 +58,7 @@ namespace ohf {
             }
         }
 
-        if (m_path.empty())
-            m_path = httpURL.encodedPath();
+        if (m_path.empty()) m_path = httpURL.encodedPath();
     }
 
     std::vector<Cookie> Cookie::parseAll(HttpURL &httpUrl, Headers &headers) {

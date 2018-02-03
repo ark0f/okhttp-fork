@@ -79,6 +79,7 @@ namespace ohf {
         TimeUnit& operator ^=(const TimeUnit &right);
         TimeUnit& operator <<=(const TimeUnit &right);
         TimeUnit& operator >>=(const TimeUnit &right);
+
     private:
         TimeUnit(float seconds);
 
@@ -88,6 +89,10 @@ namespace ohf {
         long mSec;
         long mUSec;
     };
+
+    TimeUnit operator "" _s(long double seconds);
+    TimeUnit operator "" _ms(Uint64 milliseconds);
+    TimeUnit operator "" _us(Uint64 microseconds);
 }
 
 #endif //OKHTTPFORK_TIMEUNIT_HPP

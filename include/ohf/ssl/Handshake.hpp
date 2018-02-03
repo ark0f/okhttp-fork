@@ -16,6 +16,8 @@ namespace ohf {
     namespace ssl {
         class Handshake {
         public:
+            Handshake() = default;
+
             explicit Handshake(SSL &ssl);
 
             Handshake(const TLSVersion &tlsVersion,

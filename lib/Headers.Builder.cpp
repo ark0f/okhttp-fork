@@ -21,12 +21,12 @@ namespace ohf {
 
     Headers::Builder &Headers::Builder::add(const std::string &name, const std::string &value) {
         if (name.empty() || value.empty()) {
-            throw Exception(Exception::Code::HEADER_NAME_IS_EMPTY, "Header is empty: name: \"" + name
-                                                                   + "\" value: \"" + value + "\"");
+            throw Exception(Exception::Code::HEADER_IS_EMPTY, "Header is empty: name: \"" + name
+                                                              + "\" value: \"" + value + "\"");
         }
 
-        namesAndValues.push_back(name);
-        namesAndValues.push_back(value);
+        namesValues.push_back(name);
+        namesValues.push_back(value);
 
         return *this;
     }
@@ -37,7 +37,7 @@ namespace ohf {
 
     std::string Headers::Builder::get(std::string name) const {
         util::string::toLower(name);
-        for (auto it = namesAndValues.begin(); it != namesAndValues.end(); it += 2) {
+        for (auto it = namesValues.begin(); it != namesValues.end(); it += 2) {
             std::string element = *it;
             util::string::toLower(element);
             if (name == element) return *(++it);
@@ -48,7 +48,7 @@ namespace ohf {
     Headers::Builder &Headers::Builder::removeAll(std::string name) {
         util::string::toLower(name);
         std::vector<std::string> nav;
-        for (auto it = namesAndValues.begin(); it != namesAndValues.end(); it += 2) {
+        for (auto it = namesValues.begin(); it != namesValues.end(); it += 2) {
             std::string element = *it;
             util::string::toLower(element);
             if(name != element) {
@@ -56,7 +56,7 @@ namespace ohf {
                 nav.insert(nav.end(), it + 1, it + 2);
             }
         }
-        namesAndValues.swap(nav);
+        namesValues.swap(nav);
 
         return *this;
     }

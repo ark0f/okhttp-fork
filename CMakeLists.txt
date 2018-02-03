@@ -1,17 +1,25 @@
 cmake_minimum_required(VERSION 2.8)
 project(OkHttpFork)
 
-if(MSVC)
-    set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS 1)
-endif()
-
 set(CMAKE_CXX_STANDARD 11)
 
+# Compiler options
+if(MSVC)
+    add_compile_options("/wd4018") # Compare signed and unsgined values
+endif()
+
+# Options
 option(DTLS "Access to use DTLS" OFF)
 if(DTLS)
     add_definitions(-DOKHTTPFORK_DTLS)
 endif()
 
+option(TESTS "Unit-tests for ${PROJECT_NAME} using Catch2" ON)
+if(TESTS)
+    add_subdirectory(tests)
+endif()
+
+# Common files
 include_directories(include)
 
 file(GLOB_RECURSE INCLUDE RELATIVE ${PROJECT_SOURCE_DIR} "include/*")
@@ -45,9 +53,3 @@ install(DIRECTORY "include/ohf/" DESTINATION "${CMAKE_INSTALL_PREFIX}/include/oh
 install(TARGETS ohf
         LIBRARY DESTINATION "${CMAKE_INSTALL_PREFIX}/lib"
         ARCHIVE DESTINATION "${CMAKE_INSTALL_PREFIX}/lib")
-
-# Tests
-option(TESTS "Unit-tests for ${PROJECT_NAME} using Catch2" ON)
-if(TESTS)
-    add_subdirectory(tests)
-endif()

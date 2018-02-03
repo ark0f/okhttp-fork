@@ -8,7 +8,7 @@
 #include <ohf/Protocol.hpp>
 #include <ohf/Request.hpp>
 #include <ohf/ResponseBody.hpp>
-#include <ohf/Challenge.hpp>
+#include <ohf/ssl/Challenge.hpp>
 #include <ohf/ssl/Handshake.hpp>
 
 namespace ohf {
@@ -16,7 +16,9 @@ namespace ohf {
     public:
         class Builder {
         public:
-            Response build();
+            Builder();
+
+            ~Builder();
 
             Builder& protocol(Protocol protocol);
 
@@ -48,23 +50,29 @@ namespace ohf {
 
             Builder& receivedResponse(const TimeUnit &time);
 
+            Response build();
+
         private:
+            Builder(const Response *response);
+
             Protocol mProtocol;
             Int32 mCode;
             std::string mMessage;
 
-            ResponseBody mBody;
-            Request mRequest;
+            ResponseBody *mBody;
+            Request *mRequest;
             ssl::Handshake mHandshake;
 
             //const Response &mCacheResponse;
             //const Response &mNetworkResponse;
             //const Response &mPriorResponse;
 
-            Headers mHeaders;
+            Headers::Builder mHeaders;
 
             TimeUnit mSent;
             TimeUnit mReceived;
+
+            friend class ohf::Response;
         };
 
         Protocol protocol() const;
@@ -73,13 +81,13 @@ namespace ohf {
 
         std::string message() const;
 
-        ResponseBody body();
+        ResponseBody body() const;
 
-        ResponseBody peekBody(Uint64 byteCount);
+        ResponseBody peekBody(Uint64 byteCount) const;
 
-        Request request();
+        Request request() const;
 
-        ssl::Handshake handshake();
+        ssl::Handshake handshake() const;
 
         //Response cacheResponse();
 
@@ -87,29 +95,43 @@ namespace ohf {
 
         //Response priorResponse();
 
-        std::string header(const std::string &name);
+        std::string header(const std::string &name) const;
 
-        std::string header(const std::string &name, const std::string &defaultValue);
+        std::string header(const std::string &name, const std::string &defaultValue) const;
 
-        std::vector<std::string> headers(const std::string &name);
+        std::vector<std::string> headers(const std::string &name) const;
 
-        Headers headers();
+        Headers headers() const;
 
-        TimeUnit sentRequest();
+        TimeUnit sentRequest() const;
 
-        TimeUnit receivedResponse();
+        TimeUnit receivedResponse() const;
 
-        CacheControl cacheControl();
+        CacheControl cacheControl() const;
 
-        std::vector<Challenge> challenges();
+        std::vector<ssl::Challenge> challenges() const;
 
-        void close();
+        bool isRedirect() const;
 
-        bool isRedirect();
-
-        bool isSuccessful();
+        bool isSuccessful() const;
 
         Builder newBuilder();
+
+    private:
+        Response(const Builder *builder);
+
+        Protocol mProtocol;
+        Int32 mCode;
+        std::string mMessage;
+
+        ResponseBody mBody;
+        Request mRequest;
+        ssl::Handshake mHandshake;
+
+        Headers mHeaders;
+
+        TimeUnit mSent;
+        TimeUnit mReceived;
     };
 }
 

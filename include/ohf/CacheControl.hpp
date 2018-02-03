@@ -50,7 +50,7 @@ namespace ohf {
 
         CacheControl();
 
-        explicit CacheControl(Headers &headers);
+        explicit CacheControl(const Headers &headers);
 
         bool isPrivate() const;
 
@@ -75,8 +75,6 @@ namespace ohf {
         TimeUnit minFresh() const;
 
         TimeUnit sMaxAge() const;
-
-        CacheControl *clone() const;
 
         std::string toString() const;
 

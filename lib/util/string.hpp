@@ -8,10 +8,13 @@
 #include <cctype>
 #include <string>
 #include <vector>
+#include <unordered_map>
 
 namespace util {
     namespace string {
         std::vector<std::string> split(std::string s, const std::string &delimiter);
+
+        std::vector<std::string> split(std::string s, const std::vector<std::string> &delimiters);
 
         inline bool startsWith(const std::string &s, const std::string &prefix) {
             return s.substr(0, prefix.length()) == prefix;

@@ -69,11 +69,11 @@ namespace ohf {
 
         std::string boundary();
 
-        Part part(int index);
+        Part part(Uint64 index);
 
         std::vector<Part> parts();
 
-        int size();
+        Uint64 size();
 
         MediaType type();
 

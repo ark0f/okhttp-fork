@@ -50,11 +50,13 @@ namespace ohf {
             INVALID_MIN_FRESH,
             UNEXPECTED_HEADER,
             INVALID_CONTENT_TYPE_LINE,
-            HEADER_NAME_IS_EMPTY,
-            HEADER_VALUE_IS_EMPTY,
+            HEADER_IS_EMPTY,
             METHOD_IS_NOT_NAMED,
             URL_IS_NOT_NAMED,
-            INVALID_EXCEPTION_CODE
+            INVALID_EXCEPTION_CODE,
+            RESPONSE_BODY_IS_NOT_SPECIFIED,
+            REQUEST_IS_NOT_SPECIFIED,
+            INVALID_CHALLENGE
         };
 
         Exception(const Code &code, const std::string &what) noexcept;

@@ -2,6 +2,7 @@
 // Created by Good_Pudge.
 //
 
+#include <sstream>
 #include "string.hpp"
 
 namespace util {
@@ -16,6 +17,15 @@ namespace util {
             }
             if (!str.empty()) tokens.push_back(str);
             return tokens;
+        }
+
+        std::vector<std::string> split(std::string s, const std::vector<std::string> &delimiters) {
+            std::vector<std::string> all_tokens;
+            for(const auto &delimiter : delimiters) {
+                std::vector<std::string> tokens = split(s, delimiter);
+                all_tokens.insert(all_tokens.end(), tokens.begin(), tokens.end());
+            }
+            return all_tokens;
         }
     }
 }

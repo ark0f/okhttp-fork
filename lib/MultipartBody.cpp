@@ -18,8 +18,8 @@ namespace ohf {
         return mBoundary;
     }
 
-    MultipartBody::Part MultipartBody::part(int index) {
-        if (index > mParts.size())
+    MultipartBody::Part MultipartBody::part(Uint64 index) {
+        if (index >= mParts.size())
             throw RangeException(index);
         return mParts[index];
     }
@@ -28,7 +28,7 @@ namespace ohf {
         return mParts;
     }
 
-    int MultipartBody::size() {
+    Uint64 MultipartBody::size() {
         return mParts.size();
     }
 
@@ -44,10 +44,9 @@ namespace ohf {
                     builder->mType.type().empty() // original MediaType
                     ? FORM
                     : MediaType(builder->mType.type() + '/' + builder->mType.subtype() +
-                      (builder->mType.charset().empty()
-                       ? std::string()
-                       : "; charset=" + builder->mType.charset()) +
-                      "; boundary=" + builder->mBoundary),
+                        (builder->mType.charset().empty()
+                        ? std::string()
+                        : "; charset=" + builder->mType.charset()) + "; boundary=" + builder->mBoundary),
                     std::vector<char>())
     {
         std::stringstream ss;
@@ -66,7 +65,8 @@ namespace ohf {
             ss << "\r\n";
         }
         ss << "--" << mBoundary << "--";
+
         std::string readyContent = ss.str();
-        content = std::vector<Int8>(readyContent.begin(), readyContent.end());
+        content = {readyContent.begin(), readyContent.end()};
     }
 }
