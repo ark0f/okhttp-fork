@@ -32,8 +32,10 @@ configuration:
     - Debug
     - Release
 
-build_script:
+install:
     - git submodule update --init --recursive
+
+build_script:
     - mkdir build
     - cd build
     - cmake .. -DCMAKE_BUILD_TYPE=%CONFIGURATION% -DBUILD_SHARED_LIBS=%SHARED% -DDTLS=ON
