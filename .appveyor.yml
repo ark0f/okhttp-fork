@@ -11,9 +11,6 @@ shallow_clone: true
 build:
     parallel: true
 
-matrix:
-    fast_finish: false
-
 environment:
     OPENSSL_ROOT_DIR: C:\OpenSSL-Win64
     matrix:
@@ -27,6 +24,7 @@ environment:
           APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
 
 matrix:
+    fast_finish: false
     allow_failures:
         - SHARED: ON
 
