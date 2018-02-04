@@ -99,7 +99,6 @@ namespace ohf {
     }
 
     std::vector<ssl::Challenge> Response::challenges() const {
-        // Basic realm="Access to the staging site", charset="UTF-8"
         std::vector<ssl::Challenge> challenges;
         for(const auto &header : mHeaders) {
             std::string name = header.first;

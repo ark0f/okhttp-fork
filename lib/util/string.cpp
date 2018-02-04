@@ -3,6 +3,7 @@
 //
 
 #include <sstream>
+#include <tuple>
 #include "string.hpp"
 
 namespace util {
@@ -20,12 +21,20 @@ namespace util {
         }
 
         std::vector<std::string> split(std::string s, const std::vector<std::string> &delimiters) {
-            std::vector<std::string> all_tokens;
-            for(const auto &delimiter : delimiters) {
-                std::vector<std::string> tokens = split(s, delimiter);
-                all_tokens.insert(all_tokens.end(), tokens.begin(), tokens.end());
+            std::vector<std::string> tokens;
+
+            while(!s.empty()) {
+                auto min_offset = std::string::npos;
+                std::string::size_type current_offset;
+                for (const auto &delimiter : delimiters) {
+                    current_offset = s.find(delimiter);
+                    if (current_offset < min_offset) min_offset = current_offset;
+                }
+                tokens.emplace_back(s, s.length() - min_offset);
+                s.erase(0, min_offset);
             }
-            return all_tokens;
+
+            return tokens;
         }
     }
 }

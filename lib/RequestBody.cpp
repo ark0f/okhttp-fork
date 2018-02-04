@@ -31,7 +31,7 @@ namespace ohf {
             content(util::readStream(stream))
     {}
 
-    Uint32 RequestBody::contentLength() {
+    Uint64 RequestBody::contentLength() {
         return content.size();
     }
 
@@ -39,7 +39,4 @@ namespace ohf {
         return mediaType;
     }
 
-    RequestBody* RequestBody::clone() const {
-        return new RequestBody(*this);
-    }
 }

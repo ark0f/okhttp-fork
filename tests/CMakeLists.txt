@@ -11,3 +11,5 @@ file(GLOB SOURCE_FILES RELAIVE ${PROJECT_SOURCE_DIR} "./*")
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES} ${CATCH})
 target_link_libraries(${PROJECT_NAME} ohf)
+
+add_test(NAME ${PROJECT_NAME} COMMAND ${PROJECT_NAME})

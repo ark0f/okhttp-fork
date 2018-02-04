@@ -6,7 +6,6 @@ clone_folder: c:\projects\okhttp-fork
 clone_script:
     - git config --global core.autocrlf input
     - git clone --recursive --branch=%APPVEYOR_REPO_BRANCH% https://github.com/%APPVEYOR_REPO_NAME%.git %APPVEYOR_BUILD_FOLDER%
-    - git checkout -qf %APPVEYOR_REPO_COMMIT%
 
 shallow_clone: true
 
