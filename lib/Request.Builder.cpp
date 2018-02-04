@@ -41,7 +41,7 @@ namespace ohf {
 
     Request::Builder& Request::Builder::delete_(const RequestBody &body) {
         mMethod = "DELETE";
-        mBody = body.clone();
+        mBody = new RequestBody(body);
 
         return *this;
     }
@@ -62,21 +62,21 @@ namespace ohf {
 
     Request::Builder& Request::Builder::patch(const RequestBody &body) {
         mMethod = "PATCH";
-        mBody = body.clone();
+        mBody = new RequestBody(body);
 
         return *this;
     }
 
     Request::Builder& Request::Builder::post(const RequestBody &body) {
         mMethod = "POST";
-        mBody = body.clone();
+        mBody = new RequestBody(body);
 
         return *this;
     }
 
     Request::Builder& Request::Builder::put(const RequestBody &body) {
         mMethod = "PUT";
-        mBody = body.clone();
+        mBody = new RequestBody(body);
 
         return *this;
     }
@@ -90,7 +90,7 @@ namespace ohf {
 
     Request::Builder& Request::Builder::method(const std::string &method, const RequestBody &body) {
         mMethod = method;
-        mBody = body.clone();
+        mBody = new RequestBody(body);
 
         return *this;
     }

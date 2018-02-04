@@ -14,14 +14,16 @@ namespace ohf {
                 case TLSVersion::SSLv23:
                     method = SSLv23_method();
                     break;
-            #ifndef OPENSSL_NO_SSL2
+            #if OPENSSL_VERSION_NUMBER <= 0x10100000L
+                #ifndef OPENSSL_NO_SSL2
                 case TLSVersion::SSLv2:
                     method = SSLv2_method();
                     break;
-            #endif
+                #endif
                 case TLSVersion::SSLv3:
                     method = SSLv3_method();
                     break;
+            #endif
                 case TLSVersion::TLSv1:
                     method = TLSv1_method();
                     break;

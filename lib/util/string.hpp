@@ -17,7 +17,9 @@ namespace util {
         std::vector<std::string> split(std::string s, const std::vector<std::string> &delimiters);
 
         inline bool startsWith(const std::string &s, const std::string &prefix) {
-            return s.substr(0, prefix.length()) == prefix;
+            if(s.length() >= prefix.length())
+                return s.substr(0, prefix.length()) == prefix;
+            return false;
         }
 
         inline bool endsWith(const std::string &s, const std::string &postfix) {
@@ -32,10 +34,6 @@ namespace util {
 
         inline void toLower(std::string &s) {
             for (char &i : s) i = std::tolower(i);
-        }
-
-        inline std::string::size_type firstIndexOf(const std::string &str, const std::string &find) {
-            return str.find(find);
         }
     }
 }

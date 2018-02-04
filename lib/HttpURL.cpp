@@ -50,84 +50,84 @@ namespace ohf {
 
     HttpURL::HttpURL(const std::string &url) : mPathSuffix(false)
     {
-        std::string tempUrl = url;
+        std::string tmpUrl = url;
 
-        std::string::size_type offset = util::string::firstIndexOf(tempUrl, "://");
+        std::string::size_type offset = tmpUrl.find("://");
         // scheme
         if (offset == std::string::npos) { // if protocol not exists
             mScheme = "http";
             mPort = 80;
         } else { // check protocol
-            std::string protocol = tempUrl.substr(0, offset);
+            std::string protocol = tmpUrl.substr(0, offset);
             mPort = HttpURL::defaultPort(protocol);
             mScheme = protocol;
             offset += 3;
-            tempUrl.erase(0, offset);
+            tmpUrl.erase(0, offset);
         }
 
-        offset = tempUrl.find_first_of('/');
+        offset = tmpUrl.find_first_of('/');
         // check query
         if (offset == std::string::npos) { // if path not found
-            offset = tempUrl.find_first_of('?');
+            offset = tmpUrl.find_first_of('?');
             if (offset != std::string::npos) // but found query - url is invalid
                 throw Exception(Exception::Code::INVALID_URI, "Invalid url: " + url);
         }
 
         // check fragment
         if (offset == std::string::npos) { // if path not found
-            offset = tempUrl.find_first_of('#');
+            offset = tmpUrl.find_first_of('#');
             if (offset != std::string::npos) // but found fragment - url is invalid
                 throw Exception(Exception::Code::INVALID_URI, "Invalid url: " + url);
         }
 
         bool portExists = true;
-        offset = tempUrl.find_first_of(':'); // find port pos
+        offset = tmpUrl.find_first_of(':'); // search port pos
         if (offset == std::string::npos) { // if port not found
-            offset = tempUrl.find_first_of('/'); // find path pos
+            offset = tmpUrl.find_first_of('/'); // search path pos
             portExists = false;
         }
 
         // host
         if (offset == std::string::npos) { // if port and path not found
-            mHost = tempUrl;
+            mHost = tmpUrl;
             return;
         } else {
-            mHost = tempUrl.substr(0, offset);
-            tempUrl.erase(0, ++offset);
+            mHost = tmpUrl.substr(0, offset);
+            tmpUrl.erase(0, ++offset);
         }
         if(mHost.empty()) throw Exception(Exception::Code::HOST_IS_EMPTY, "Host is empty");
 
         // port
         if (portExists) {
-            offset = tempUrl.find_first_of('/');
-            std::string port = tempUrl.substr(0, offset);
+            offset = tmpUrl.find_first_of('/');
+            std::string port = tmpUrl.substr(0, offset);
             try {
                 mPort = std::stoi(port);
             } catch (std::invalid_argument&) {
                 throw Exception(Exception::Code::INVALID_PORT, "Invalid port: " + port);
             }
-            tempUrl.erase(0, offset);
+            tmpUrl.erase(0, offset);
         }
 
         bool queryExists = true;
-        offset = tempUrl.find_first_of('?'); // find query
+        offset = tmpUrl.find_first_of('?'); // search query
         if (offset == std::string::npos) { // if query not found
-            offset = tempUrl.find_first_of('#'); // find fragment
+            offset = tmpUrl.find_first_of('#'); // search fragment
             queryExists = false;
         }
 
         // path
-        std::string path = tempUrl.substr(0, offset);
+        std::string path = tmpUrl.substr(0, offset);
         mPathSuffix = util::string::endsWith(path, "/");
         mPath = util::string::split(path, "/");
         if (offset != std::string::npos) {
-            tempUrl.erase(0, ++offset);
+            tmpUrl.erase(0, ++offset);
         }
 
         // query
         if (queryExists) {
-            offset = tempUrl.find_first_of('#');
-            std::vector<std::string> query = util::string::split(tempUrl.substr(0, offset), "&");
+            offset = tmpUrl.find_first_of('#');
+            std::vector<std::string> query = util::string::split(tmpUrl.substr(0, offset), "&");
             for (const auto &parameter : query) {
                 std::vector<std::string> nameValue = util::string::split(parameter, "=");
                 if (nameValue.size() == 2)
@@ -137,11 +137,11 @@ namespace ohf {
                 else
                     throw Exception(Exception::Code::INVALID_QUERY_PARAMETER, "Invalid query parameter: " + parameter);
             }
-            tempUrl.erase(0, ++offset);
+            tmpUrl.erase(0, ++offset);
         }
 
         if (offset != std::string::npos && offset != 0) // if fragment exists
-            mFragment = tempUrl;
+            mFragment = tmpUrl;
     }
 
     HttpURL::HttpURL(const char *url) : HttpURL(std::string(url)) {}

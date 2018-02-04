@@ -140,7 +140,6 @@ Will installed directories in `${CMAKE_INSTALL_PREFIX}`. This are `include/ohf` 
 * IOStreamBuf
 * InetAddress
 * TimeUnit
-* UDPSocket
 
 ## <a name="license"></a> License
 OkHttp fork distribute with an Apache 2.0 License. See LICENSE and NOTICE for more info.

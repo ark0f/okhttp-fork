@@ -26,11 +26,9 @@ namespace ohf {
 
         RequestBody(const MediaType &contentType, std::istream &stream);
 
-        Uint32 contentLength();
+        Uint64 contentLength();
 
         MediaType contentType();
-
-        RequestBody *clone() const;
 
     protected:
         std::vector<Int8> content;
