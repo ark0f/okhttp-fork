@@ -45,13 +45,13 @@ env:
     global:
         - TESTS=OFF
     matrix:
-        - BUILD_CONFIGURATION=Debug
-        - BUILD_CONFIGURATION=Release
-        - BUILD_SHARED_LIBS=ON
-        - BUILD_SHARED_LIBS=OFF
+        - BUILD_TYPE=Debug SHARED=ON
+        - BUILD_TYPE=Debug SHARED=OFF
+        - BUILD_TYPE=Release SHARED=ON
+        - BUILD_TYPE=Release SHARED=OFF
 
 script:
     - mkdir build
     - cd build
-    - cmake .. -DCMAKE_BUILD_TYPE=$BUILD_CONFIGURATION -DBUILD_SHARED_LIBS=$BUILD_SHARED_LIBS -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
+    - cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DBUILD_SHARED_LIBS=$SHARED -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DTESTS=$TESTS
     - sudo make install -j4
