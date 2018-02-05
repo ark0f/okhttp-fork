@@ -78,9 +78,9 @@ namespace ohf {
         std::vector<CipherSuite> SSL::ciphers() const {
             std::vector<CipherSuite> ciphers;
 
-            auto stack = SSL_get_ciphers(pImpl->ssl)->stack;
-            for(int i = 0; i < stack.num; i++) {
-                auto ssl_cipher = (const SSL_CIPHER *) stack.data[i];
+            auto* stack = SSL_get_ciphers(pImpl->ssl);
+            for(int i = 0; i < sk_SSL_CIPHER_num(stack); i++) {
+                auto ssl_cipher = sk_SSL_CIPHER_value(stack, i);
 
                 CipherSuite cipher;
                 cipher.pImpl->cipher = ssl_cipher;
