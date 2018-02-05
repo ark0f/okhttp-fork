@@ -12,6 +12,10 @@ cache: ccache
 os:
     - linux
 
+compiler:
+    - g++
+    - clang
+
 matrix:
     include:
         # Default
