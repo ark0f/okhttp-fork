@@ -12,26 +12,45 @@ cache: ccache
 os:
     - linux
 
-compiler:
-    - gcc
-    - clang
-
-addons:
-    apt:
-        sources:
-            - sourceline: 'ppa:ubuntu-toolchain-r/test'
-        packages:
-            - gcc-5
-            - g++-5
+matrix:
+    include:
+        # Default
+        - compiler: g++
+          addons:
+              apt:
+                  sources:
+                      - sourceline: 'ppa:ubuntu-toolchain-r/test'
+                  packages: ["g++-5"]
+          before_script:
+              - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-5 90
+        - compiler: clang
+        # Reporter
+        - compiler: clang
+          addons:
+              apt:
+                  packages: ["lcov"]
+          after_success:
+              - cd ${TRAVIS_BUILD_DIR}/build/tests
+              - lcov --directory . --capture --output-file coverage.info
+              - bash <(curl -s https://codecov.io/bash)
+        # Tester
+        - compiler: clang
+          env: TESTS=ON
+          after_success:
+              - make test
+    allow_failures:
+            - env: TESTS=ON # Some UNIT-tests are unstable
 
 env:
-    - BUILD_CONFIGURATION=Debug BUILD_SHARED_LIBS=ON
-    - BUILD_CONFIGURATION=Release BUILD_SHARED_LIBS=ON
-    - BUILD_CONFIGURATION=Debug BUILD_SHARED_LIBS=OFF
-    - BUILD_CONFIGURATION=Release BUILD_SHARED_LIBS=OFF
+    global:
+        - TESTS=OFF
+    matrix:
+        - BUILD_CONFIGURATION=Debug
+        - BUILD_CONFIGURATION=Release
+        - BUILD_SHARED_LIBS=ON
+        - BUILD_SHARED_LIBS=OFF
 
 script:
-    - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-5 90
     - mkdir build
     - cd build
     - cmake .. -DCMAKE_BUILD_TYPE=$BUILD_CONFIGURATION -DBUILD_SHARED_LIBS=$BUILD_SHARED_LIBS -DCMAKE_CXX_COMPILER_LAUNCHER=ccache

@@ -11,30 +11,51 @@ namespace ohf {
         Context::Context(TLSVersion version) : pImpl(new impl) {
             const SSL_METHOD *method;
             switch (version) {
+                // OpenSSL 1.1.0
+            #if OPENSSL_VERSION_NUMBER >= 0x10100000L
+                case TLSVersion::TLS:
+                    method = TLS_method();
+            #endif
+
+                // OpenSSL 1.0.2 and 1.1.0
                 case TLSVersion::SSLv23:
                     method = SSLv23_method();
                     break;
-            #if OPENSSL_VERSION_NUMBER <= 0x10100000L
+
+                // OpenSSL 1.0.2
+            #if OPENSSL_VERSION_NUMBER < 0x10100000L
                 #ifndef OPENSSL_NO_SSL2
                 case TLSVersion::SSLv2:
                     method = SSLv2_method();
                     break;
                 #endif
+
                 case TLSVersion::SSLv3:
                     method = SSLv3_method();
                     break;
             #endif
+
+                // deprecated
+            #ifndef OPENSSL_NO_TLS1_METHOD
                 case TLSVersion::TLSv1:
                     method = TLSv1_method();
                     break;
+            #endif
+
+            #ifndef OPENSSL_NO_TLS1_1_METHOD
                 case TLSVersion::TLSv1_1:
                     method = TLSv1_1_method();
                     break;
+            #endif
+
+            #ifndef OPENSSL_NO_TLS1_2_METHOD
                 case TLSVersion::TLSv1_2:
                     method = TLSv1_2_method();
                     break;
+            #endif
+
                 default:
-                    throw Exception(Exception::Code::SSL_PROTOCOL_DOESNT_SUPPORTED);
+                    throw Exception(Exception::Code::SSL_PROTOCOL_DOES_NOT_SUPPORTED);
             }
 
             SSL_CTX *&context = pImpl->context;
@@ -47,16 +68,25 @@ namespace ohf {
         Context::Context(DTLSVersion version) : pImpl(new impl) {
             const SSL_METHOD *method;
             switch (version) {
-            #ifdef OKHTTPFORK_DTLS
-                case DTLSVersion::TLSv1:
+        #ifdef OKHTTPFORK_DTLS
+                case DTLSVersion::DTLS:
+                    method = DTLS_method();
+                    break;
+            #ifndef OPENSSL_NO_DTLS1_METHOD
+                case DTLSVersion::DTLSv1:
                     method = DTLSv1_method();
                     break;
-                case DTLSVersion::TLSv1_2:
+            #endif
+
+            #ifndef OPENSSL_NO_DTLS1_2_METHOD
+                case DTLSVersion::DTLSv1_2:
                     method = DTLSv1_2_method();
                     break;
             #endif
+
+        #endif
                 default:
-                    throw Exception(Exception::Code::SSL_PROTOCOL_DOESNT_SUPPORTED);
+                    throw Exception(Exception::Code::SSL_PROTOCOL_DOES_NOT_SUPPORTED);
 
             }
 

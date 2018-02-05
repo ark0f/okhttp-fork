@@ -34,7 +34,7 @@ namespace ohf {
                 case Exception::Code::SSL_FAILED_TO_VERIFY_PRIVATE_KEY:
                     m_what = "SSL failed to verify private key: ";
                     break;
-                case Exception::Code::SSL_PROTOCOL_DOESNT_SUPPORTED:
+                case Exception::Code::SSL_PROTOCOL_DOES_NOT_SUPPORTED:
                     m_what = "SSL protocol doesn't supported: ";
                 default: {
                     throw ohf::Exception(Exception::Code::INVALID_EXCEPTION_CODE,

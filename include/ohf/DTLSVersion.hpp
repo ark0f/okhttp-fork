@@ -7,8 +7,9 @@
 
 namespace ohf {
     enum class DTLSVersion {
-        TLSv1,
-        TLSv1_2
+        DTLS,
+        DTLSv1,
+        DTLSv1_2
     };
 }
 

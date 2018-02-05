@@ -10,6 +10,7 @@ namespace ohf {
         SSLv23,
         SSLv2,
         SSLv3,
+        TLS,
         TLSv1,
         TLSv1_1,
         TLSv1_2
