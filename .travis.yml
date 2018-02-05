@@ -16,20 +16,17 @@ compiler:
     - g++
     - clang
 
+addons:
+    apt:
+        sources:
+            - sourceline: 'ppa:ubuntu-toolchain-r/test'
+        packages: ["g++-5"]
+
 matrix:
     include:
-        # Default
-        - compiler: g++
-          addons:
-              apt:
-                  sources:
-                      - sourceline: 'ppa:ubuntu-toolchain-r/test'
-                  packages: ["g++-5"]
-          before_script:
-              - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-5 90
-        - compiler: clang
         # Reporter
         - compiler: clang
+          env: BUILD_TYPE=Release SHARED=ON
           addons:
               apt:
                   packages: ["lcov"]
@@ -39,7 +36,7 @@ matrix:
               - bash <(curl -s https://codecov.io/bash)
         # Tester
         - compiler: clang
-          env: TESTS=ON
+          env: BUILD_TYPE=Release SHARED=ON TESTS=ON
           after_success:
               - make test
     allow_failures:
@@ -55,6 +52,7 @@ env:
         - BUILD_TYPE=Release SHARED=OFF
 
 script:
+    - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-5 90
     - mkdir build
     - cd build
     - cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DBUILD_SHARED_LIBS=$SHARED -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DTESTS=$TESTS
