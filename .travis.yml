@@ -25,22 +25,24 @@ addons:
 matrix:
     include:
         # Reporter
-        - compiler: clang
+        - compiler: clang++
           env: BUILD_TYPE=Release SHARED=ON
           addons:
               apt:
-                  packages: ["lcov"]
+                  packages:
+                      - g++-5
+                      - lcov
           after_success:
               - cd ${TRAVIS_BUILD_DIR}/build/tests
               - lcov --directory . --capture --output-file coverage.info
               - bash <(curl -s https://codecov.io/bash)
         # Tester
-        - compiler: clang
+        - compiler: clang++
           env: BUILD_TYPE=Release SHARED=ON TESTS=ON
           after_success:
               - make test
     allow_failures:
-            - env: TESTS=ON # Some UNIT-tests are unstable
+            - env: BUILD_TYPE=Release SHARED=ON TESTS=ON # Some UNIT-tests are unstable
 
 env:
     global:
