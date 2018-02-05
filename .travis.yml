@@ -13,7 +13,7 @@ os:
     - linux
 
 compiler:
-    - g++
+    - gcc
     - clang
 
 addons:
@@ -25,10 +25,12 @@ addons:
 matrix:
     include:
         # Reporter
-        - compiler: clang++
+        - compiler: clang
           env: BUILD_TYPE=Release SHARED=ON
           addons:
               apt:
+                  sources:
+                      - sourceline: 'ppa:ubuntu-toolchain-r/test'
                   packages:
                       - g++-5
                       - lcov
@@ -37,7 +39,7 @@ matrix:
               - lcov --directory . --capture --output-file coverage.info
               - bash <(curl -s https://codecov.io/bash)
         # Tester
-        - compiler: clang++
+        - compiler: clang
           env: BUILD_TYPE=Release SHARED=ON TESTS=ON
           after_success:
               - make test

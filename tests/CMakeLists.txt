@@ -1,13 +1,16 @@
-cmake_minimum_required(VERSION 2.8)
 project(ohf_tests)
 
-set(CMAKE_CXX_STANDARD 11)
+if(NOT EXISTS "${PROJECT_SOURCE_DIR}/Catch2/CMakeLists.txt")
+	message(FATAL_ERROR "Catch2 submodule not found")
+endif()
 
-include_directories("Catch2/include")
+set(CATCH_INCLUDE_DIR "Catch2/include")
+
+include_directories(${CATCH_INCLUDE_DIR})
 include_directories("../include")
 
-file(GLOB_RECURSE CATCH RELATIVE ${PROJECT_SOURCE_DIR} "Catch2/include/*")
-file(GLOB SOURCE_FILES RELAIVE ${PROJECT_SOURCE_DIR} "./*")
+file(GLOB_RECURSE CATCH RELATIVE ${PROJECT_SOURCE_DIR} "${CATCH_INCLUDE_DIR}/*")
+file(GLOB SOURCE_FILES RELATIVE ${PROJECT_SOURCE_DIR} "./*")
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES} ${CATCH})
 target_link_libraries(${PROJECT_NAME} ohf)

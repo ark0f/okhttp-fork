@@ -16,6 +16,7 @@ endif()
 
 option(TESTS "Unit-tests for ${PROJECT_NAME} using Catch2" ON)
 if(TESTS)
+    enable_testing()
     add_subdirectory(tests)
 endif()
 
