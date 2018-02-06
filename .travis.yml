@@ -35,8 +35,11 @@ matrix:
                       - g++-5
                       - lcov
           after_success:
-              - cmake .. -DCOVERAGE=ON -DCMAKE_BUILD_TYPE=$BUILD_TYPE
+              - cmake .. -DCOVERAGE=ON -DTESTS=$TESTS -DCMAKE_BUILD_TYPE=$BUILD_TYPE
+              - make -j4
               - make coveralls
+              - lcov -c -d . -o coverage.info
+              - bash <(curl -s https://codecov.io/bash)
 
 env:
     global:
