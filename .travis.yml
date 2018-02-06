@@ -26,7 +26,7 @@ matrix:
     include:
         # Tester and reporter
         - compiler: clang
-          env: BUILD_TYPE=Release SHARED=ON TESTS=ON
+          env: BUILD_TYPE=Debug SHARED=ON TESTS=ON
           addons:
               apt:
                   sources:
@@ -35,7 +35,7 @@ matrix:
                       - g++-5
                       - lcov
           after_success:
-              - cmake .. -DCOVERAGE=ON
+              - cmake .. -DCOVERAGE=ON -DCMAKE_BUILD_TYPE=$BUILD_TYPE
               - make coveralls
 
 env:
