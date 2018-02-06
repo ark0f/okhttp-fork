@@ -34,9 +34,9 @@ matrix:
                   packages:
                       - g++-5
                       - lcov
-          after_success:
+          script:
               - cmake .. -DCOVERAGE=ON -DTESTS=$TESTS -DCMAKE_BUILD_TYPE=$BUILD_TYPE
-              - make -j4
+              - sudo make -j4
               - make coveralls
               - lcov -c -d . -o coverage.info
               - bash <(curl -s https://codecov.io/bash)
@@ -50,9 +50,11 @@ env:
         - BUILD_TYPE=Release SHARED=ON
         - BUILD_TYPE=Release SHARED=OFF
 
-script:
+before_script:
     - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-5 90
     - mkdir build
     - cd build
+
+script:
     - cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DBUILD_SHARED_LIBS=$SHARED -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DTESTS=$TESTS
     - sudo make install -j4
