@@ -25,7 +25,7 @@ addons:
 matrix:
     include:
         # Tester and reporter
-        - compiler: clang
+        - compiler: gcc
           env: BUILD_TYPE=Debug SHARED=ON TESTS=ON COVERALLS_SERVICE_NAME=travis-ci COVERALLS_REPO_TOKEN=12306af4-16a0-479c-aafc-956fd2475ee0
           addons:
               apt:
