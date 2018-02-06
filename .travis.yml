@@ -26,7 +26,7 @@ matrix:
     include:
         # Tester and reporter
         - compiler: clang
-          env: BUILD_TYPE=Debug SHARED=ON TESTS=ON
+          env: BUILD_TYPE=Debug SHARED=ON TESTS=ON COVERALLS_SERVICE_NAME=travis-ci COVERALLS_REPO_TOKEN=12306af4-16a0-479c-aafc-956fd2475ee0
           addons:
               apt:
                   sources:
@@ -34,9 +34,6 @@ matrix:
                   packages:
                       - g++-5
                       - lcov
-          before_script:
-              - export COVERALLS_SERVICE_NAME=travis-ci
-              - export COVERALLS_REPO_TOKEN=12306af4-16a0-479c-aafc-956fd2475ee0
           after_success:
               - cmake .. -DCOVERAGE=ON -DCMAKE_BUILD_TYPE=$BUILD_TYPE
               - make coveralls
