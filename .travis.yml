@@ -24,9 +24,9 @@ addons:
 
 matrix:
     include:
-        # Reporter
+        # Tester and reporter
         - compiler: clang
-          env: BUILD_TYPE=Release SHARED=ON
+          env: BUILD_TYPE=Release SHARED=ON TESTS=ON
           addons:
               apt:
                   sources:
@@ -35,16 +35,8 @@ matrix:
                       - g++-5
                       - lcov
           after_success:
-              - cmake --build .. --target coverage
-              - lcov --directory . --capture --output-file coverage.info
-              - bash <(curl -s https://codecov.io/bash)
-        # Tester
-        - compiler: clang
-          env: BUILD_TYPE=Release SHARED=ON TESTS=ON CTEST_OUTPUT_ON_FAILURE=1
-          after_success:
-              - make test
-    allow_failures:
-            - env: BUILD_TYPE=Release SHARED=ON TESTS=ON CTEST_OUTPUT_ON_FAILURE=1 # Some UNIT-tests are unstable
+              - cmake .. -DCOVERAGE=ON
+              - make coveralls
 
 env:
     global:

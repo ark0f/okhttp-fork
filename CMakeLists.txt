@@ -1,11 +1,13 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.1)
 project(OkHttpFork)
 
 set(CMAKE_CXX_STANDARD 11)
 
 # Compiler options
 if(MSVC)
-    add_compile_options("/wd4018") # Compare signed and unsgined values
+    set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "/W4")
+elseif(CMAKE_COMPILER_IS_GNUCXX)
+    set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-Wall")
 endif()
 
 # Options
