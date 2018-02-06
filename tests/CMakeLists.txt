@@ -22,7 +22,7 @@ if(COVERAGE)
 	include(Coveralls)
 
 	coveralls_turn_on_coverage()
-	coveralls_setup("${LIB}" ON "${PROJECT_SOURCE_DIR}/coveralls-cmake/cmake")
+	coveralls_setup("${LIB}" OFF "${PROJECT_SOURCE_DIR}/coveralls-cmake/cmake")
 endif()
 
 # Target
