@@ -26,7 +26,7 @@ matrix:
     include:
         # Tester and reporter
         - compiler: gcc
-          env: BUILD_TYPE=Debug SHARED=ON TESTS=ON COVERALLS_SERVICE_NAME=travis-ci COVERALLS_REPO_TOKEN=12306af4-16a0-479c-aafc-956fd2475ee0
+          env: BUILD_TYPE=Debug SHARED=ON TESTS=ON
           addons:
               apt:
                   sources:
@@ -39,6 +39,7 @@ matrix:
               - sudo make -j4
               - make coveralls
               - lcov -c -d . -o coverage.info
+              - lcov -r coverage.info '/usr/*' '$TRAVIS_BUILD_DIR/tests/*' -o coverage.info
               - bash <(curl -s https://codecov.io/bash)
 
 env:
