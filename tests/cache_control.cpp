@@ -1,8 +1,11 @@
 #include <catch.hpp>
 #include "exception_matcher.hpp"
+#include "time_unit_matcher.hpp"
 #include <ohf/CacheControl.hpp>
 
 TEST_CASE("CacheControl") {
+    using ohf::operator""_s;
+
     ohf::CacheControl::Builder builder;
     SECTION("Builder") {
         builder
@@ -11,9 +14,9 @@ TEST_CASE("CacheControl") {
                 .noStore()
                 .noTransform()
                 .onlyIfCached()
-                .maxAge(ohf::TimeUnit::seconds(10))
-                .maxStale(ohf::TimeUnit::seconds(5))
-                .minFresh(ohf::TimeUnit::seconds(3));
+                .maxAge(10.0_s)
+                .maxStale(5.0_s)
+                .minFresh(3.0_s);
     }
 
     ohf::CacheControl cacheControl = builder.build();
@@ -26,9 +29,9 @@ TEST_CASE("CacheControl") {
     REQUIRE_FALSE(cacheControl.isPublic());
     REQUIRE_FALSE(cacheControl.isPrivate());
     REQUIRE(cacheControl.sMaxAge() == ohf::TimeUnit::MINUS_ONE_SECOND);
-    REQUIRE(cacheControl.maxAge() == ohf::TimeUnit::seconds(10));
-    REQUIRE(cacheControl.maxStale() == ohf::TimeUnit::seconds(5));
-    REQUIRE(cacheControl.minFresh() == ohf::TimeUnit::seconds(3));
+    REQUIRE(cacheControl.maxAge() == 10.0_s);
+    REQUIRE(cacheControl.maxStale() == 5.0_s);
+    REQUIRE(cacheControl.minFresh() == 3.0_s);
 
     ohf::Headers headers = ohf::Headers::Builder()
             .add("Cache-Control", "public, private, no-cache, only-if-cached, must-revalidate, proxy-revalidate, "
@@ -36,7 +39,7 @@ TEST_CASE("CacheControl") {
                                   "min-fresh=3")
             .build();
     ohf::CacheControl cc(headers);
-    REQUIRE(cc.sMaxAge() == ohf::TimeUnit::seconds(7));
+    TIMEUNIT_EQUAL(cc.sMaxAge(), 7.0_s);
     REQUIRE(cc.mustRevalidate());
     REQUIRE(cc.isPublic());
     REQUIRE(cc.isPrivate());

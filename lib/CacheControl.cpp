@@ -27,7 +27,7 @@ namespace ohf {
             mMinFresh(TimeUnit::MINUS_ONE_SECOND)
     {
         std::vector<std::string> cache_control = split(headers.get("cache-control"),
-                                                       std::vector<std::string>{",", ", "});
+                                                       std::vector<std::string>{", ", ","});
 
         for (auto &element : cache_control) {
             util::string::toLower(element);

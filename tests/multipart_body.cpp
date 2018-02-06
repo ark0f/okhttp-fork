@@ -4,12 +4,12 @@
 
 TEST_CASE("MultipartBody") {
     ohf::MultipartBody::Builder builder("BNDRY");
-    SECTION("Builder") {
+    //SECTION("Builder") {
         builder
                 .addFormDataPart("hello", "world")
                 .addFormDataPart("photo", "image.png", ohf::RequestBody("image/png", "*content*"))
                 .setType(ohf::MultipartBody::FORM);
-    }
+    //}
 
     ohf::MultipartBody body = builder.build();
     REQUIRE(body.size() == 2);
