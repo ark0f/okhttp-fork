@@ -24,7 +24,7 @@ addons:
 
 matrix:
     include:
-        # Tester and reporter
+        # Tester
         - compiler: gcc
           env: BUILD_TYPE=Debug SHARED=ON TESTS=ON
           addons:
@@ -36,11 +36,8 @@ matrix:
                       - lcov
           script:
               - cmake .. -DCOVERAGE=ON -DTESTS=$TESTS -DCMAKE_BUILD_TYPE=$BUILD_TYPE
-              - sudo make -j4
-              - make coveralls
-              - lcov -c -d . -o coverage.info
-              - lcov -r coverage.info "/usr/*" "$TRAVIS_BUILD_DIR/tests/*" -o coverage.info
-              - bash <(curl -s https://codecov.io/bash)
+              - make -j4
+              - make test
 
 env:
     global:
