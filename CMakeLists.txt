@@ -11,7 +11,7 @@ elseif(CMAKE_COMPILER_IS_GNUCXX)
 endif()
 
 # Options
-option(DTLS "Access to use DTLS" OFF)
+option(DTLS "Would use DTLS" OFF)
 if(DTLS)
     add_definitions(-DOKHTTPFORK_DTLS)
 endif()
@@ -25,18 +25,17 @@ endif()
 # Common files
 include_directories(include)
 
-file(GLOB_RECURSE INCLUDE RELATIVE ${PROJECT_SOURCE_DIR} "include/*")
-file(GLOB_RECURSE LIB RELATIVE ${PROJECT_SOURCE_DIR} "lib/*")
+file(GLOB_RECURSE SOURCE_FILES RELATIVE ${PROJECT_SOURCE_DIR} "include/*.hpp" "src/*.cpp")
 
 # Files for different systems
 if(WIN32)
-    file(GLOB FILES RELATIVE ${PROJECT_SOURCE_DIR} "lib/unix/*")
+    file(GLOB_RECURSE FILES RELATIVE ${PROJECT_SOURCE_DIR} "src/unix/*")
 elseif(UNIX)
-    file(GLOB FILES RELATIVE ${PROJECT_SOURCE_DIR} "lib/win32/*")
+    file(GLOB_RECURSE FILES RELATIVE ${PROJECT_SOURCE_DIR} "src/win32/*")
 endif()
-list(REMOVE_ITEM LIB ${FILES})
+list(REMOVE_ITEM SOURCE_FILES ${FILES})
 
-add_library(ohf ${INCLUDE} ${LIB})
+add_library(ohf ${SOURCE_FILES})
 
 # Libraries
 # OpenSSL

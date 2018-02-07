@@ -39,7 +39,7 @@ matrix:
               - sudo make -j4
               - make coveralls
               - lcov -c -d . -o coverage.info
-              - lcov -r coverage.info '/usr/*' '$TRAVIS_BUILD_DIR/tests/*' -o coverage.info
+              - lcov -r coverage.info "/usr/*" "$TRAVIS_BUILD_DIR/tests/*" -o coverage.info
               - bash <(curl -s https://codecov.io/bash)
 
 env:
