@@ -57,5 +57,5 @@ before_script:
     - cd build
 
 script:
-    - cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DBUILD_SHARED_LIBS=$SHARED -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DTESTS=$TESTS
+    - cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DBUILD_SHARED_LIBS=$SHARED -DTESTS=$TESTS -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
     - sudo make install -j4

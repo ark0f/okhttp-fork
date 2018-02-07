@@ -1,9 +1,9 @@
-## OkHttp fork for C++ 
+## OkHttp fork for C++ [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg?style=flat-square)](https://opensource.org/licenses/Apache-2.0)
 |           | master                                                                                                                                                                       | dev                                                                                                                                                                       |
 |:---------:|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |:------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Travis CI | [![Build status](https://img.shields.io/travis/Good-Pudge/okhttp-fork/master.svg?style=flat-square)](https://travis-ci.org/Good-Pudge/okhttp-fork)                           | [![Build status](https://img.shields.io/travis/Good-Pudge/okhttp-fork/dev.svg?style=flat-square)](https://travis-ci.org/Good-Pudge/okhttp-fork)                           |
 | AppVeyor  | [![Build status](https://img.shields.io/appveyor/ci/Good-Pudge/okhttp-fork/master.svg?style=flat-square)](https://ci.appveyor.com/project/Good-Pudge/okhttp-fork)            | [![Build status](https://img.shields.io/appveyor/ci/Good-Pudge/okhttp-fork/dev.svg?style=flat-square)](https://ci.appveyor.com/project/Good-Pudge/okhttp-fork)            |
-| Codecov   | [![Codecov branch](https://img.shields.io/codecov/c/github/Good-Pudge/okhttp-fork/master.svg?style=flat-square)](https://codecov.io/gh/Good-Pudge/okhttp-fork/branch/master) | [![Codecov branch](https://img.shields.io/codecov/c/github/Good-Pudge/okhttp-fork/dev.svg?style=flat-square)](https://codecov.io/gh/Good-Pudge/okhttp-fork/branch/dev)    |
+
 
 
 ## Overview
