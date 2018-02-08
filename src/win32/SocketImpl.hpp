@@ -8,8 +8,8 @@
 #include <ohf/Socket.hpp>
 #include <ohf/Config.hpp>
 #include <string>
-#include <winsock.h>
 #include <ws2tcpip.h>
+#include <winsock.h>
 
 namespace ohf {
     class SocketImpl {
