@@ -77,7 +77,7 @@ namespace ohf {
                     try {
                         mMinFresh = TimeUnit::seconds(std::stoi(value));
                     } catch (const std::invalid_argument&) {
-                        throw Exception(Exception::Code::INVALID_MIN_FRESH, "Invalid min fresh: " + value);
+                        throw Exception(Exception::Code::INVALID_MIN_FRESH, "Invalid Min-Fresh: " + value);
                     }
                 // stale-while-revalidate=<seconds> ?
                 // stale-if-error=<seconds> ?
@@ -181,18 +181,18 @@ namespace ohf {
         return
                 // bool
                 this->mPublic == cc.mPublic
-                || this->mPrivate == cc.mPrivate
-                || this->mNoCache == cc.mNoCache
-                || this->mOnlyIfCached == cc.mOnlyIfCached
-                || this->mMustRevalidate == cc.mMustRevalidate
-                || this->mImmutable == cc.mImmutable
-                || this->mNoStore == cc.mNoStore
-                || this->mNoTransform == cc.mNoTransform
+                && this->mPrivate == cc.mPrivate
+                && this->mNoCache == cc.mNoCache
+                && this->mOnlyIfCached == cc.mOnlyIfCached
+                && this->mMustRevalidate == cc.mMustRevalidate
+                && this->mImmutable == cc.mImmutable
+                && this->mNoStore == cc.mNoStore
+                && this->mNoTransform == cc.mNoTransform
                 // TimeUnit
-                || this->mMaxAge == cc.mMaxAge
-                || this->mSMaxAge == cc.mSMaxAge
-                || this->mMaxStale == cc.mMaxStale
-                || this->mMinFresh == cc.mMinFresh;
+                && this->mMaxAge == cc.mMaxAge
+                && this->mSMaxAge == cc.mSMaxAge
+                && this->mMaxStale == cc.mMaxStale
+                && this->mMinFresh == cc.mMinFresh;
     }
 
     std::ostream &operator <<(std::ostream &stream, const CacheControl &cc) {

@@ -8,17 +8,20 @@
 
 int main() {
     try {
-        ohf::UDPSocket socket;
+        ohf::udp::Socket socket;
 
         socket.send("www.udp-server.com", 1337, "Some request");
 
         ohf::InetAddress address;
-        ohf::Uint16 port; // unsigned short
+        unsigned short port;
         std::vector<char> response(1024);
-        std::size_t received = socket.receive(address, port, response.data(), response.size());
+        int received = socket.receive(address, port, response.data(), (int) response.size());
 
         std::cout << std::string(response.begin(), response.end()) << std::endl;
     } catch(const ohf::Exception &e) {
-
+        std::cerr << e.what() << std::endl;
+        return 1;
     }
+
+    return 0;
 }

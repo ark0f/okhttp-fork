@@ -5,13 +5,12 @@
 #include <ohf/InetAddress.hpp>
 #include <ohf/Exception.hpp>
 #include <cstring>
+#include <ws2tcpip.h>
+#include <iostream>
 #include "util/util.hpp"
 #include "SocketImpl.hpp"
 
-namespace ohf {
-    InetAddress InetAddress::BROADCAST = InetAddress(INADDR_BROADCAST);
-    InetAddress InetAddress::ANY = InetAddress((Uint32) INADDR_ANY);
-
+namespace {
     std::string ip2s(const std::vector<ohf::Uint8> &ip) {
         std::string readyIP;
         for (auto it = ip.begin(); it != ip.end() - 1; it++) {
@@ -23,14 +22,19 @@ namespace ohf {
         return readyIP;
     }
 
-    std::vector<Uint8> uint32tov(Uint32 address) {
+    std::vector<ohf::Uint8> uint32tov(ohf::Uint32 address) {
         return {
-                (Uint8) ((address & 0xFF) >> 0),
-                (Uint8) ((address & 0xFF00) >> 8),
-                (Uint8) ((address & 0xFF0000) >> 16),
-                (Uint8) ((address & 0xFF000000) >> 24)
+                (ohf::Uint8) ((address & 0xFF) >> 0),
+                (ohf::Uint8) ((address & 0xFF00) >> 8),
+                (ohf::Uint8) ((address & 0xFF0000) >> 16),
+                (ohf::Uint8) ((address & 0xFF000000) >> 24)
         };
     }
+}
+
+namespace ohf {
+    InetAddress InetAddress::BROADCAST = InetAddress(INADDR_BROADCAST);
+    InetAddress InetAddress::ANY = InetAddress((Uint32) INADDR_ANY);
 
     SocketImpl::Initializer socket_init;
 
@@ -49,31 +53,26 @@ namespace ohf {
     std::vector<InetAddress> InetAddress::getAllByName(const std::string &host) {
         std::vector<InetAddress> ias;
 
-        hostent *hostent = gethostbyname(host.c_str());
-        if(hostent) {
-            if(hostent->h_addrtype != AF_INET) {
-                throw Exception(Exception::Code::INVALID_ADDRESS_TYPE,
-                        "Invalid address type: " + std::to_string(hostent->h_addrtype));
+        addrinfo hints;
+        std::memset(&hints, 0, sizeof(hints));
+        hints.ai_family = AF_INET;
+        hints.ai_flags = AI_CANONNAME;
+
+        addrinfo *info;
+        if(getaddrinfo(host.c_str(), nullptr, &hints, &info) == 0 && info) {
+            std::string canon_name = info->ai_canonname;
+            for(; info != nullptr; info = info->ai_next) {
+                Uint32 address = *(Uint32 *) &reinterpret_cast<sockaddr_in *>(info->ai_addr)->sin_addr;
+
+                InetAddress inet;
+                inet.mHostName = host;
+                inet.mCanonName = canon_name;
+                inet.mIP = uint32tov(address);
+
+                ias.push_back(inet);
             }
 
-            Uint32 *address;
-            for(Int32 i = 0; (address = (Uint32 *) hostent->h_addr_list[i]) != nullptr; i++) {
-                InetAddress ia;
-                ia.mIP = uint32tov(*address);
-                ias.push_back(ia);
-            }
-
-            // aliases
-            std::vector<std::string> aliases;
-            const char *alias;
-            for(Int32 i = 0; (alias = hostent->h_aliases[i]); i++) {
-                aliases.emplace_back(alias);
-            }
-
-            for(auto &ia : ias) {
-                ia.mHostName = hostent->h_name;
-                ia.mAliases = aliases;
-            }
+            freeaddrinfo(info);
         } else {
             throw Exception(Exception::Code::UNKNOWN_HOST, "Unknown host: " + host);
         }
@@ -93,15 +92,15 @@ namespace ohf {
         return mHostName;
     }
 
-    std::vector<std::string> InetAddress::aliases() const {
-        return mAliases;
+    std::string InetAddress::canonicalName() const {
+        return mCanonName;
     }
 
     Uint32 InetAddress::toUint32() const {
         return mIP[0] << 24 | mIP[1] << 16 | mIP[2] << 8 | mIP[3];
     }
 
-    std::ostream& operator<<(std::ostream &stream, const InetAddress &address) {
+    std::ostream& operator <<(std::ostream &stream, const InetAddress &address) {
         return stream << address.hostAddress();
     }
 }

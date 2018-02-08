@@ -8,11 +8,12 @@
 
 int main() {
     try {
-        ohf::tcp::Socket socket("www.yandex.ru", 80);
+        ohf::tcp::Socket socket;
+        socket.connect("www.google.com", 80);
 
         std::iostream &ios = socket.stream();
         ios << "GET / HTTP/1.1\r\n"
-            << "Host: www.yandex.ru\r\n"
+            << "Host: www.google.com\r\n"
             << "Connection: close\r\n"
             << "\r\n";
         ios.flush();
@@ -20,6 +21,6 @@ int main() {
         std::cout << ios.rdbuf() << std::endl; // better if you don't do it
         socket.disconnect(); // or close() or destructor do it
     } catch (ohf::Exception &e) {
-        std::cout << e.what() << std::endl << "\tCode: " << e.code() << std::endl;
+        std::cout << e.what() << std::endl;
     }
 }

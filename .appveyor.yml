@@ -12,29 +12,33 @@ shallow_clone: true
 build:
     parallel: true
 
+cache:
+    - build
+
+image:
+    - Visual Studio 2017
+    - Visual Studio 2015
+
+configuration:
+    - Debug
+    - Release
+
 environment:
     OPENSSL_ROOT_DIR: C:\OpenSSL-Win64
     matrix:
-        - SHARED: ON
-          APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-        - SHARED: ON
-          APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
         - SHARED: OFF
-          APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-        - SHARED: OFF
-          APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
+        - SHARED: ON
 
 matrix:
     fast_finish: false
     allow_failures:
         - SHARED: ON
 
-configuration:
-    - Debug
-    - Release
-
 build_script:
     - mkdir build
     - cd build
-    - cmake .. -DCMAKE_BUILD_TYPE=%CONFIGURATION% -DBUILD_SHARED_LIBS=%SHARED% -DDTLS=ON
+    - cmake .. -DCMAKE_BUILD_TYPE=%CONFIGURATION% -DBUILD_SHARED_LIBS=%SHARED% -DDTLS=ON -DTESTS=ON
     - cmake --build .
+
+test_script:
+    - make test

@@ -22,6 +22,11 @@ if(TESTS)
     add_subdirectory(tests)
 endif()
 
+option(SAMPLES "Would compile samples" OFF)
+if(SAMPLES)
+    add_subdirectory(samples)
+endif()
+
 # Common files
 include_directories(include)
 
@@ -47,7 +52,7 @@ endif()
 
 # Socket
 if (WIN32)
-    target_link_libraries(ohf wsock32)
+    target_link_libraries(ohf ws2_32)
 endif()
 
 # Install

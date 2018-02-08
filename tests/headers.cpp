@@ -2,8 +2,10 @@
 #include "exception_matcher.hpp"
 #include <ohf/Headers.hpp>
 
+using namespace ohf;
+
 TEST_CASE("Headers") {
-    ohf::Headers::Builder builder;
+    Headers::Builder builder;
     SECTION("Builder") {
         builder
                 .add("Set-Cookie: Hello=World")
@@ -13,7 +15,7 @@ TEST_CASE("Headers") {
                 .add("Host", "example.com")
                 .add("Date: Wed, 21 Oct 2015 07:28:00 GMT");
 
-        REQUIRE_THROWS_CODE(builder.add(""), ohf::Exception::Code::HEADER_IS_EMPTY);
+        REQUIRE_THROWS_CODE(builder.add(""), Exception::Code::HEADER_IS_EMPTY);
 
         REQUIRE(builder.get("Set-Cookie") == "Hello=World");
         REQUIRE(builder.get("Host") == "unknown");
@@ -22,17 +24,17 @@ TEST_CASE("Headers") {
         REQUIRE(builder.get("Set-Cookie").empty());
     }
 
-    ohf::Headers headers = builder.build();
+    Headers headers = builder.build();
     // REQUIRE(headers.getDate().seconds() == 1445441280.0f); // ambiguous result on different platforms, compilators, build types
     REQUIRE(headers.get("Some") == "one");
     REQUIRE(headers.name(0) == "Some");
-    REQUIRE_THROWS_CODE(headers.name(4), ohf::Exception::Code::OUT_OF_RANGE);
+    REQUIRE_THROWS_CODE(headers.name(4), Exception::Code::OUT_OF_RANGE);
     REQUIRE(headers.value(0) == "one");
-    REQUIRE_THROWS_CODE(headers.value(4), ohf::Exception::Code::OUT_OF_RANGE);
-    REQUIRE(headers.pair(0) == ohf::Headers::Pair("Some", "one"));
+    REQUIRE_THROWS_CODE(headers.value(4), Exception::Code::OUT_OF_RANGE);
+    REQUIRE(headers.pair(0) == Headers::Pair("Some", "one"));
     REQUIRE(headers.size() == 4);
 
-    ohf::Headers other = ohf::Headers::Builder()
+    Headers other = Headers::Builder()
             .add("Headers: not equal")
             .build();
     REQUIRE_FALSE(headers == other);
@@ -41,13 +43,13 @@ TEST_CASE("Headers") {
     std::map<std::string, std::string> map;
     map["Set-Cookie"] = "COOKIE=";
     map["Host"] = "example.com";
-    headers = ohf::Headers(map);
+    headers = Headers(map);
 
     REQUIRE(headers.name(0) == "Host");
     REQUIRE(headers.value(0) == "example.com");
-    REQUIRE(headers.pair(1) == ohf::Headers::Pair("Set-Cookie", "COOKIE="));
+    REQUIRE(headers.pair(1) == Headers::Pair("Set-Cookie", "COOKIE="));
 
     map.clear();
     map[""] = "";
-    REQUIRE_THROWS_CODE(ohf::Headers(map), ohf::Exception::Code::HEADER_IS_EMPTY);
+    REQUIRE_THROWS_CODE(Headers(map), Exception::Code::HEADER_IS_EMPTY);
 }

@@ -25,23 +25,18 @@ addons:
 matrix:
     include:
         # Tester
-        - compiler: gcc
+        - compiler: clang
           env: BUILD_TYPE=Debug SHARED=ON TESTS=ON
-          addons:
-              apt:
-                  sources:
-                      - sourceline: 'ppa:ubuntu-toolchain-r/test'
-                  packages:
-                      - g++-5
-                      - lcov
-          script:
-              - cmake .. -DCOVERAGE=ON -DTESTS=$TESTS -DCMAKE_BUILD_TYPE=$BUILD_TYPE
-              - make -j4
+          after_script:
               - make test
+        # Samples compiler
+        - compiler: clang
+          env: BUILD_TYPE=Release SHARED=ON SAMPLES=ON
 
 env:
     global:
         - TESTS=OFF
+        - SAMPLES=OFF
     matrix:
         - BUILD_TYPE=Debug SHARED=ON
         - BUILD_TYPE=Debug SHARED=OFF
@@ -54,5 +49,5 @@ before_script:
     - cd build
 
 script:
-    - cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DBUILD_SHARED_LIBS=$SHARED -DTESTS=$TESTS -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
+    - cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DBUILD_SHARED_LIBS=$SHARED -DTESTS=$TESTS -DSAMPLES=$SAMPLES -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
     - sudo make install -j4

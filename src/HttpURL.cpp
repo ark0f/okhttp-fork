@@ -37,7 +37,7 @@ namespace ohf {
                 std::string hex = str.substr(i + 1, 2);
                 try {
                     ss << (char) std::stoi(hex, nullptr, 16);
-                } catch (std::invalid_argument&) {
+                } catch(const std::invalid_argument&) {
                     throw Exception(Exception::Code::INVALID_URI_HEX_CODE, "Invalid uri hex code:" + hex);
                 }
                 i += 2;
@@ -296,7 +296,7 @@ namespace ohf {
         return std::next(mQuery.begin(), index)->second;
     }
 
-    Uint32 HttpURL::querySize() const {
+    Uint64 HttpURL::querySize() const {
         return encodedQuery().length();
     }
 
@@ -336,7 +336,7 @@ namespace ohf {
     bool HttpURL::operator ==(const HttpURL &url) const {
         auto ps1 = url.mPath;
         std::sort(ps1.begin(), ps1.end());
-        auto ps2 = std::move(this->mPath);
+        auto ps2 = this->mPath;
         std::sort(ps2.begin(), ps2.end());
 
         return url.mPathSuffix == this->mPathSuffix

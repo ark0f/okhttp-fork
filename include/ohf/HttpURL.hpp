@@ -110,7 +110,7 @@ namespace ohf {
 
         // std::vector<std::string> queryParameterValues(const std::string &name) const;
 
-        Uint32 querySize() const;
+        Uint64 querySize() const;
 
         // std::string redact();
         // HttpURL resolve(const std::string &link);

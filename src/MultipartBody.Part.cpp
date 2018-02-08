@@ -4,6 +4,7 @@
 
 #include "../include/ohf/MultipartBody.hpp"
 #include "ohf/Exception.hpp"
+#include "util/string.hpp"
 
 namespace ohf {
     std::string handleQuotedString(const std::string &str) {
@@ -43,9 +44,11 @@ namespace ohf {
 
     MultipartBody::Part::Part(const Headers &headers, const RequestBody &body) :
             mHeaders(headers),
-            mBody(body) {
+            mBody(body)
+    {
         bool cdExists = false;
-        for (const auto &name : mHeaders.names()) {
+        for (auto name : mHeaders.names()) {
+            util::string::toLower(name);
             if (name == "content-type")
                 throw Exception(Exception::Code::UNEXPECTED_HEADER, "Unexpected header: Content-Type");
             else if (name == "content-length")

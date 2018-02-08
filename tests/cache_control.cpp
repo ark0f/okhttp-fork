@@ -3,10 +3,11 @@
 #include "time_unit_matcher.hpp"
 #include <ohf/CacheControl.hpp>
 
-TEST_CASE("CacheControl") {
-    using ohf::operator""_s;
+using namespace ohf;
 
-    ohf::CacheControl::Builder builder;
+TEST_CASE("CacheControl") {
+
+    CacheControl::Builder builder;
     SECTION("Builder") {
         builder
                 .immutable()
@@ -19,7 +20,7 @@ TEST_CASE("CacheControl") {
                 .minFresh(3.0_s);
     }
 
-    ohf::CacheControl cacheControl = builder.build();
+    CacheControl cacheControl = builder.build();
     REQUIRE(cacheControl.immutable());
     REQUIRE(cacheControl.noCache());
     REQUIRE(cacheControl.noStore());
@@ -28,27 +29,42 @@ TEST_CASE("CacheControl") {
     REQUIRE_FALSE(cacheControl.mustRevalidate());
     REQUIRE_FALSE(cacheControl.isPublic());
     REQUIRE_FALSE(cacheControl.isPrivate());
-    REQUIRE(cacheControl.sMaxAge() == ohf::TimeUnit::MINUS_ONE_SECOND);
+    REQUIRE(cacheControl.sMaxAge() == TimeUnit::MINUS_ONE_SECOND);
     REQUIRE(cacheControl.maxAge() == 10.0_s);
     REQUIRE(cacheControl.maxStale() == 5.0_s);
     REQUIRE(cacheControl.minFresh() == 3.0_s);
 
-    ohf::Headers headers = ohf::Headers::Builder()
+    Headers headers = Headers::Builder()
             .add("Cache-Control", "public, private, no-cache, only-if-cached, must-revalidate, proxy-revalidate, "
                                   "immutable, no-store, no-transform, max-age=10, s-maxage=7, max-stale=5, "
                                   "min-fresh=3")
             .build();
-    ohf::CacheControl cc(headers);
+    CacheControl cc(headers);
     TIMEUNIT_EQUAL(cc.sMaxAge(), 7.0_s);
     REQUIRE(cc.mustRevalidate());
     REQUIRE(cc.isPublic());
     REQUIRE(cc.isPrivate());
 
-    ohf::CacheControl otherCC(headers);
+    CacheControl otherCC(headers);
     REQUIRE(cc == otherCC);
 
-    headers = ohf::Headers::Builder()
-            .add("Cache-Control: max-age=INVALID")
+    headers = Headers::Builder()
+            .set("Cache-Control", "max-age=INVALID")
             .build();
-    REQUIRE_THROWS_CODE(ohf::CacheControl(headers), ohf::Exception::Code::INVALID_MAX_AGE);
+    REQUIRE_THROWS_CODE(CacheControl(headers), Exception::Code::INVALID_MAX_AGE);
+
+    headers = Headers::Builder()
+            .set("Cache-Control", "public, s-maxage=INVALID")
+            .build();
+    REQUIRE_THROWS_CODE(CacheControl(headers), Exception::Code::INVALID_S_MAX_AGE);
+
+    headers = Headers::Builder()
+            .set("Cache-Control", "max-stale=INVALID")
+            .build();
+    REQUIRE_THROWS_CODE(CacheControl(headers), Exception::Code::INVALID_MAX_STALE);
+
+    headers = Headers::Builder()
+            .set("Cache-Control", "min-fresh=INVALID")
+            .build();
+    REQUIRE_THROWS_CODE(CacheControl(headers), Exception::Code::INVALID_MIN_FRESH);
 }

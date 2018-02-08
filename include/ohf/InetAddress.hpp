@@ -33,7 +33,7 @@ namespace ohf {
 
         std::string hostName() const;
 
-        std::vector<std::string> aliases() const;
+        std::string canonicalName() const;
 
         Uint32 toUint32() const;
 
@@ -41,7 +41,7 @@ namespace ohf {
 
     private:
         std::string mHostName;
-        std::vector<std::string> mAliases;
+        std::string mCanonName;
         std::vector<Uint8> mIP;
     };
 }

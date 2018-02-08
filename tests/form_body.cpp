@@ -2,15 +2,17 @@
 #include "exception_matcher.hpp"
 #include <ohf/FormBody.hpp>
 
+using namespace ohf;
+
 TEST_CASE("FormBody") {
-    ohf::FormBody::Builder builder;
+    FormBody::Builder builder;
     SECTION("Builder") {
         builder
                 .add("{q}", "Cat! and dogs?")
                 .add("hello", "world");
     }
 
-    ohf::FormBody formBody = builder.build();
+    FormBody formBody = builder.build();
 
     REQUIRE(formBody.name(0) == "{q}");
     REQUIRE_THROWS_CODE(formBody.name(2), ohf::Exception::Code::OUT_OF_RANGE);

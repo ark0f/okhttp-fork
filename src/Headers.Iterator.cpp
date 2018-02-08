@@ -28,29 +28,29 @@ namespace ohf {
     }
 
     // operator *
-    const Headers::Pair& Headers::Iterator::operator*() const {
+    const Headers::Pair& Headers::Iterator::operator *() const {
         return type;
     }
 
-    const Headers::Pair & Headers::Iterator::operator *() {
+    const Headers::Pair& Headers::Iterator::operator *() {
         return type;
     }
 
     // operator ->
-    const Headers::Pair* Headers::Iterator::operator->() const {
+    const Headers::Pair* Headers::Iterator::operator ->() const {
         return &type;
     }
 
-    const Headers::Pair* Headers::Iterator::operator->() {
+    const Headers::Pair* Headers::Iterator::operator ->() {
         return &type;
     }
 
     // operator ++
-    const Headers::Iterator Headers::Iterator::operator++(Int32) const {
+    const Headers::Iterator Headers::Iterator::operator ++(Int32) const {
         return {index + 1, headers};
     }
 
-    const Headers::Iterator& Headers::Iterator::operator++() {
+    const Headers::Iterator& Headers::Iterator::operator ++() {
         index++;
 
         swapPair();
@@ -59,11 +59,11 @@ namespace ohf {
     }
 
     // operator --
-    const Headers::Iterator Headers::Iterator::operator--(Int32) const {
+    const Headers::Iterator Headers::Iterator::operator --(Int32) const {
         return {index - 1, headers};
     }
 
-    const Headers::Iterator& Headers::Iterator::operator--() {
+    const Headers::Iterator& Headers::Iterator::operator --() {
         index--;
 
         swapPair();
@@ -72,17 +72,17 @@ namespace ohf {
     }
 
     // operator +
-    const Headers::Iterator Headers::Iterator::operator+(Uint32 index) const {
+    const Headers::Iterator Headers::Iterator::operator +(Uint32 index) const {
         return {this->index + index, headers};
     }
 
     // operator -
-    const Headers::Iterator Headers::Iterator::operator-(Uint32 index) const {
+    const Headers::Iterator Headers::Iterator::operator -(Uint32 index) const {
         return {this->index - index, headers};
     }
 
     // operator +=
-    const Headers::Iterator& Headers::Iterator::operator+=(Uint32 index) {
+    const Headers::Iterator& Headers::Iterator::operator +=(Uint32 index) {
         this->index += index;
 
         swapPair();
@@ -91,7 +91,7 @@ namespace ohf {
     }
 
     // operator -=
-    const Headers::Iterator& Headers::Iterator::operator-=(Uint32 index) {
+    const Headers::Iterator& Headers::Iterator::operator -=(Uint32 index) {
         this->index -= index;
 
         swapPair();
@@ -100,12 +100,12 @@ namespace ohf {
     }
 
     // operator ==
-    bool Headers::Iterator::operator==(const Iterator &right) const {
+    bool Headers::Iterator::operator ==(const Iterator &right) const {
         return (type == right.type) && (index == right.index);
     }
 
     // operator !=
-    bool Headers::Iterator::operator!=(const Iterator &right) const {
+    bool Headers::Iterator::operator !=(const Iterator &right) const {
         return (type != right.type) && (index != right.index);
     }
 }

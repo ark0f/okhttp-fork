@@ -20,7 +20,7 @@ int main() {
     ohf::ssl::Initializer initializer; // no any exception
 
     try {
-        ohf::HttpURL url = "https://yandex.ru";
+        ohf::HttpURL url = "https://google.com";
 
         ohf::ssl::Context context(ohf::TLSVersion::SSLv23);
         ohf::tcp::SSLSocket sslSocket(context);
@@ -35,10 +35,10 @@ int main() {
         ios.flush();
 
         std::cout << ios.rdbuf() << std::endl;
-
-        sslSocket.disconnect();
     } catch (ohf::Exception &e) {
-        std::cout << e.what() << std::endl
-                  << '\t' << "Code: " << (int) e.code() << std::endl;
+        std::cout << e.what() << std::endl;
+        return 1;
     }
+
+    return 0;
 }
