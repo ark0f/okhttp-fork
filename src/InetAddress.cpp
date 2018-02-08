@@ -5,8 +5,6 @@
 #include <ohf/InetAddress.hpp>
 #include <ohf/Exception.hpp>
 #include <cstring>
-#include <ws2tcpip.h>
-#include <iostream>
 #include "util/util.hpp"
 #include "SocketImpl.hpp"
 

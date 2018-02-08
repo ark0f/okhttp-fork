@@ -9,6 +9,7 @@
 #include <ohf/Config.hpp>
 #include <string>
 #include <winsock.h>
+#include <ws2tcpip.h>
 
 namespace ohf {
     class SocketImpl {
