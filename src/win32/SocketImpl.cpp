@@ -3,7 +3,6 @@
 //
 
 #include <cstring>
-#include <winsock.h>
 #include "SocketImpl.hpp"
 
 namespace ohf {
