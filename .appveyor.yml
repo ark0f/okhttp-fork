@@ -12,9 +12,6 @@ shallow_clone: true
 build:
     parallel: true
 
-cache:
-    - build
-
 image:
     - Visual Studio 2017
     - Visual Studio 2015
