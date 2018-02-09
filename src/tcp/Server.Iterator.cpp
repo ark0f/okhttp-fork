@@ -8,19 +8,19 @@ namespace ohf {
     namespace tcp {
         Server::Iterator::Iterator(const Server *server) : server(server) {}
 
-        Server::Connection Server::Iterator::operator*() const {
+        Server::Connection Server::Iterator::operator *() const {
             return server->accept();
         }
 
-        Server::Connection Server::Iterator::operator->() const {
+        Server::Connection Server::Iterator::operator ->() const {
             return server->accept();
         }
 
-        const Server::Iterator& Server::Iterator::operator++(Int32) const {
+        const Server::Iterator& Server::Iterator::operator ++(Int32) const {
             return *this;
         }
 
-        const Server::Iterator& Server::Iterator::operator++() const {
+        const Server::Iterator& Server::Iterator::operator ++() const {
             return *this;
         }
 

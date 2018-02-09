@@ -27,7 +27,7 @@ namespace ohf {
             sockaddr_in addr;
             SocketImpl::SocketLength length = sizeof(addr);
 
-            Socket::Handle fd = ::accept(ssl::Socket::mFD, (sockaddr *) &addr, &length);
+            auto fd = ::accept(ssl::Socket::mFD, (sockaddr *) &addr, &length);
             if (fd == SocketImpl::invalidSocket()) {
                 throw Exception(Exception::Code::FAILED_TO_ACCEPT_SOCKET,
                         "Failed to accept socket: " + SocketImpl::getError());

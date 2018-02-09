@@ -41,5 +41,5 @@ build_script:
     - cmake --build .
 
 test_script:
-    - cd build/tests
+    - cd %APPVEYOR_BUILD_FOLDER%\build\tests
     - .\ohf_tests.exe

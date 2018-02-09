@@ -10,6 +10,8 @@
 
 namespace ohf {
     namespace tcp {
+        friend class SSLServer;
+
         class Server : public ohf::Socket {
         public:
             class Connection {
@@ -35,15 +37,15 @@ namespace ohf {
             public:
                 Iterator(const Server *server);
 
-                Connection operator*() const;
+                Connection operator *() const;
 
-                Connection operator->() const;
+                Connection operator ->() const;
 
-                const Iterator &operator++(Int32) const;
+                const Iterator& operator ++(Int32) const;
 
-                const Iterator &operator++() const;
+                const Iterator& operator ++() const;
 
-                bool operator!=(const Iterator &right) const;
+                bool operator !=(const Iterator &right) const;
 
             private:
                 const Server *server;
@@ -72,9 +74,6 @@ namespace ohf {
             const Iterator end() const;
 
             Iterator end();
-
-        private:
-
         };
     }
 }

@@ -54,7 +54,7 @@ namespace ohf {
                         "Failed to accept socket: " + SocketImpl::getError());
             }
 
-            tcp::Socket *client = new tcp::Socket;
+            auto *client = new tcp::Socket;
             client->create(fd);
 
             return {client, InetAddress(*(Uint32 *) &addr.sin_addr), addr.sin_port};
