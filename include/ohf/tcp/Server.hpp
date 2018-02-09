@@ -10,8 +10,6 @@
 
 namespace ohf {
     namespace tcp {
-        friend class SSLServer;
-
         class Server : public ohf::Socket {
         public:
             class Connection {
