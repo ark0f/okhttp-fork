@@ -41,4 +41,5 @@ build_script:
     - cmake --build .
 
 test_script:
-    - .\tests\ohf_tests.exe
+    - cd build/tests
+    - .\ohf_tests.exe

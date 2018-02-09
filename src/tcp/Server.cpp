@@ -48,7 +48,7 @@ namespace ohf {
             sockaddr_in addr;
             SocketImpl::SocketLength length = sizeof(addr);
 
-            ohf::Socket::Handle fd = ::accept(mFD, (sockaddr *) &addr, &length);
+            auto fd = ::accept(mFD, (sockaddr *) &addr, &length);
             if (fd == SocketImpl::invalidSocket()) {
                 throw Exception(Exception::Code::FAILED_TO_ACCEPT_SOCKET,
                         "Failed to accept socket: " + SocketImpl::getError());
