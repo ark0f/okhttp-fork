@@ -51,26 +51,26 @@ namespace ohf {
     std::vector<InetAddress> InetAddress::getAllByName(const std::string &host) {
         std::vector<InetAddress> ias;
 
-        addrinfo hints;
-        std::memset(&hints, 0, sizeof(hints));
-        hints.ai_family = AF_INET;
-        hints.ai_flags = AI_CANONNAME;
+        hostent *hostent = gethostbyname(host.c_str());
+        if(hostent) {
+            if(hostent->h_addrtype == AF_INET) {
+                Uint32 *address;
+                for(int i = 0; (address = (Uint32 *) hostent->h_addr_list[i]) != nullptr; i++) {
+                    InetAddress inet(*address);
+                    inet.mHostName = host;
+                    inet.mCanonName = hostent->h_name;
 
-        addrinfo *info;
-        if(getaddrinfo(host.c_str(), nullptr, &hints, &info) == 0 && info) {
-            std::string canon_name = info->ai_canonname;
-            for(; info != nullptr; info = info->ai_next) {
-                Uint32 address = *(Uint32 *) &reinterpret_cast<sockaddr_in *>(info->ai_addr)->sin_addr;
+                    char *alias;
+                    for(int j = 0; (alias = hostent->h_aliases[j]) != nullptr; j++) {
+                        inet.mAliases.emplace_back(alias);
+                    }
 
-                InetAddress inet;
-                inet.mHostName = host;
-                inet.mCanonName = canon_name;
-                inet.mIP = uint32tov(address);
-
-                ias.push_back(inet);
+                    ias.push_back(inet);
+                }
+            } else {
+                throw Exception(Exception::Code::INVALID_ADDRESS_TYPE, "Invalid address type: "
+                                                                       + std::to_string(hostent->h_addrtype));
             }
-
-            freeaddrinfo(info);
         } else {
             throw Exception(Exception::Code::UNKNOWN_HOST, "Unknown host: " + host);
         }
@@ -92,6 +92,10 @@ namespace ohf {
 
     std::string InetAddress::canonicalName() const {
         return mCanonName;
+    }
+
+    std::vector<std::string> InetAddress::aliases() const {
+        return mAliases;
     }
 
     Uint32 InetAddress::toUint32() const {

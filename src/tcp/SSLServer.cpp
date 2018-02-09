@@ -3,8 +3,8 @@
 //
 
 #include <ohf/tcp/SSLServer.hpp>
-#include <ohf/Exception.hpp>
 #include <ohf/tcp/SSLSocket.hpp>
+#include <ohf/Exception.hpp>
 #include <openssl/ssl.h>
 #include "../SocketImpl.hpp"
 #include "../ssl/Util.hpp"
@@ -27,13 +27,13 @@ namespace ohf {
             sockaddr_in addr;
             SocketImpl::SocketLength length = sizeof(addr);
 
-            ohf::Socket::Handle fd = ::accept(ssl::Socket::mFD, (sockaddr *) &addr, &length);
+            Socket::Handle fd = ::accept(ssl::Socket::mFD, (sockaddr *) &addr, &length);
             if (fd == SocketImpl::invalidSocket()) {
                 throw Exception(Exception::Code::FAILED_TO_ACCEPT_SOCKET,
                         "Failed to accept socket: " + SocketImpl::getError());
             }
 
-            tcp::SSLSocket *client = new tcp::SSLSocket(context);
+            auto *client = new tcp::SSLSocket(context);
             client->create(fd);
             client->accept();
 

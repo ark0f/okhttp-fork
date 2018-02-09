@@ -35,6 +35,8 @@ namespace ohf {
 
         std::string canonicalName() const;
 
+        std::vector<std::string> aliases() const;
+
         Uint32 toUint32() const;
 
         friend std::ostream& operator<<(std::ostream &stream, const InetAddress &address);
@@ -43,6 +45,7 @@ namespace ohf {
         std::string mHostName;
         std::string mCanonName;
         std::vector<Uint8> mIP;
+        std::vector<std::string> mAliases;
     };
 }
 

@@ -30,7 +30,7 @@ endif()
 # Common files
 include_directories(include)
 
-file(GLOB_RECURSE SOURCE_FILES RELATIVE ${PROJECT_SOURCE_DIR} "include/*.hpp" "src/*.cpp")
+file(GLOB_RECURSE SOURCE_FILES RELATIVE ${PROJECT_SOURCE_DIR} "include/*.hpp" "src/*.cpp" "src/*.hpp")
 
 # Files for different systems
 if(WIN32)
