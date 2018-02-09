@@ -41,5 +41,5 @@ build_script:
     - cmake --build .
 
 test_script:
-    - IF /I "%CONFIGURATION%" == "Debug" ( cd %APPVEYOR_BUILD_FOLDER%\build\tests\Debug ) ELSE ( cd %APPVEYOR_BUILD_FOLDER%\build\tests )
+    - cd %APPVEYOR_BUILD_FOLDER%\build\tests\Debug
     - .\ohf_tests.exe
