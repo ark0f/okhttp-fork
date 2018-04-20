@@ -18,21 +18,21 @@
 * [Catch2](https://github.com/catchorg/Catch2) (submodule in `tests`)
 
 ## <a name="compilers"></a> Compilers
-You can use any compiler that support full C++11 standard. These are tested by me and CI:
+You can use any compiler that support full C++11 standard. These were tested by me and CI:
 * GCC >= 5
 * MSVC >= 2015
 * MinGW (7.2.0)
 * Clang (3.8 and Travis CI default version)
 
 These compilers tested and aren't supported:
-* GCC 4.9.2 (issue: `mktime`)
+* GCC 4.9.2 (issue: `std::get_time`)
 * MSVC 2013 (issue: `noexcept`)
 
 ## <a name="installation"></a> Installation
 The first step:
 ````bash
-git clone https://github.com/Good-Pudge/OkHttpFork.git
-cd OkHttpFork
+git clone https://github.com/Good-Pudge/okhttp-fork.git
+cd okhttp-fork
 cd build
 cmake ..
 ````
@@ -44,7 +44,7 @@ Also you can use `TESTS` option to compile tests (default: `ON`)
 ````bash
 cmake .. -DTESTS=ON
 ````
-And if you need DTLS, use `DTLS` option (default: `OFF`)
+And if you need DTLS, use `DTLS` option (default: `OFF`, as WIP)
 ````bash
 cmake .. -DDTLS=ON
 ````
@@ -65,10 +65,10 @@ The second step for different systems:
     make -j2
     sudo make install
     ````
-Will installed directories in `${CMAKE_INSTALL_PREFIX}`. This are `include/ohf` and `lib`
+Will be installed directories in `${CMAKE_INSTALL_PREFIX}`. These are `include/ohf` and `lib`
 
 ## <a name="components"></a> Original library components
-- [ ] Address
+- [x] Address
 - [ ] Authenticator
 - [ ] Cache
 - [x] CacheControl
@@ -78,7 +78,6 @@ Will installed directories in `${CMAKE_INSTALL_PREFIX}`. This are `include/ohf` 
 - [x] Callback
 - [ ] CertificatePinner
     - [ ] Builder
-- [ ] CipherSuite
 - [ ] Connection
 - [ ] ConnectionPool
 - [ ] ConnectionSpec
@@ -127,6 +126,7 @@ Will installed directories in `${CMAKE_INSTALL_PREFIX}`. This are `include/ohf` 
     * Socket
     * SSL
     * Challenge
+    * CipherSuite
 * namespace `tcp`
     * Server
         * Connection

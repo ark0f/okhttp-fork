@@ -5,7 +5,7 @@
 #include <ohf/Proxy.hpp>
 
 namespace ohf {
-    bool Proxy::operator ==(const Proxy &proxy) const { // TODO: Implement it
+    bool Proxy::Selector::operator ==(const Proxy::Selector &selector) const { // TODO: Implement it
         return false;
     }
 }
