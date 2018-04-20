@@ -80,7 +80,7 @@ namespace ohf {
 
         bool operator==(const CacheControl &cc) const;
 
-        friend std::ostream &operator<<(std::ostream &stream, const CacheControl &cacheControl);
+        friend std::ostream &operator <<(std::ostream &stream, const CacheControl &cacheControl);
     private:
         CacheControl(const Builder *builder);
 

@@ -10,9 +10,21 @@
 
 namespace ohf {
     namespace udp {
+        class Socket;
+    }
+}
+
+namespace std {
+    void swap(ohf::udp::Socket& a, ohf::udp::Socket& b);
+}
+
+namespace ohf {
+    namespace udp {
         class Socket : public ohf::Socket {
         public:
             Socket();
+
+            Socket(Socket &&socket) noexcept;
 
             virtual void bind(const InetAddress &address, Uint16 port);
 
@@ -29,6 +41,11 @@ namespace ohf {
             Int32 receive(InetAddress &address, Uint16 &port, std::vector<Int8> &data);
 
             Int32 receive(InetAddress &address, Uint16 &port, std::string &data, Int32 size);
+
+            Socket& operator =(Socket &&right) noexcept;
+
+        private:
+            friend void ::std::swap(Socket& a, Socket& b);
         };
     }
 }

@@ -83,7 +83,6 @@ namespace ohf {
                     method = DTLSv1_2_method();
                     break;
             #endif
-
         #endif
                 default:
                     throw Exception(Exception::Code::SSL_PROTOCOL_DOES_NOT_SUPPORTED);

@@ -172,8 +172,7 @@ namespace ohf {
         if (mMaxStale > TimeUnit::MINUS_ONE_SECOND) ss << "max-stale=" << mMaxStale.std_time() << ", ";
         if (mMinFresh > TimeUnit::MINUS_ONE_SECOND) ss << "min-fresh=" << mMinFresh.std_time() << ", ";
         std::string str = ss.str();
-        if (!str.empty())
-            str.erase(str.length() - 2, 2);
+        if (!str.empty()) str.erase(str.length() - 2, 2);
         return str;
     }
 

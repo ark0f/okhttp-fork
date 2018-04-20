@@ -17,6 +17,16 @@
 
 namespace ohf {
     namespace tcp {
+        class Socket;
+    }
+}
+
+namespace std {
+    void swap(ohf::tcp::Socket&& a, ohf::tcp::Socket&& b);
+}
+
+namespace ohf {
+    namespace tcp {
         class Socket : public ohf::Socket {
         public:
             class StreamBuf : public IOStreamBuf {
@@ -35,6 +45,8 @@ namespace ohf {
             };
 
             explicit Socket(StreamBuf *buffer = new StreamBuf(1024, 1024));
+
+            Socket(Socket &&socket) noexcept;
 
             virtual void connect(const InetAddress &address, Uint16 port);
 
@@ -56,8 +68,12 @@ namespace ohf {
 
             std::string receiveString(Int32 size) const;
 
+            Socket& operator =(Socket &&right) noexcept;
+
         private:
             std::shared_ptr<std::iostream> mIOS;
+
+            friend void ::std::swap(Socket&& a, Socket&& b);
         };
     }
 }

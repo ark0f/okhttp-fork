@@ -46,6 +46,8 @@ namespace ohf {
         explicit operator bool();
 
     protected:
+        Socket() = default;
+
         Handle mFD;
         bool mBlocking;
         Type mType;

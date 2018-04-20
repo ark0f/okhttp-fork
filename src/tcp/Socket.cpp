@@ -18,6 +18,16 @@ namespace ohf {
             mIOS->exceptions(ios::badbit); // rethrow exceptions
         }
 
+        Socket::Socket(tcp::Socket&& socket) noexcept : tcp::Socket() {
+            mFD = socket.mFD;
+            socket.mFD = SocketImpl::invalidSocket();
+
+            mBlocking = socket.mBlocking;
+            socket.mBlocking = true;
+
+            ((StreamBuf *) mIOS->rdbuf())->socket(this);
+        }
+
         void Socket::connect(const InetAddress &address, Uint16 port) {
             create();
 
@@ -84,5 +94,26 @@ namespace ohf {
             vector<Int8> data = receive(size);
             return string(data.begin(), data.end());
         }
+
+        Socket& Socket::operator =(tcp::Socket&& right) noexcept {
+            mFD = right.mFD;
+            right.mFD = SocketImpl::invalidSocket();
+
+            mBlocking = right.mBlocking;
+
+            ((StreamBuf *) mIOS->rdbuf())->socket(this);
+
+            return *this;
+        }
+    }
+}
+
+namespace std {
+    using namespace ohf;
+
+    void swap(tcp::Socket&& a, tcp::Socket&& b) {
+        std::swap(a.mFD, b.mFD);
+        std::swap(a.mBlocking, b.mBlocking);
+        std::swap(a.mIOS, b.mIOS);
     }
 }

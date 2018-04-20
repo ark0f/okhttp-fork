@@ -11,6 +11,14 @@ namespace ohf {
     namespace udp {
         Socket::Socket() : ohf::Socket(Type::UDP) {}
 
+        Socket::Socket(udp::Socket &&socket) noexcept : udp::Socket() {
+            mFD = socket.mFD;
+            socket.mFD = SocketImpl::invalidSocket();
+
+            mBlocking = socket.mBlocking;
+            socket.mBlocking = true;
+        }
+
         void Socket::bind(const InetAddress &address, Uint16 port) {
             create();
 
@@ -69,5 +77,24 @@ namespace ohf {
             data.insert(data.begin(), buffer.begin(), buffer.end());
             return received;
         }
+
+        Socket& Socket::operator =(udp::Socket &&right) noexcept {
+            mFD = right.mFD;
+            right.mFD = SocketImpl::invalidSocket();
+
+            mBlocking = right.mBlocking;
+            right.mBlocking = true;
+
+            return *this;
+        }
+    }
+}
+
+namespace std {
+    using namespace ohf;
+
+    void swap(ohf::udp::Socket& a, ohf::udp::Socket& b) {
+        std::swap(a.mFD, b.mFD);
+        std::swap(a.mBlocking, b.mBlocking);
     }
 }

@@ -8,7 +8,7 @@ namespace ohf {
     const TimeUnit TimeUnit::ZERO = {0, Type::SECONDS};
     const TimeUnit TimeUnit::MINUS_ONE_SECOND = {-1, Type::SECONDS};
 
-    TimeUnit::TimeUnit(Int64 count, const TimeUnit::Type &type) : mType(type) {
+    TimeUnit::TimeUnit(Int64 count, Type type) : mType(type) {
         Int32 multiplier, delimiter;
         switch (type) {
             case Type::SECONDS:

@@ -7,7 +7,9 @@
 
 namespace ohf {
     class CertificatePinner {
+    public:
 
+        bool operator ==(const CertificatePinner &pinner) const;
     };
 }
 

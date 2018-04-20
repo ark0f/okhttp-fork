@@ -48,6 +48,10 @@ find_package(OpenSSL REQUIRED)
 if (OPENSSL_FOUND)
     include_directories(${OPENSSL_INCLUDE_DIR})
     target_link_libraries(ohf ${OPENSSL_LIBRARIES})
+
+    if(WIN32)
+        target_link_libraries(ohf crypt32)
+    endif()
 endif()
 
 # Socket

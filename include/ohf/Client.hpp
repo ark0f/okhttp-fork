@@ -18,7 +18,6 @@
 #include "Interceptor.hpp"
 #include "Protocol.hpp"
 #include "Proxy.hpp"
-#include "ProxySelector.hpp"
 #include "TimeUnit.hpp"
 #include "WebSocket.hpp"
 
@@ -55,9 +54,9 @@ namespace ohf {
 
             Builder& dns(const DNS &dns);
 
-            Builder& followRedirects(bool follorRedirects);
+            Builder& followRedirects(bool follow);
 
-            Builder& follorSSLRedirects(bool followSSLRedirects);
+            Builder& follorSSLRedirects(bool follow);
 
             Builder& hostnameVerifier(const HostnameVerifier &verifier);
 
@@ -73,7 +72,7 @@ namespace ohf {
 
             Builder& proxyAuthenticator(const Authenticator &authenticator);
 
-            Builder& proxySelector(const ProxySelector &selector);
+            Builder& proxySelector(const Proxy::Selector &selector);
 
             Builder& readTimeout(const TimeUnit &timeout);
 
@@ -121,9 +120,9 @@ namespace ohf {
 
         Builder newBuilder();
 
-        Call *newCall(const Request &request);
+        std::shared_ptr<Call> newCall(const Request &request);
 
-        WebSocket& newWebSocket(const Request &request, const WebSocket::Listener &listener);
+        std::shared_ptr<WebSocket> newWebSocket(const Request &request, const WebSocket::Listener &listener);
 
         TimeUnit pingInterval();
 
@@ -133,7 +132,7 @@ namespace ohf {
 
         Authenticator proxyAuthenticator();
 
-        ProxySelector proxySelector();
+        Proxy::Selector proxySelector();
 
         TimeUnit connectTimeout();
 

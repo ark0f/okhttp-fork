@@ -7,7 +7,14 @@
 
 namespace ohf {
     class Proxy {
+    public:
+        class Selector {
+        public:
 
+            bool operator ==(const Selector &selector) const;
+        };
+
+        bool operator ==(const Proxy &proxy) const;
     };
 }
 

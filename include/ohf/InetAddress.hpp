@@ -39,7 +39,7 @@ namespace ohf {
 
         Uint32 toUint32() const;
 
-        friend std::ostream& operator<<(std::ostream &stream, const InetAddress &address);
+        friend std::ostream& operator <<(std::ostream &stream, const InetAddress &address);
 
     private:
         std::string mHostName;

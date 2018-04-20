@@ -7,7 +7,9 @@
 
 namespace ohf {
     class ConnectionSpec {
+    public:
 
+        bool operator ==(const ConnectionSpec &spec) const;
     };
 }
 
