@@ -50,4 +50,4 @@ before_script:
 
 script:
     - cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DBUILD_SHARED_LIBS=$SHARED -DBUILD_TESTING=$TESTS -DBUILD_EXAMPLES=$EXAMPLES -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
-    - cmake --build . --target install -- -j4
+    - sudo cmake --build . --target install -- -j4
