@@ -28,15 +28,15 @@ matrix:
         - compiler: clang
           env: BUILD_TYPE=Debug SHARED=ON TESTS=ON
           after_script:
-              - make test
-        # Samples compiler
+              - cmake . --target test
+        # Examples compiler
         - compiler: clang
-          env: BUILD_TYPE=Release SHARED=ON SAMPLES=ON
+          env: BUILD_TYPE=Release SHARED=ON EXAMPLES=ON
 
 env:
     global:
         - TESTS=OFF
-        - SAMPLES=OFF
+        - EXAMPLES=OFF
     matrix:
         - BUILD_TYPE=Debug SHARED=ON
         - BUILD_TYPE=Debug SHARED=OFF
@@ -49,5 +49,5 @@ before_script:
     - cd build
 
 script:
-    - cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DBUILD_SHARED_LIBS=$SHARED -DTESTS=$TESTS -DSAMPLES=$SAMPLES -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
-    - sudo make install -j4
+    - cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DBUILD_SHARED_LIBS=$SHARED -DBUILD_TESTING=$TESTS -DBUILD_EXAMPLES=$EXAMPLES -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
+    - cmake --build . --target install -- -j4

@@ -34,7 +34,7 @@ matrix:
 build_script:
     - mkdir build
     - cd build
-    - cmake .. -DCMAKE_BUILD_TYPE=%CONFIGURATION% -DBUILD_SHARED_LIBS=%SHARED% -DDTLS=ON -DTESTS=ON
+    - cmake .. -DCMAKE_BUILD_TYPE=%CONFIGURATION% -DBUILD_SHARED_LIBS=%SHARED% -DUSE_DTLS=ON -DBUILD_TESTING=ON
     - cmake --build .
 
 test_script:

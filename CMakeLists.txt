@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.1)
-project(OkHttpFork)
+project(okhttp-fork)
 
 set(CMAKE_CXX_STANDARD 11)
 
@@ -11,25 +11,23 @@ elseif(CMAKE_COMPILER_IS_GNUCXX)
 endif()
 
 # Options
-option(DTLS "Would use DTLS" OFF)
-if(DTLS)
+option(BUILD_DTLS "Would compile DTLS" OFF)
+if(BUILD_DTLS)
     add_definitions(-DOKHTTPFORK_DTLS)
 endif()
 
-option(TESTS "Unit-tests for ${PROJECT_NAME} using Catch2" ON)
-if(TESTS)
-    enable_testing()
+enable_testing()
+if(BUILD_TESTING)
     add_subdirectory(tests)
 endif()
 
-option(SAMPLES "Would compile samples" OFF)
-if(SAMPLES)
-    add_subdirectory(samples)
+option(BUILD_EXAMPLES "Would compile examples" OFF)
+if(BUILD_EXAMPLES)
+    add_subdirectory(examples)
 endif()
 
 # Common files
 include_directories(include)
-
 file(GLOB_RECURSE SOURCE_FILES RELATIVE ${PROJECT_SOURCE_DIR} "include/*.hpp" "src/*.cpp" "src/*.hpp")
 
 # Files for different systems
