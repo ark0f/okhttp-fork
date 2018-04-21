@@ -16,7 +16,15 @@ namespace ohf {
         }
 
         Server::Server(const HttpURL &url) : Server() {
-            bind(url);
+            bind(InetAddress(url.host()), url.port());
+        }
+
+        Server::Server(ohf::tcp::Server &&server) noexcept {
+            mFD = server.mFD;
+            server.mFD = SocketImpl::invalidSocket();
+
+            mBlocking = server.mBlocking;
+            server.mBlocking = true;
         }
 
         void Server::bind(const InetAddress &address, Uint16 port) {
@@ -75,5 +83,24 @@ namespace ohf {
         Server::Iterator Server::end() {
             return {this};
         }
+
+        Server& Server::operator =(ohf::tcp::Server&& right) noexcept {
+            mFD = right.mFD;
+            right.mFD = SocketImpl::invalidSocket();
+
+            mBlocking = right.mBlocking;
+            right.mBlocking = true;
+
+            return *this;
+        }
+    }
+}
+
+namespace std {
+    using namespace ohf;
+
+    void swap(tcp::Server& a, tcp::Server& b) {
+        std::swap(a.mFD, b.mFD);
+        std::swap(a.mBlocking, b.mBlocking);
     }
 }

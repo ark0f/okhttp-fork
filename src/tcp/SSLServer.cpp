@@ -5,22 +5,24 @@
 #include <ohf/tcp/SSLServer.hpp>
 #include <ohf/tcp/SSLSocket.hpp>
 #include <ohf/Exception.hpp>
-#include <openssl/ssl.h>
 #include "../SocketImpl.hpp"
 #include "../ssl/Util.hpp"
 
 namespace ohf {
     namespace tcp {
-        SSLServer::SSLServer(const ssl::Context &context) : ssl::Socket(Type::TCP, context) {}
+        SSLServer::SSLServer(const ssl::Context &context) :
+                ohf::Socket(Type::TCP),
+                ssl::Socket(Type::TCP, context)
+        {}
 
-        void SSLServer::create(Handle fd) {
-            ssl::Socket::create(fd);
-            tcp::Server::create(fd);
-        }
+        SSLServer::SSLServer(ohf::tcp::SSLServer&& server) noexcept : ssl::Socket(Type::TCP, server.context) {
+            mFD = server.mFD;
+            server.mFD = SocketImpl::invalidSocket();
 
-        void SSLServer::close() {
-            Server::close();
-            ssl::Socket::close();
+            mBlocking = server.mBlocking;
+            server.mBlocking = true;
+
+            mSSL = std::move(server.mSSL);
         }
 
         SSLServer::Connection SSLServer::accept() const {
@@ -42,9 +44,29 @@ namespace ohf {
 
         void SSLServer::bind(const InetAddress &address, Uint16 port) {
             ssl::Socket::create();
-            Server::create(ssl::Socket::mFD);
 
             Server::bind(address, port);
         }
+
+        SSLServer& SSLServer::operator =(ohf::tcp::SSLServer&& right) noexcept {
+            mFD = right.mFD;
+            right.mFD = SocketImpl::invalidSocket();
+
+            mBlocking = right.mBlocking;
+            right.mBlocking = true;
+
+            mSSL = std::move(right.mSSL);
+
+            return *this;
+        }
+    }
+}
+
+namespace std {
+    using namespace ohf;
+
+    void swap(tcp::SSLServer& a, tcp::SSLServer& b) {
+        swap(a, b);
+        swap(a.mSSL, b.mSSL);
     }
 }

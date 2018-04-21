@@ -10,7 +10,17 @@
 
 namespace ohf {
     namespace tcp {
-        class Server : public ohf::Socket {
+        class Server;
+    }
+}
+
+namespace std {
+    void swap(ohf::tcp::Server& a, ohf::tcp::Server& b);
+}
+
+namespace ohf {
+    namespace tcp {
+        class Server : public virtual ohf::Socket {
         public:
             class Connection {
             public:
@@ -25,6 +35,9 @@ namespace ohf {
                 Uint16 port() const;
 
                 std::iostream& stream() const;
+
+                void close() const;
+
             private:
                 tcp::Socket *mSocket;
                 InetAddress mAddress;
@@ -53,7 +66,9 @@ namespace ohf {
 
             Server(const InetAddress &address, Uint16 port);
 
-            Server(const HttpURL &url);
+            explicit Server(const HttpURL &url);
+
+            Server(Server&& server) noexcept;
 
             virtual void bind(const InetAddress &address, Uint16 port);
 
@@ -72,6 +87,11 @@ namespace ohf {
             const Iterator end() const;
 
             Iterator end();
+
+            Server& operator =(Server&& right) noexcept;
+
+        private:
+            friend void ::std::swap(Server& a, Server& b);
         };
     }
 }

@@ -8,6 +8,13 @@
 
 using namespace std;
 
+#ifdef OKHTTPFORK_UNIX
+    #define OHF_FLAGS MSG_NOSIGNAL
+#else
+    #define OHF_FLAGS 0
+#endif
+
+
 namespace ohf {
     namespace tcp {
         Socket::Socket(StreamBuf *buffer) :
@@ -59,7 +66,7 @@ namespace ohf {
             if (!data || size == 0) throw Exception(Exception::Code::NO_DATA_TO_SEND, "No data to send: ");
 
             Int32 length;
-            if ((length = ::send(mFD, data, size, 0)) < 0) {
+            if ((length = ::send(mFD, data, size, OHF_FLAGS)) < 0) {
                 throw Exception(Exception::Code::FAILED_TO_SEND_DATA,
                         "Failed to send data: " + SocketImpl::getError());
             }
@@ -76,7 +83,7 @@ namespace ohf {
         }
 
         Int32 Socket::receive(char *data, Int32 size) const {
-            Int32 received = recv(mFD, data, size, 0);
+            Int32 received = recv(mFD, data, size, OHF_FLAGS);
             if(received < 0) {
                 throw Exception(Exception::Code::FAILED_TO_RECEIVE_DATA,
                                 "Failed to receive data: " + SocketImpl::getError());
@@ -86,13 +93,13 @@ namespace ohf {
 
         vector<Int8> Socket::receive(Int32 size) const {
             vector<Int8> data(size);
-            receive(data.data(), size);
-            return data;
+            Int32 received = receive(data.data(), size);
+            return {data.begin(), data.begin() + received};
         }
 
         string Socket::receiveString(Int32 size) const {
             vector<Int8> data = receive(size);
-            return string(data.begin(), data.end());
+            return {data.begin(), data.end()};
         }
 
         Socket& Socket::operator =(tcp::Socket&& right) noexcept {
@@ -100,6 +107,7 @@ namespace ohf {
             right.mFD = SocketImpl::invalidSocket();
 
             mBlocking = right.mBlocking;
+            right.mBlocking = true;
 
             ((StreamBuf *) mIOS->rdbuf())->socket(this);
 
@@ -111,9 +119,8 @@ namespace ohf {
 namespace std {
     using namespace ohf;
 
-    void swap(tcp::Socket&& a, tcp::Socket&& b) {
+    void swap(tcp::Socket& a, tcp::Socket& b) {
         std::swap(a.mFD, b.mFD);
         std::swap(a.mBlocking, b.mBlocking);
-        std::swap(a.mIOS, b.mIOS);
     }
 }

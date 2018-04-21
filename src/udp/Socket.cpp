@@ -11,7 +11,7 @@ namespace ohf {
     namespace udp {
         Socket::Socket() : ohf::Socket(Type::UDP) {}
 
-        Socket::Socket(udp::Socket &&socket) noexcept : udp::Socket() {
+        Socket::Socket(udp::Socket&& socket) noexcept : udp::Socket() {
             mFD = socket.mFD;
             socket.mFD = SocketImpl::invalidSocket();
 
@@ -35,8 +35,10 @@ namespace ohf {
 
         void Socket::send(const InetAddress &address, Uint16 port, const char *data, size_t size) {
             if (!data || size == 0) throw Exception(Exception::Code::NO_DATA_TO_SEND, "No data to send: ");
-            if (size > 65507)
-                throw Exception(Exception::Code::DATAGRAM_PACKET_IS_TOO_BIG, "Datagram packet is too big: ");
+            if (size > 65507) {
+                throw Exception(Exception::Code::DATAGRAM_PACKET_IS_TOO_BIG,
+                                "Datagram packet is too big: " + std::to_string(size));
+            }
 
             sockaddr_in socket_address = SocketImpl::createAddress(address.toUint32(), port);
             if (::sendto(mFD, data, size, 0, (sockaddr *) &socket_address, sizeof(sockaddr_in)) < 0) {
@@ -74,7 +76,8 @@ namespace ohf {
         Int32 Socket::receive(InetAddress &address, Uint16 &port, std::string &data, Int32 size) {
             std::vector<Int8> buffer(size);
             Int32 received = receive(address, port, buffer.data(), size);
-            data.insert(data.begin(), buffer.begin(), buffer.end());
+            data.clear();
+            data.insert(0, buffer.data(), received);
             return received;
         }
 

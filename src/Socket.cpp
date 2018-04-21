@@ -65,4 +65,8 @@ namespace ohf {
     Socket::operator bool() {
         return isValid();
     }
+
+    Socket::Type Socket::type() const {
+        return mType;
+    }
 }

@@ -3,13 +3,13 @@
 |:---------:|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |:------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Travis CI | [![Build status](https://img.shields.io/travis/Good-Pudge/okhttp-fork/master.svg?style=flat-square)](https://travis-ci.org/Good-Pudge/okhttp-fork)                           | [![Build status](https://img.shields.io/travis/Good-Pudge/okhttp-fork/dev.svg?style=flat-square)](https://travis-ci.org/Good-Pudge/okhttp-fork)                           |
 | AppVeyor  | [![Build status](https://img.shields.io/appveyor/ci/Good-Pudge/okhttp-fork/master.svg?style=flat-square)](https://ci.appveyor.com/project/Good-Pudge/okhttp-fork)            | [![Build status](https://img.shields.io/appveyor/ci/Good-Pudge/okhttp-fork/dev.svg?style=flat-square)](https://ci.appveyor.com/project/Good-Pudge/okhttp-fork)            |
-
-
+| Codecov   | [![Codecov master](https://img.shields.io/codecov/c/github/Good-Pudge/okhttp-fork/master.svg?style=flat-square)](https://codecov.io/gh/Good-Pudge/okhttp-fork/branch/master) | [![Codecov branch](https://img.shields.io/codecov/c/github/Good-Pudge/okhttp-fork/dev.svg?style=flat-square)](https://codecov.io/gh/Good-Pudge/okhttp-fork/branch/dev)    |
 
 ## Overview
 * [Used libraries](#used_libs)
 * [Supported compilers](#compilers)
 * [Installation](#installation)
+* [CMake options](#options)
 * [Components](#components)
 * [License](#license)
 
@@ -29,43 +29,21 @@ These compilers tested and aren't supported:
 * MSVC 2013 (issue: `noexcept`)
 
 ## <a name="installation"></a> Installation
-The first step:
 ````bash
-git clone https://github.com/Good-Pudge/okhttp-fork.git
+git clone --recursive https://github.com/Good-Pudge/okhttp-fork.git
 cd okhttp-fork
+mkdir build
 cd build
 cmake ..
-````
-If you want to build the library as shared, use `BUILD_SHARED_LIBS` option (default: `OFF`)
-````bash
-cmake .. -DBUILD_SHARED_LIBS=ON
-````  
-Also you can use `TESTS` option to compile tests (default: `ON`)
-````bash
-cmake .. -DTESTS=ON
-````
-And if you need DTLS, use `DTLS` option (default: `OFF`, as WIP)
-````bash
-cmake .. -DDTLS=ON
+cmake --build . --target install
 ````
 
-The second step for different systems:
-* #### Windows:
-    * MSVC:
-    ````bash
-    cmake --build . --target INSTALL
-    ````
-    * MinGW:
-    ````bash
-    mingw32-make -j2
-    mingw32-make install
-    ````
-* #### UNIX-like
-    ````bash
-    make -j2
-    sudo make install
-    ````
-Will be installed directories in `${CMAKE_INSTALL_PREFIX}`. These are `include/ohf` and `lib`
+## <a name="options"></a> CMake options
+* `CMAKE_INSTALL_PREFIX` - installation path that contain `include/ohf` and `lib`
+* `BUILD_SHARED_LIBS` (default: `OFF`) - build library as shared.
+* `BUILD_TESTING` (default: `OFF`) - build executable for tests.
+* `BUILD_EXAMPLES` (default: `OFF`) - build executables of examples.
+* `ENABLE_DTLS` (default: `OFF`, as WIP) - access to use DTLS components.
 
 ## <a name="components"></a> Original library components
 - [x] Address
@@ -127,6 +105,7 @@ Will be installed directories in `${CMAKE_INSTALL_PREFIX}`. These are `include/o
     * SSL
     * Challenge
     * CipherSuite
+    * Exception
 * namespace `tcp`
     * Server
         * Connection
@@ -140,6 +119,7 @@ Will be installed directories in `${CMAKE_INSTALL_PREFIX}`. These are `include/o
 * IOStreamBuf
 * InetAddress
 * TimeUnit
+* Exception
 
 ## <a name="license"></a> License
 OkHttp fork distribute with an Apache 2.0 License. See LICENSE and NOTICE for more info.

@@ -22,12 +22,12 @@ namespace ohf {
 }
 
 namespace std {
-    void swap(ohf::tcp::Socket&& a, ohf::tcp::Socket&& b);
+    void swap(ohf::tcp::Socket& a, ohf::tcp::Socket& b);
 }
 
 namespace ohf {
     namespace tcp {
-        class Socket : public ohf::Socket {
+        class Socket : public virtual ohf::Socket {
         public:
             class StreamBuf : public IOStreamBuf {
             public:
@@ -70,10 +70,11 @@ namespace ohf {
 
             Socket& operator =(Socket &&right) noexcept;
 
-        private:
+        protected:
             std::shared_ptr<std::iostream> mIOS;
 
-            friend void ::std::swap(Socket&& a, Socket&& b);
+        private:
+            friend void ::std::swap(Socket& a, Socket& b);
         };
     }
 }

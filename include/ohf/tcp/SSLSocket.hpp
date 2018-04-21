@@ -10,16 +10,25 @@
 
 namespace ohf {
     namespace tcp {
+        class SSLSocket;
+    }
+}
+
+namespace std {
+    void swap(ohf::tcp::SSLSocket& a, ohf::tcp::SSLSocket& b);
+}
+
+namespace ohf {
+    namespace tcp {
         class SSLServer;
 
         class SSLSocket : public tcp::Socket, public ssl::Socket {
         public:
             explicit SSLSocket(const ssl::Context &context, StreamBuf *buffer = new StreamBuf(1024, 1024));
 
-            using tcp::Socket::create;
-            void create(Handle handle) override;
+            SSLSocket(SSLSocket&& socket) noexcept;
 
-            void close() override;
+            using ssl::Socket::create;
 
             using tcp::Socket::connect;
             void connect(const InetAddress &address, Uint16 port) override;
@@ -30,8 +39,14 @@ namespace ohf {
             using tcp::Socket::receive;
             Int32 receive(char *data, Int32 size) const override;
 
+            using ssl::Socket::close;
+
+            SSLSocket& operator =(SSLSocket &&right) noexcept;
+
         private:
             void accept() const;
+
+            friend void ::std::swap(SSLSocket& a, SSLSocket& b);
 
             friend class ohf::tcp::SSLServer;
         };

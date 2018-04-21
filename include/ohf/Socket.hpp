@@ -17,7 +17,7 @@ namespace ohf {
                 typedef Uint32 Handle;
             #endif
         #elif defined(OKHTTPFORK_UNIX)
-            typedef int Handle;
+            typedef Int32 Handle;
         #endif
 
         enum class Type {
@@ -44,6 +44,8 @@ namespace ohf {
         bool isValid() const;
 
         explicit operator bool();
+
+        Type type() const;
 
     protected:
         Socket() = default;

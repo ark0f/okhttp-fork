@@ -3,27 +3,30 @@
 //
 
 #include <ohf/tcp/SSLSocket.hpp>
+#include "../SocketImpl.hpp"
 
 namespace ohf {
     namespace tcp {
         SSLSocket::SSLSocket(const ssl::Context &context, StreamBuf *buffer) :
+                ohf::Socket(Type::TCP),
                 tcp::Socket(buffer),
                 ssl::Socket(Type::TCP, context)
         {}
 
-        void SSLSocket::create(Handle fd) {
-            ssl::Socket::create(fd);
-            tcp::Socket::create(fd);
-        }
+        SSLSocket::SSLSocket(SSLSocket &&socket) noexcept : ssl::Socket(Type::TCP, socket.context) {
+            mFD = socket.mFD;
+            socket.mFD = SocketImpl::invalidSocket();
 
-        void SSLSocket::close() {
-            tcp::Socket::close();
-            ssl::Socket::close();
+            mBlocking = socket.mBlocking;
+            socket.mBlocking = true;
+
+            ((StreamBuf *) mIOS->rdbuf())->socket(this);
+
+            mSSL = std::move(socket.mSSL);
         }
 
         void SSLSocket::connect(const InetAddress &address, Uint16 port) {
             ssl::Socket::create();
-            tcp::Socket::create(ssl::Socket::mFD);
 
             if(SNICalled) mSSL->setTLSExtHostName(address.hostName());
 
@@ -42,5 +45,28 @@ namespace ohf {
         void SSLSocket::accept() const {
             mSSL->accept();
         }
+
+        SSLSocket& SSLSocket::operator =(SSLSocket &&right) noexcept {
+            mFD = right.mFD;
+            right.mFD = SocketImpl::invalidSocket();
+
+            mBlocking = right.mBlocking;
+            right.mBlocking = true;
+
+            ((StreamBuf *) mIOS->rdbuf())->socket(this);
+
+            mSSL = std::move(right.mSSL);
+
+            return *this;
+        }
+    }
+}
+
+namespace std {
+    using namespace ohf;
+
+    void swap(tcp::SSLSocket& a, tcp::SSLSocket& b) {
+        swap(a, b);
+        swap(a.mSSL, b.mSSL);
     }
 }

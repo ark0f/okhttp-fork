@@ -12,7 +12,7 @@
 
 namespace ohf {
     namespace ssl {
-        class Socket : public ohf::Socket {
+        class Socket : public virtual ohf::Socket {
         public:
             Socket(Type type, const Context &context);
 

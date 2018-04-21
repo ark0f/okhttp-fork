@@ -19,35 +19,43 @@ compiler:
 addons:
     apt:
         sources:
-            - sourceline: 'ppa:ubuntu-toolchain-r/test'
-        packages: ["g++-5"]
+            - ubuntu-toolchain-r-test
+        packages:
+            - g++-5
 
 matrix:
     include:
         # Tester
+        - compiler: gcc
+          env: BUILD_TYPE=Coverage SHARED=ON TESTS=ON TARGET=coverage
+          before_script:
+              - sudo apt install -y lcov gdb
+              - sudo update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-5 90
+        # Installer and examples compiler
         - compiler: clang
-          env: BUILD_TYPE=Debug SHARED=ON TESTS=ON
-          after_script:
-              - cmake . --target test
-        # Examples compiler
-        - compiler: clang
-          env: BUILD_TYPE=Release SHARED=ON EXAMPLES=ON
+          env: BUILD_TYPE=Release SHARED=ON EXAMPLES=ON TARGET=install
 
 env:
     global:
         - TESTS=OFF
         - EXAMPLES=OFF
+        - TARGET=ohf
     matrix:
         - BUILD_TYPE=Debug SHARED=ON
         - BUILD_TYPE=Debug SHARED=OFF
         - BUILD_TYPE=Release SHARED=ON
         - BUILD_TYPE=Release SHARED=OFF
 
-before_script:
-    - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-5 90
+script:
+    - |
+      if [ "$CC" == "gcc" ];
+      then
+        export LAUNCHER="-DCMAKE_CXX_COMPILER_LAUNCHER=ccache";
+        sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-5 90;
+      else
+        export LAUNCHER="";
+      fi
     - mkdir build
     - cd build
-
-script:
-    - cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DBUILD_SHARED_LIBS=$SHARED -DBUILD_TESTING=$TESTS -DBUILD_EXAMPLES=$EXAMPLES -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
-    - sudo cmake --build . --target install -- -j4
+    - cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DBUILD_SHARED_LIBS=$SHARED -DBUILD_TESTING=$TESTS -DBUILD_EXAMPLES=$EXAMPLES $LAUNCHER
+    - sudo env "PATH=$PATH" cmake --build . --target $TARGET -- -j4

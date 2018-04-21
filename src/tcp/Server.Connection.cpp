@@ -31,5 +31,9 @@ namespace ohf {
         std::iostream& Server::Connection::stream() const {
             return mSocket->stream();
         }
+
+        void Server::Connection::close() const {
+            mSocket->close();
+        }
     }
 }
