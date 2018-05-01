@@ -42,7 +42,7 @@ namespace ohf {
                 util::string::toLower(name);
                 std::string value = parameter[1];
                 if (name == "expires") {
-                    m_expiresAt = TimeUnit::seconds(util::parseDate(value, "%a, %d %b %Y %H:%M:%S GMT"));
+                    m_expiresAt = TimeUnit::seconds(util::parseDate(value, "%a, %d %b %Y %H:%M:%S %z"));
                     m_persistent = true;
                 } else if (name == "max-age") {
                     try {

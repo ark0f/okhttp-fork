@@ -28,8 +28,6 @@ namespace util {
                                  "Failed to parse time: data: " + what + "; format: " + format);
         }
         std::time_t time = std::mktime(&t);
-
-        std::tm *greenwich = std::gmtime(&time);
-        return std::mktime(greenwich);
+        return time;
     }
 }

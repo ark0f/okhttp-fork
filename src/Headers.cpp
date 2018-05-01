@@ -59,7 +59,7 @@ namespace ohf {
     }
 
     TimeUnit Headers::getDate() const {
-        return TimeUnit::seconds(util::parseDate(this->get("Date"), "%a, %d %b %Y %H:%M:%S GMT"));
+        return TimeUnit::seconds(util::parseDate(this->get("Date"), "%a, %d %b %Y %H:%M:%S %z"));
     }
 
     std::string Headers::name(Uint32 index) const {
