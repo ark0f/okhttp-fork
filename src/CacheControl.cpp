@@ -12,20 +12,7 @@ using namespace util;
 using namespace util::string;
 
 namespace ohf {
-    CacheControl::CacheControl(const Headers &headers) :
-            mPublic(false),
-            mPrivate(false),
-            mNoCache(false),
-            mOnlyIfCached(false),
-            mMustRevalidate(false),
-            mImmutable(false),
-            mNoStore(false),
-            mNoTransform(false),
-            mMaxAge(TimeUnit::MINUS_ONE_SECOND),
-            mSMaxAge(TimeUnit::MINUS_ONE_SECOND),
-            mMaxStale(TimeUnit::MINUS_ONE_SECOND),
-            mMinFresh(TimeUnit::MINUS_ONE_SECOND)
-    {
+    CacheControl::CacheControl(const Headers &headers) : CacheControl() {
         std::vector<std::string> cache_control = split(headers.get("cache-control"),
                                                        std::vector<std::string>{", ", ","});
 
@@ -134,6 +121,14 @@ namespace ohf {
     }
 
     CacheControl::CacheControl() :
+            mPublic(false),
+            mPrivate(false),
+            mNoCache(false),
+            mOnlyIfCached(false),
+            mMustRevalidate(false),
+            mImmutable(false),
+            mNoStore(false),
+            mNoTransform(false),
             mMaxAge(TimeUnit::MINUS_ONE_SECOND),
             mSMaxAge(TimeUnit::MINUS_ONE_SECOND),
             mMaxStale(TimeUnit::MINUS_ONE_SECOND),

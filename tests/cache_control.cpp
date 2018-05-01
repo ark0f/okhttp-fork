@@ -6,7 +6,6 @@
 using namespace ohf;
 
 TEST_CASE("CacheControl") {
-
     CacheControl::Builder builder;
     SECTION("Builder") {
         builder
@@ -67,4 +66,9 @@ TEST_CASE("CacheControl") {
             .set("Cache-Control", "min-fresh=INVALID")
             .build();
     REQUIRE_THROWS_CODE(CacheControl(headers), Exception::Code::INVALID_MIN_FRESH);
+
+    CacheControl emptyCC;
+    std::ostringstream oss;
+    oss << emptyCC;
+    REQUIRE(oss.str().empty());
 }

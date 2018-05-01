@@ -52,7 +52,7 @@ namespace ohf {
 
             Builder &setQueryParameter(const std::string &name, const std::string &value);
 
-            Builder &pathEndsWithSlash(bool b);
+            Builder &pathSuffix(bool b);
 
         private:
             Uint16 mPort;
@@ -118,6 +118,8 @@ namespace ohf {
         std::string scheme() const;
 
         // std::string topPrivateDomain();
+
+        bool pathSuffix() const;
 
         std::string url() const;
 

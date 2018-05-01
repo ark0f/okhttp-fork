@@ -176,7 +176,7 @@ namespace ohf {
 
         std::ostringstream oss;
         oss << '/';
-        for (int i = 0; i < mPath.size() - 1; i++) {
+        for (unsigned int i = 0; i < mPath.size() - 1; i++) {
             std::string pathSegment = mPath[i];
             oss << HttpURL::encode(pathSegment) << "/";
         }
@@ -198,7 +198,7 @@ namespace ohf {
             return std::string();
 
         std::ostringstream oss;
-        for (int i = 0; i < mQuery.size() - 1; i++) {
+        for (unsigned int i = 0; i < mQuery.size() - 1; i++) {
             auto entry = std::next(mQuery.begin(), i);
             if (entry->second.empty())
                 oss << entry->first << '&';
@@ -258,7 +258,7 @@ namespace ohf {
             return std::string();
 
         std::ostringstream oss;
-        for (int i = 0; i < mQuery.size() - 1; i++) {
+        for (unsigned int i = 0; i < mQuery.size() - 1; i++) {
             auto entry = std::next(mQuery.begin(), i);
             if (entry->second.empty())
                 oss << entry->first << '&';
@@ -302,6 +302,10 @@ namespace ohf {
 
     std::string HttpURL::scheme() const {
         return mScheme;
+    }
+
+    bool HttpURL::pathSuffix() const {
+        return mPathSuffix;
     }
 
     std::string HttpURL::url() const {
@@ -348,7 +352,7 @@ namespace ohf {
                && ps1 == ps2;
     }
 
-    std::ostream &operator<<(std::ostream &stream, const HttpURL &httpURL) {
+    std::ostream& operator <<(std::ostream &stream, const HttpURL &httpURL) {
         return stream << httpURL.url();
     }
 

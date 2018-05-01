@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.1 FATAL_ERROR)
 project(ohf_tests)
 
 # Catch2
-set(CATCH_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/Catch2/include")
+set(CATCH_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/../Catch2/include")
 if(NOT EXISTS ${CATCH_INCLUDE_DIR})
 	message(FATAL_ERROR "Catch2 submodule not found")
 endif()
@@ -12,7 +12,8 @@ file(GLOB_RECURSE CATCH ${PROJECT_SOURCE_DIR} "${CATCH_INCLUDE_DIR}/*")
 
 # Tests
 include_directories("../include")
-file(GLOB TESTS_FILES ${PROJECT_SOURCE_DIR} "*.hpp" "*.cpp")
+include_directories(".")
+file(GLOB_RECURSE TESTS_FILES ${PROJECT_SOURCE_DIR} "*.hpp" "*.cpp")
 
 # Target
 add_executable(${PROJECT_NAME} ${TESTS_FILES} ${CATCH})
@@ -24,11 +25,6 @@ add_test(NAME ${PROJECT_NAME}
 find_package(Threads REQUIRED)
 if(CMAKE_THREAD_LIBS_INIT)
 	target_link_libraries(${PROJECT_NAME} ${CMAKE_THREAD_LIBS_INIT})
-endif()
-
-# Defines
-if(MINGW)
-	add_definitions(-DCATCH_CONFIG_NO_POSIX_SIGNALS)
 endif()
 
 # Reporter

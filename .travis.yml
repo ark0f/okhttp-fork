@@ -16,6 +16,9 @@ compiler:
     - gcc
     - clang
 
+build:
+    parallel: true
+
 addons:
     apt:
         sources:
@@ -51,6 +54,7 @@ script:
       if [ "$CC" == "gcc" ];
       then
         export LAUNCHER="-DCMAKE_CXX_COMPILER_LAUNCHER=ccache";
+        sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-5 90;
         sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-5 90;
       else
         export LAUNCHER="";

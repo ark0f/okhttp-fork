@@ -1,5 +1,5 @@
 #include <catch.hpp>
-#include "exception_matcher.hpp"
+#include <exception_matcher.hpp>
 #include <ohf/udp/Socket.hpp>
 #include <thread>
 
@@ -7,6 +7,7 @@ using namespace ohf;
 
 #define A_PORT 50001
 #define B_PORT 50002
+#define INVALID_FD Socket::Handle(-1)
 
 void a_func(udp::Socket& a) {
     a.bind("localhost", A_PORT);
@@ -15,30 +16,50 @@ void a_func(udp::Socket& a) {
     Uint16 port;
     std::string data;
     a.receive(address, port, data, 128);
-    REQUIRE(data == "U2_HELLO");
+    REQUIRE(data == "B_HELLO");
     REQUIRE(address.hostAddress() == "127.0.0.1");
     REQUIRE(port == B_PORT);
 
-    a.send(address, port, "U1_WORLD");
+    a.send(address, port, "A_WORLD");
+
+    std::vector<char> dataVector(3);
+    a.receive(address, port, dataVector);
+    REQUIRE(dataVector[0] == 1);
+    REQUIRE(dataVector[1] == 127);
+    REQUIRE(dataVector[2] == -128);
 }
 
 void b_func(udp::Socket& b) {
     b.bind("localhost", B_PORT);
 
-    b.send("localhost", A_PORT, "U2_HELLO");
+    b.send("localhost", A_PORT, "B_HELLO");
 
     InetAddress address;
     Uint16 port;
     std::string data;
     b.receive(address, port, data, 128);
-    REQUIRE(data == "U1_WORLD");
+    REQUIRE(data == "A_WORLD");
     REQUIRE(address.hostAddress() == "127.0.0.1");
     REQUIRE(port == A_PORT);
+
+    std::vector<char> toSend = {1, 127, -128};
+    b.send("localhost", A_PORT, toSend);
 }
 
 TEST_CASE("udp::Socket") {
     udp::Socket a;
     udp::Socket b;
+
+    // create and close
+    a.create();
+    REQUIRE(a.fd() != INVALID_FD);
+    a.close();
+    REQUIRE(a.fd() == INVALID_FD);
+
+    a.create();
+    REQUIRE(a.fd() != INVALID_FD);
+    a.unbind();
+    REQUIRE(a.fd() == INVALID_FD);
 
     // exceptions
     b.bind("localhost", B_PORT);

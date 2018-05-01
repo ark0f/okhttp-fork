@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.1 FATAL_ERROR)
-project(okhttp-fork)
+project(ohf)
 
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 11)
@@ -51,34 +51,34 @@ elseif(UNIX)
 endif()
 list(REMOVE_ITEM LIB_FILES ${FILES})
 
-add_library(ohf ${INCLUDE_FILES} ${LIB_FILES})
+add_library(${PROJECT_NAME} ${INCLUDE_FILES} ${LIB_FILES})
 
 # Libraries
 # OpenSSL
 find_package(OpenSSL REQUIRED)
 if (OPENSSL_FOUND)
     include_directories(${OPENSSL_INCLUDE_DIR})
-    target_link_libraries(ohf ${OPENSSL_LIBRARIES})
+    target_link_libraries(${PROJECT_NAME} ${OPENSSL_LIBRARIES})
 
     if(WIN32)
-        target_link_libraries(ohf crypt32)
+        target_link_libraries(${PROJECT_NAME} crypt32)
     endif()
 endif()
 
 # Threads
 find_package(Threads REQUIRED)
 if(CMAKE_THREAD_LIBS_INIT)
-    target_link_libraries(ohf ${CMAKE_THREAD_LIBS_INIT})
+    target_link_libraries(${PROJECT_NAME} ${CMAKE_THREAD_LIBS_INIT})
 endif()
 
 # Socket
 if (WIN32)
-    target_link_libraries(ohf ws2_32)
+    target_link_libraries(${PROJECT_NAME} ws2_32)
 endif()
 
 # Install
-install(DIRECTORY include/ohf DESTINATION include)
-install(TARGETS ohf
+install(DIRECTORY include/${PROJECT_NAME} DESTINATION include)
+install(TARGETS ${PROJECT_NAME}
         RUNTIME       DESTINATION bin
         LIBRARY       DESTINATION lib
         ARCHIVE       DESTINATION lib)

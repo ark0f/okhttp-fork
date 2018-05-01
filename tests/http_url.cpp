@@ -20,9 +20,14 @@ TEST_CASE("HttpURL") {
                 .port(1234)
                 .addPathSegments("/foo/bar")
                 .setPathSegment(0, "wow")
-                .query("q=123&hello=world")
+                .setPathSegment(2, "oh/")
+                .removePathSegment(1)
+                .query("q=123&hello=world&empty_parameter")
+                .setQueryParameter("unused", "parameter")
                 .setQueryParameter("q", "321")
-                .fragment("some_fragment");
+                .removeQueryParameter("unused")
+                .fragment("some_fragment")
+                .pathSuffix(false);
 
         REQUIRE_THROWS_CODE(builder.query("q=123=321"), Exception::Code::INVALID_QUERY_PARAMETER);
     }
@@ -31,18 +36,20 @@ TEST_CASE("HttpURL") {
     REQUIRE(url.scheme() == "ftp");
     REQUIRE(url.host() == "example.com");
     REQUIRE(url.port() == 1234);
-    REQUIRE(url.encodedPath() == "/wow/bar/");
+    REQUIRE_FALSE(url.pathSuffix());
+    REQUIRE(url.encodedPath() == "/wow/oh");
     REQUIRE(url.pathSegments()[0] == "wow");
-    REQUIRE(url.pathSize() == 9);
-    REQUIRE(url.query() == "hello=world&q=321");
+    REQUIRE(url.pathSegments()[1] == "oh");
+    REQUIRE(url.pathSize() == 7);
+    REQUIRE(url.query() == "empty_parameter&hello=world&q=321");
     REQUIRE(url.queryParameter("q") == "321");
-    REQUIRE(url.queryParameterName(0) == "hello");
-    REQUIRE_THROWS_CODE(url.queryParameterName(2), Exception::Code::OUT_OF_RANGE);
-    REQUIRE(url.queryParameterValue(0) == "world");
-    REQUIRE_THROWS_CODE(url.queryParameterValue(2), Exception::Code::OUT_OF_RANGE);
-    REQUIRE(url.queryParameterNames()[0] == "hello");
-    REQUIRE(url.querySize() == 17);
+    REQUIRE(url.queryParameterName(0) == "empty_parameter");
+    REQUIRE_THROWS_CODE(url.queryParameterName(3), Exception::Code::OUT_OF_RANGE);
+    REQUIRE(url.queryParameterValue(0).empty());
+    REQUIRE_THROWS_CODE(url.queryParameterValue(3), Exception::Code::OUT_OF_RANGE);
+    REQUIRE(url.queryParameterNames()[0] == "empty_parameter");
+    REQUIRE(url.querySize() == 33);
     REQUIRE(url.fragment() == "some_fragment");
     REQUIRE_FALSE(url.isHttps());
-    REQUIRE(url.url() == "ftp://example.com/wow/bar/?hello=world&q=321#some_fragment");
+    REQUIRE(url.url() == "ftp://example.com/wow/oh?empty_parameter&hello=world&q=321#some_fragment");
 }

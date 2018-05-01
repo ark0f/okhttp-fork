@@ -150,15 +150,15 @@ namespace ohf {
     bool Cookie::operator==(const Cookie &cookie) const {
         return m_expiresAt == cookie.m_expiresAt
                // bool
-               || m_hostOnly == cookie.m_hostOnly
-               || m_httpOnly == cookie.m_httpOnly
-               || m_persistent == cookie.m_persistent
-               || m_secure == cookie.m_secure
+               && m_hostOnly == cookie.m_hostOnly
+               && m_httpOnly == cookie.m_httpOnly
+               && m_persistent == cookie.m_persistent
+               && m_secure == cookie.m_secure
                // std::string
-               || m_name == cookie.m_name
-               || m_value == cookie.m_value
-               || m_path == cookie.m_path
-               || m_domain == cookie.m_domain;
+               && m_name == cookie.m_name
+               && m_value == cookie.m_value
+               && m_path == cookie.m_path
+               && m_domain == cookie.m_domain;
     }
 
     std::ostream &operator<<(std::ostream &stream, const Cookie &cookie) {

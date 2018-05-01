@@ -28,7 +28,6 @@ namespace ohf {
     }
 
     HttpURL::Builder& HttpURL::Builder::fragment(const std::string &fragment) {
-        mPathSuffix = true;
         mFragment = HttpURL::decode(fragment);
         return *this;
     }
@@ -44,7 +43,6 @@ namespace ohf {
     }
 
     HttpURL::Builder& HttpURL::Builder::query(const std::string &query) {
-        mPathSuffix = true;
         std::vector<std::string> queries = util::string::split(query, "&");
         for (const auto &parameter : queries) {
             std::vector<std::string> nameValue = util::string::split(parameter, "=");
@@ -62,7 +60,6 @@ namespace ohf {
         auto it = mQuery.find(name);
         if (mQuery.find(name) != mQuery.end())
             mQuery.erase(it);
-        if(mQuery.empty() && mFragment.empty() && mPath.empty()) mPathSuffix = false;
         return *this;
     }
 
@@ -82,13 +79,20 @@ namespace ohf {
     }
 
     HttpURL::Builder& HttpURL::Builder::setPathSegment(Uint32 index, std::string pathSegment) {
-        if (index < mPath.size()) {
-            if (util::string::endsWith(pathSegment, "/")) {
-                pathSegment = pathSegment.substr(0, pathSegment.length() - 1);
-                mPathSuffix = true;
-            }
-            mPath[index] = HttpURL::decode(pathSegment);
+        bool ends = false;
+        if (util::string::endsWith(pathSegment, "/")) {
+            pathSegment = pathSegment.substr(0, pathSegment.length() - 1);
+            ends = true;
         }
+        pathSegment = HttpURL::decode(pathSegment);
+
+        if(index < mPath.size()) {
+            mPath[index] = pathSegment;
+        } else {
+            mPathSuffix = ends;
+            mPath.push_back(pathSegment);
+        }
+
         return *this;
     }
 
@@ -97,7 +101,7 @@ namespace ohf {
         return *this;
     }
 
-    HttpURL::Builder& HttpURL::Builder::pathEndsWithSlash(bool b) {
+    HttpURL::Builder& HttpURL::Builder::pathSuffix(bool b) {
         mPathSuffix = b;
         return *this;
     }

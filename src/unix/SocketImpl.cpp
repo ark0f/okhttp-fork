@@ -22,7 +22,9 @@ namespace ohf {
     }
 
     std::string SocketImpl::getError() {
-        return strerror(errno);
+        std::string error(strerrorlen_s(errno), 0);
+        strerror_s(&error[0], error.size(), errno);
+        return error;
     }
 
     void SocketImpl::setBlocking(Socket::Handle sock, bool blocking) {

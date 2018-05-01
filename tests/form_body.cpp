@@ -19,7 +19,7 @@ TEST_CASE("FormBody") {
     REQUIRE(formBody.encodedName(0) == "%7Bq%7D");
 
     REQUIRE(formBody.value(0) == "Cat! and dogs?");
-    REQUIRE_THROWS_CODE(formBody.name(2), ohf::Exception::Code::OUT_OF_RANGE);
+    REQUIRE_THROWS_CODE(formBody.value(2), ohf::Exception::Code::OUT_OF_RANGE);
     REQUIRE(formBody.encodedValue(0) == "Cat%21%20and%20dogs%3F");
 
     REQUIRE(formBody.size() == 2);

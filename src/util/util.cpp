@@ -21,7 +21,15 @@ namespace util {
     std::time_t parseDate(const std::string &what, const std::string &format) {
         std::tm t{};
         std::istringstream iss(what);
+
         iss >> std::get_time(&t, format.c_str());
-        return std::mktime(&t);
+        if(iss.fail()) {
+            throw ohf::Exception(ohf::Exception::Code::FAILED_TO_PARSE_TIME,
+                                 "Failed to parse time: data: " + what + "; format: " + format);
+        }
+        std::time_t time = std::mktime(&t);
+
+        std::tm *greenwich = std::gmtime(&time);
+        return std::mktime(greenwich);
     }
 }

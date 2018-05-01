@@ -25,8 +25,10 @@ TEST_CASE("Headers") {
     }
 
     Headers headers = builder.build();
-    // REQUIRE(headers.getDate().seconds() == 1445441280.0f); // ambiguous result on different platforms, compilators, build types
+    REQUIRE(headers.getDate().seconds() == 1445390848.f);
     REQUIRE(headers.get("Some") == "one");
+    REQUIRE(headers["Date"] == "Wed, 21 Oct 2015 07:28:00 GMT");
+    REQUIRE(headers.get("Header that don't exist").empty());
     REQUIRE(headers.name(0) == "Some");
     REQUIRE_THROWS_CODE(headers.name(4), Exception::Code::OUT_OF_RANGE);
     REQUIRE(headers.value(0) == "one");

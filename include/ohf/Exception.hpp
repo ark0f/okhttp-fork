@@ -56,7 +56,8 @@ namespace ohf {
             INVALID_EXCEPTION_CODE,
             RESPONSE_BODY_IS_NOT_SPECIFIED,
             REQUEST_IS_NOT_SPECIFIED,
-            INVALID_CHALLENGE
+            INVALID_CHALLENGE,
+            FAILED_TO_PARSE_TIME
         };
 
         Exception(const Code &code, const std::string &what) noexcept;

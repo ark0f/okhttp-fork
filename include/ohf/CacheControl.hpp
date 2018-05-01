@@ -81,23 +81,23 @@ namespace ohf {
         bool operator==(const CacheControl &cc) const;
 
         friend std::ostream &operator <<(std::ostream &stream, const CacheControl &cacheControl);
+
     private:
         CacheControl(const Builder *builder);
 
-        bool
-                mPublic,
-                mPrivate,
-                mNoCache,
-                mOnlyIfCached,
-                mMustRevalidate,
-                mImmutable,
-                mNoStore,
-                mNoTransform;
-        TimeUnit
-                mMaxAge,
-                mSMaxAge,
-                mMaxStale,
-                mMinFresh;
+        bool mPublic;
+        bool mPrivate;
+        bool mNoCache;
+        bool mOnlyIfCached;
+        bool mMustRevalidate;
+        bool mImmutable;
+        bool mNoStore;
+        bool mNoTransform;
+
+        TimeUnit mMaxAge;
+        TimeUnit mSMaxAge;
+        TimeUnit mMaxStale;
+        TimeUnit mMinFresh;
     };
 }
 
