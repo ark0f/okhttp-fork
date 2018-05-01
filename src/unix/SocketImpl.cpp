@@ -23,7 +23,7 @@ namespace ohf {
 
     std::string SocketImpl::getError() {
         std::string error(strerrorlen_s(errno), 0);
-        strerror_s(&error[0], error.size(), errno);
+        strerror_r(errno, &error[0], error.size());
         return error;
     }
 
