@@ -33,11 +33,11 @@ TEST_CASE("Cookie") {
 
     Headers headers = Headers::Builder()
             .add("Set-Cookie", "foo=bar; secure; httpOnly; path=/example; domain=exampledomain; expires=Sun, 16 Jul 2018 06:23:41 GMT")
-            .add("Set-Cookie: foo=bar; secure; httpOnly; path=/example; domain=exampledomain; max-age=1531700608")
+            .add("Set-Cookie: foo=bar; secure; httpOnly; path=/example; domain=exampledomain; max-age=1531722240")
             .build();
     std::vector<Cookie> cookies = Cookie::parseAll(url, headers);
     REQUIRE(cookies[0] == cookies[1]);
-    REQUIRE(cookies[0].toString() == "foo=bar; Path=/example; Domain=exampledomain; Max-Age=1531700608; HttpOnly; Secure");
+    REQUIRE(cookies[0].toString() == "foo=bar; Path=/example; Domain=exampledomain; Max-Age=1531722240; HttpOnly; Secure");
 
     REQUIRE_THROWS_CODE(Cookie(url, ""), Exception::Code::INVALID_COOKIE_LINE);
     REQUIRE_THROWS_CODE(Cookie(url, "name value"), Exception::Code::INVALID_COOKIE_NAME_VALUE);

@@ -59,7 +59,7 @@ namespace ohf {
     }
 
     TimeUnit Headers::getDate() const {
-        return TimeUnit::seconds(util::parseDate(this->get("Date"), "%a, %d %b %Y %H:%M:%S %z"));
+        return TimeUnit::seconds(util::parseDate(this->get("Date"), "%a, %d %b %Y %H:%M:%S GMT"));
     }
 
     std::string Headers::name(Uint32 index) const {
@@ -113,7 +113,7 @@ namespace ohf {
     std::string Headers::toString() const {
         std::stringstream ss;
         auto begin = namesValues.begin();
-        for (int i = 0; i < namesValues.size(); i += 2) {
+        for (unsigned int i = 0; i < namesValues.size(); i += 2) {
             ss << *begin << ": ";
             ++begin;
             ss << *begin << "\r\n";

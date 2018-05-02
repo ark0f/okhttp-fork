@@ -25,7 +25,7 @@ TEST_CASE("Headers") {
     }
 
     Headers headers = builder.build();
-    REQUIRE(headers.getDate().seconds() == 1445390848.f);
+    REQUIRE(headers.getDate().seconds() == 1445412480.0f);
     REQUIRE(headers.get("Some") == "one");
     REQUIRE(headers["Date"] == "Wed, 21 Oct 2015 07:28:00 GMT");
     REQUIRE(headers.get("Header that don't exist").empty());
