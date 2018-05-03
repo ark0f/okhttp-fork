@@ -2,8 +2,8 @@
 // Created by good-pudge on 01.11.17.
 //
 
-#ifndef OKHTTPFORK_SOCKETIMPL_H
-#define OKHTTPFORK_SOCKETIMPL_H
+#ifndef OKHTTPFORK_SOCKETIMPL_HPP
+#define OKHTTPFORK_SOCKETIMPL_HPP
 
 #include <ohf/Socket.hpp>
 #include <ohf/Config.hpp>
@@ -33,4 +33,4 @@ namespace ohf {
     };
 }
 
-#endif //OKHTTPFORK_SOCKETIMPL_H
+#endif //OKHTTPFORK_SOCKETIMPL_HPP

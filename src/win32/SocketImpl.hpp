@@ -8,7 +8,7 @@
 #include <ohf/Socket.hpp>
 #include <ohf/Config.hpp>
 
-#include <winsock.h>
+#include <winsock2.h>
 
 namespace ohf {
     class SocketImpl {
