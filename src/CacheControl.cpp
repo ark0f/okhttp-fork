@@ -8,8 +8,8 @@
 #include "util/util.hpp"
 #include "util/string.hpp"
 
-using namespace util;
-using namespace util::string;
+using namespace ohf::util;
+using namespace ohf::util::string;
 
 namespace ohf {
     CacheControl::CacheControl(const Headers &headers) : CacheControl() {

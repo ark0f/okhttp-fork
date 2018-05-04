@@ -9,7 +9,9 @@
 #include "SocketImpl.hpp"
 
 namespace {
-    std::string ip2s(const std::vector<ohf::Uint8> &ip) {
+    using namespace ohf;
+
+    std::string ip2s(const std::vector<Uint8> &ip) {
         std::string readyIP;
         for (auto it = ip.begin(); it != ip.end() - 1; it++) {
             readyIP += std::to_string(*it);
@@ -20,21 +22,21 @@ namespace {
         return readyIP;
     }
 
-    std::vector<ohf::Uint8> uint32tov(ohf::Uint32 address) {
+    std::vector<Uint8> uint32tov(Uint32 address) {
         return {
-                (ohf::Uint8) ((address & 0xFF) >> 0),
-                (ohf::Uint8) ((address & 0xFF00) >> 8),
-                (ohf::Uint8) ((address & 0xFF0000) >> 16),
-                (ohf::Uint8) ((address & 0xFF000000) >> 24)
+                (Uint8) ((address & 0xFF) >> 0),
+                (Uint8) ((address & 0xFF00) >> 8),
+                (Uint8) ((address & 0xFF0000) >> 16),
+                (Uint8) ((address & 0xFF000000) >> 24)
         };
     }
 }
 
 namespace ohf {
+    static SocketImpl::Initializer socket_init;
+
     InetAddress InetAddress::BROADCAST = InetAddress(INADDR_BROADCAST);
     InetAddress InetAddress::ANY = InetAddress((Uint32) INADDR_ANY);
-
-    SocketImpl::Initializer socket_init;
 
     InetAddress::InetAddress(const char *x) : InetAddress(std::string(x)) {}
 
