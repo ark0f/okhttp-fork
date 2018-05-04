@@ -5,6 +5,15 @@ project(ohf)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 11)
 
+# Compiler options
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    if(MSVC)
+        set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "/W4")
+    elseif(CMAKE_COMPILER_IS_GNUCXX)
+        set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-Wall")
+    endif()
+endif()
+
 # Options
 ## DTLS
 option(ENABLE_DTLS "Would enable DTLS" OFF)
@@ -35,15 +44,6 @@ endif()
 option(BUILD_EXAMPLES "Would compile examples" OFF)
 if(BUILD_EXAMPLES)
     add_subdirectory(examples)
-endif()
-
-# Compiler options
-if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-    if(MSVC)
-        set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "/W4")
-    elseif(CMAKE_COMPILER_IS_GNUCXX)
-        set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-Wall")
-    endif()
 endif()
 
 # Files

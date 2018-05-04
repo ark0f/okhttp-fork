@@ -93,6 +93,7 @@ namespace ohf {
             data.resize(size);
             Int32 received = receive(data.data(), size);
             data.resize(received);
+            data.shrink_to_fit();
             return received;
         }
 
@@ -101,6 +102,7 @@ namespace ohf {
             data.resize(size);
             Int32 received = receive(&data[0], size);
             data.resize(received);
+            data.shrink_to_fit();
             return received;
         }
 
