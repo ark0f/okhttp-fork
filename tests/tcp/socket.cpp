@@ -18,7 +18,8 @@ void server_func(tcp::Server& server) {
 
         ios << "SERVER_DATA" << std::flush;
 
-        std::string response = connection.socket().receiveString(128);
+        std::string response;
+        connection.socket().receive(response, 128);
         REQUIRE(response == "SOCKET_DATA");
 
         connection.close();
@@ -30,7 +31,8 @@ void socket_func(tcp::Socket& socket) {
     socket.connect("localhost", SERVER_PORT);
     std::iostream& ios = socket.stream();
 
-    std::string response = socket.receiveString(128);
+    std::string response;
+    socket.receive(response, 128);
     REQUIRE(response == "SERVER_DATA");
 
     ios << "SOCKET_DATA" << std::flush;
@@ -47,7 +49,7 @@ TEST_CASE("tcp::Socket") {
     REQUIRE_THROWS_CODE(socket.send(nullptr, 128), Exception::Code::NO_DATA_TO_SEND);
     REQUIRE_THROWS_CODE(socket.send("some_data", 0), Exception::Code::NO_DATA_TO_SEND);
     REQUIRE_THROWS_CODE(socket.send("some_data", 9), Exception::Code::FAILED_TO_SEND_DATA);
-    REQUIRE_THROWS_CODE(socket.receive(128), Exception::Code::FAILED_TO_RECEIVE_DATA);
+    REQUIRE_THROWS_CODE(socket.receive(nullptr, 128), Exception::Code::FAILED_TO_RECEIVE_DATA);
 
     server.bind("localhost", SERVER_PORT);
     REQUIRE_THROWS_CODE(server.bind("localhost", SERVER_PORT), Exception::Code::FAILED_TO_BIND_SOCKET);

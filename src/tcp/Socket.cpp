@@ -6,23 +6,20 @@
 #include <ohf/tcp/Socket.hpp>
 #include <ohf/Exception.hpp>
 
-using namespace std;
-
 #ifdef OKHTTPFORK_UNIX
     #define OHF_FLAGS MSG_NOSIGNAL
 #else
     #define OHF_FLAGS 0
 #endif
 
-
 namespace ohf {
     namespace tcp {
         Socket::Socket(StreamBuf *buffer) :
                 ohf::Socket(Type::TCP),
-                mIOS(make_shared<iostream>(buffer))
+                mIOS(std::make_shared<std::iostream>(buffer))
         {
             buffer->socket(this);
-            mIOS->exceptions(ios::badbit); // rethrow exceptions
+            mIOS->exceptions(std::ios::badbit); // rethrow exceptions
         }
 
         Socket::Socket(tcp::Socket&& socket) noexcept : tcp::Socket() {
@@ -54,7 +51,7 @@ namespace ohf {
             connect(InetAddress(url.host()), url.port());
         }
 
-        iostream& Socket::stream() const {
+        std::iostream& Socket::stream() const {
             return *mIOS;
         }
 
@@ -65,20 +62,20 @@ namespace ohf {
         Int32 Socket::send(const char *data, Int32 size) const {
             if (!data || size == 0) throw Exception(Exception::Code::NO_DATA_TO_SEND, "No data to send: ");
 
-            Int32 length;
-            if ((length = ::send(mFD, data, size, OHF_FLAGS)) < 0) {
+            Int32 sent = ::send(mFD, data, size, OHF_FLAGS);
+            if (sent < 0) {
                 throw Exception(Exception::Code::FAILED_TO_SEND_DATA,
                         "Failed to send data: " + SocketImpl::getError());
             }
 
-            return length;
+            return sent;
         }
 
-        Int32 Socket::send(const vector<Int8> &data) const {
+        Int32 Socket::send(const std::vector<Int8> &data) const {
             return send(data.data(), data.size());
         }
 
-        Int32 Socket::send(const string &data) const {
+        Int32 Socket::send(const std::string &data) const {
             return send(data.data(), data.size());
         }
 
@@ -91,15 +88,20 @@ namespace ohf {
             return received;
         }
 
-        vector<Int8> Socket::receive(Int32 size) const {
-            vector<Int8> data(size);
+        Int32 Socket::receive(std::vector<Int8> &data, Int32 size) const {
+            data.clear();
+            data.resize(size);
             Int32 received = receive(data.data(), size);
-            return {data.begin(), data.begin() + received};
+            data.resize(received);
+            return received;
         }
 
-        string Socket::receiveString(Int32 size) const {
-            vector<Int8> data = receive(size);
-            return {data.begin(), data.end()};
+        Int32 Socket::receive(std::string &data, Int32 size) const {
+            data.clear();
+            data.resize(size);
+            Int32 received = receive(&data[0], size);
+            data.resize(received);
+            return received;
         }
 
         Socket& Socket::operator =(tcp::Socket&& right) noexcept {

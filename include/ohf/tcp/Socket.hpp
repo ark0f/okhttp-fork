@@ -64,9 +64,9 @@ namespace ohf {
 
             virtual Int32 receive(char *data, Int32 size) const;
 
-            std::vector<Int8> receive(Int32 size) const;
+            Int32 receive(std::vector<Int8> &data, Int32 size) const;
 
-            std::string receiveString(Int32 size) const;
+            Int32 receive(std::string &data, Int32 size) const;
 
             Socket& operator =(Socket &&right) noexcept;
 
