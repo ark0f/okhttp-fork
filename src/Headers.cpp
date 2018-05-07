@@ -135,7 +135,7 @@ namespace ohf {
         return nav1 == nav2;
     }
 
-    std::ostream &operator<<(std::ostream &stream, const Headers &headers) {
+    std::ostream &operator <<(std::ostream &stream, const Headers &headers) {
         stream << headers.toString();
         return stream;
     }

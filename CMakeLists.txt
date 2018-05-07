@@ -49,17 +49,17 @@ endif()
 # Files
 ## Common
 file(GLOB_RECURSE INCLUDE_FILES RELATIVE ${PROJECT_SOURCE_DIR} "include/*.hpp")
-file(GLOB_RECURSE LIB_FILES     RELATIVE ${PROJECT_SOURCE_DIR} "src/*.cpp" "src/*.hpp")
+file(GLOB_RECURSE SRC_FILES     RELATIVE ${PROJECT_SOURCE_DIR} "src/*.cpp" "src/*.hpp")
 
 ## For different systems
 if(WIN32)
-    file(GLOB_RECURSE FILES RELATIVE ${PROJECT_SOURCE_DIR} "src/unix/*")
+    file(GLOB_RECURSE SYSTEM_FILES RELATIVE ${PROJECT_SOURCE_DIR} "src/unix/*")
 elseif(UNIX)
-    file(GLOB_RECURSE FILES RELATIVE ${PROJECT_SOURCE_DIR} "src/win32/*")
+    file(GLOB_RECURSE SYSTEM_FILES RELATIVE ${PROJECT_SOURCE_DIR} "src/win32/*")
 endif()
-list(REMOVE_ITEM LIB_FILES ${FILES})
+list(REMOVE_ITEM SRC_FILES ${SYSTEM_FILES})
 
-add_library(ohf ${INCLUDE_FILES} ${LIB_FILES})
+add_library(ohf ${INCLUDE_FILES} ${SRC_FILES})
 
 # Libraries
 ## Find
@@ -79,7 +79,8 @@ if(WIN32)
 endif()
 
 # Install
-install(FILES cmake/FindOHF.cmake DESTINATION cmake)
+install(FILES cmake/FindOHF.cmake
+        DESTINATION "share/cmake-${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}/Modules")
 install(DIRECTORY include/ohf DESTINATION include)
 install(TARGETS ohf
         RUNTIME DESTINATION bin

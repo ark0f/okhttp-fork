@@ -7,25 +7,25 @@ if(NOT EXISTS ${CATCH_INCLUDE_DIR})
 	message(FATAL_ERROR "Catch2 submodule not found")
 endif()
 
-include_directories(${CATCH_INCLUDE_DIR})
-file(GLOB_RECURSE CATCH ${PROJECT_SOURCE_DIR} "${CATCH_INCLUDE_DIR}/*")
+file(GLOB_RECURSE CATCH_FILES ${PROJECT_SOURCE_DIR} "${CATCH_INCLUDE_DIR}/*")
 
 # Tests
-include_directories("../include")
-include_directories(".")
 file(GLOB_RECURSE TESTS_FILES ${PROJECT_SOURCE_DIR} "*.hpp" "*.cpp")
+add_executable(ohf_tests ${TESTS_FILES} ${CATCH_FILES})
+add_test(NAME ohf_tests COMMAND ohf_tests)
 
-# Target
-add_executable(ohf_tests ${TESTS_FILES} ${CATCH})
-target_link_libraries(ohf_tests ohf)
-add_test(NAME ohf_tests
-		 COMMAND ohf_tests)
-
-# Threads
+# Libraries
+## Find
 find_package(Threads REQUIRED)
-if(CMAKE_THREAD_LIBS_INIT)
-	target_link_libraries(ohf_tests ${CMAKE_THREAD_LIBS_INIT})
-endif()
+
+## Include
+include_directories(${CATCH_INCLUDE_DIR})
+include_directories(.)
+include_directories(../include)
+
+## Link
+target_link_libraries(ohf_tests ohf)
+target_link_libraries(ohf_tests ${CMAKE_THREAD_LIBS_INIT})
 
 # Reporter
 add_custom_target(coverage
