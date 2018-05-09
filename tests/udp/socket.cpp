@@ -46,7 +46,7 @@ void b_func(udp::Socket& b) {
     b.send("localhost", A_PORT, toSend);
 }
 
-TEST_CASE("udp::Socket") {
+TEST_CASE("udp::Socket", "[socket]") {
     udp::Socket a;
     udp::Socket b;
 

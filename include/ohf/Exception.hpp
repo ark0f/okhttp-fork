@@ -69,6 +69,7 @@ namespace ohf {
         const char *what() const noexcept override;
 
         static const Exception *last() noexcept;
+
     private:
         static Exception *m_last;
 

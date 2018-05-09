@@ -9,4 +9,9 @@ TEST_CASE("Exception") {
     REQUIRE(exception.code() == Exception::Code::OK);
     REQUIRE(exception.message() == "All right");
     REQUIRE(strcmp(exception.what(), "All right") == 0);
+
+    Exception last = *Exception::last();
+    REQUIRE(last.code() == exception.code());
+    REQUIRE(last.message() == exception.message());
+    REQUIRE(std::strcmp(last.what(), exception.what()) == 0);
 }

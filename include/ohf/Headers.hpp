@@ -48,6 +48,7 @@ namespace ohf {
             bool operator ==(const Iterator &right) const;
 
             bool operator !=(const Iterator &right) const;
+
         private:
             void swapPair();
 
@@ -111,6 +112,7 @@ namespace ohf {
         bool operator ==(const Headers &headers) const;
 
         friend std::ostream &operator<<(std::ostream &stream, const Headers &headers);
+
     private:
         Headers(const Builder *builder);
 

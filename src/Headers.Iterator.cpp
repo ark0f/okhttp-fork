@@ -14,7 +14,7 @@ namespace ohf {
     }
 
     void Headers::Iterator::swapPair() {
-        if(headers && 0 >= index && index < headers->size()) {
+        if(headers && 0 <= index && index < headers->size()) {
             Pair valueType = headers->pair(index);
             type.swap(valueType);
             outOfRange = false;

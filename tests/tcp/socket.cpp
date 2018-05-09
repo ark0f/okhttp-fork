@@ -40,7 +40,7 @@ void socket_func(tcp::Socket& socket) {
     socket.close();
 }
 
-TEST_CASE("tcp::Socket") {
+TEST_CASE("tcp::Socket", "[socket]") {
     tcp::Socket socket;
     tcp::Server server;
 

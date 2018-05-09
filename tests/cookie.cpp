@@ -37,7 +37,9 @@ TEST_CASE("Cookie") {
             .build();
     std::vector<Cookie> cookies = Cookie::parseAll(url, headers);
     REQUIRE(cookies[0] == cookies[1]);
-    REQUIRE(cookies[0].toString() == "foo=bar; Path=/example; Domain=exampledomain; Max-Age=1531722240; HttpOnly; Secure");
+    std::ostringstream oss;
+    oss << cookies[0];
+    REQUIRE(oss.str() == "foo=bar; Path=/example; Domain=exampledomain; Max-Age=1531722240; HttpOnly; Secure");
 
     REQUIRE_THROWS_CODE(Cookie(url, ""), Exception::Code::INVALID_COOKIE_LINE);
     REQUIRE_THROWS_CODE(Cookie(url, "name value"), Exception::Code::INVALID_COOKIE_NAME_VALUE);
