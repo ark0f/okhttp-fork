@@ -93,6 +93,11 @@ TEST_CASE("Headers") {
     REQUIRE(--iterator == Headers::Iterator(0, &headers));
     REQUIRE(access->index == 0);
 
+    REQUIRE(iterator++ == Headers::Iterator(1, &headers));
+    REQUIRE(access->index == 0);
+    REQUIRE((iterator + 1)-- == Headers::Iterator(0, &headers));
+    REQUIRE(access->index == 0);
+
     REQUIRE((iterator + 1) == Headers::Iterator(1, &headers));
     REQUIRE(access->index == 0);
 

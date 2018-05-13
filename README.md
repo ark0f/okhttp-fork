@@ -24,7 +24,7 @@ You can use any compiler that support full C++11 standard. These were tested by 
 * MinGW (7.2.0)
 * Clang (3.8 and Travis CI default version)
 
-These compilers tested and aren't supported:
+These compilers were tested and aren't supported:
 * GCC 4.9.2 (issue: `std::get_time`)
 * MSVC 2013 (issue: `noexcept`)
 
@@ -122,4 +122,4 @@ cmake --build . --target install
 * Exception
 
 ## <a name="license"></a> License
-OkHttp fork distribute with an Apache 2.0 License. See LICENSE and NOTICE for more info.
+OkHttp fork distribute with an Apache 2.0 License. See `LICENSE.md` and `NOTICE.md` for more info.
