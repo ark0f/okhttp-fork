@@ -152,18 +152,6 @@ namespace ohf {
             return 443;
         if (scheme == "http")
             return 80;
-        if (scheme == "ftp")
-            return 20;
-        if (scheme == "telnet")
-            return 23;
-        if (scheme == "gopher")
-            return 70;
-        if (scheme == "wais")
-            return 210;
-        if (scheme == "irc")
-            return 6667;
-        if (scheme == "ldap")
-            return 389;
         return 0;
     }
 
@@ -315,7 +303,7 @@ namespace ohf {
 
         oss << mHost;
 
-        if (mPort != 0 && defaultPort(mScheme) == 0) // if port specified but it is not default
+        if (mPort != 0 && defaultPort(mScheme) != mPort) // if port specified but it is not default
             oss << ':' << mPort;
 
         std::string path = encodedPath();
