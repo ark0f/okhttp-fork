@@ -2,8 +2,8 @@
 // Created by good-pudge on 01.11.17.
 //
 
-#ifndef OKHTTPFORK_SOCKETIMPL_HPP
-#define OKHTTPFORK_SOCKETIMPL_HPP
+#ifndef OKHTTPFORK_UNIX_SOCKETIMPL_HPP
+#define OKHTTPFORK_UNIX_SOCKETIMPL_HPP
 
 #include <ohf/Socket.hpp>
 #include <ohf/Config.hpp>
@@ -15,21 +15,18 @@
 #include <string>
 
 namespace ohf {
-    class SocketImpl {
-    public:
+    namespace SocketImpl {
         typedef socklen_t SocketLength;
 
         struct Initializer {};
 
-        static sockaddr_in createAddress(Uint32 address, Uint16 port);
+        void close(Socket::Handle sock);
 
-        static void close(Socket::Handle sock);
+        std::string getError();
 
-        static std::string getError();
+        void setBlocking(Socket::Handle sock, bool blocking);
 
-        static void setBlocking(Socket::Handle sock, bool blocking);
-
-        static Socket::Handle invalidSocket();
+        Socket::Handle invalidSocket();
     };
 }
 

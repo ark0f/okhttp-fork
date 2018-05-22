@@ -7,8 +7,9 @@
 #include "SocketImpl.hpp"
 
 namespace ohf {
-    Socket::Socket(const Type &type) :
+    Socket::Socket(Type type, Family family) :
             mType(type),
+            mFamily(family),
             mFD(SocketImpl::invalidSocket()),
             mBlocking(true)
     {}
@@ -24,7 +25,16 @@ namespace ohf {
     void Socket::create() {
         if(isValid()) return;
 
-        Socket::Handle handle = socket(AF_INET, mType == Type::TCP ? SOCK_STREAM : SOCK_DGRAM, 0);
+        Int32 family;
+        switch(mFamily) {
+            case Family::IPv4: family = AF_INET; break;
+            case Family::IPv6: family = AF_INET6; break;
+            default:
+                throw Exception(Exception::Code::INVALID_FAMILY_TYPE,
+                                "Invalid family type: " + std::to_string((Int32) mFamily));
+        }
+
+        Socket::Handle handle = socket(family, mType == Type::TCP ? SOCK_STREAM : SOCK_DGRAM, 0);
         if(handle == SocketImpl::invalidSocket()) {
             throw Exception(Exception::Code::FAILED_TO_CREATE_SOCKET,
                     "Failed to create socket: " + SocketImpl::getError());
@@ -68,5 +78,9 @@ namespace ohf {
 
     Socket::Type Socket::type() const {
         return mType;
+    }
+
+    Socket::Family Socket::family() const {
+        return mFamily;
     }
 }

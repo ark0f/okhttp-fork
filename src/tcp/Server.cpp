@@ -9,14 +9,14 @@
 
 namespace ohf {
     namespace tcp {
-        Server::Server() : ohf::Socket(Type::TCP) {}
+        Server::Server(Family family) : ohf::Socket(Type::TCP, family) {}
 
-        Server::Server(const InetAddress &address, Uint16 port) : Server() {
+        Server::Server(Family family, const InetAddress &address, Uint16 port) : Server(family) {
             bind(address, port);
         }
 
-        Server::Server(const HttpURL &url) : Server() {
-            bind(InetAddress(url.host()), url.port());
+        Server::Server(Family family, const HttpURL &url) : Server(family) {
+            bind(InetAddress(url.host(), family), url.port());
         }
 
         Server::Server(ohf::tcp::Server &&server) noexcept {
@@ -25,16 +25,28 @@ namespace ohf {
 
             mBlocking = server.mBlocking;
             server.mBlocking = true;
+
+            mFamily = server.mFamily;
+            server.mFamily = Family::UNKNOWN;
         }
 
         void Server::bind(const InetAddress &address, Uint16 port) {
             create();
 
-            sockaddr_in socket_address = SocketImpl::createAddress(address.toUint32(), port);
-            if (::bind(mFD, (sockaddr * ) &socket_address, sizeof(sockaddr_in)) == -1) {
+            int option = 1;
+            if(setsockopt(mFD, SOL_SOCKET, SO_REUSEADDR, (const char *) &option, sizeof(option)) < 0) {
+                throw Exception(Exception::Code::FAILED_TO_SET_SOCKET_OPTION,
+                                "Failed to set socket option: " + std::to_string(SO_REUSEADDR));
+            }
+
+            SocketImpl::SocketLength length;
+            sockaddr_storage socket_address = SocketImpl::createAddress(address, port, length);
+            if (::bind(mFD, (sockaddr *) &socket_address, length) == -1) {
                 throw Exception(Exception::Code::FAILED_TO_BIND_SOCKET,
                         "Failed to bind socket: " + SocketImpl::getError());
             }
+
+            mFamily = address.family();
         }
 
         void Server::bind(const HttpURL &url) {
@@ -53,8 +65,8 @@ namespace ohf {
         }
 
         Server::Connection Server::accept() const {
-            sockaddr_in addr;
-            SocketImpl::SocketLength length = sizeof(addr);
+            sockaddr_storage addr;
+            SocketImpl::SocketLength length = SocketImpl::addressLength(mFamily);
 
             auto fd = ::accept(mFD, (sockaddr *) &addr, &length);
             if (fd == SocketImpl::invalidSocket()) {
@@ -62,10 +74,10 @@ namespace ohf {
                         "Failed to accept socket: " + SocketImpl::getError());
             }
 
-            auto client = new tcp::Socket;
+            auto client = new tcp::Socket(mFamily);
             client->create(fd);
 
-            return {client, InetAddress(*(Uint32 *) &addr.sin_addr), addr.sin_port};
+            return {client, SocketImpl::createInetAddress(&addr), SocketImpl::port(&addr)};
         }
 
         const Server::Iterator Server::begin() const {
@@ -91,6 +103,9 @@ namespace ohf {
             mBlocking = right.mBlocking;
             right.mBlocking = true;
 
+            mFamily = right.mFamily;
+            right.mFamily = Socket::Family::UNKNOWN;
+
             return *this;
         }
     }
@@ -100,7 +115,8 @@ namespace std {
     using namespace ohf;
 
     void swap(tcp::Server& a, tcp::Server& b) {
-        std::swap(a.mFD, b.mFD);
-        std::swap(a.mBlocking, b.mBlocking);
+        swap(a.mFD, b.mFD);
+        swap(a.mBlocking, b.mBlocking);
+        swap(a.mFamily, b.mFamily);
     }
 }

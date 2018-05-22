@@ -1,5 +1,5 @@
 ## OkHttp fork for C++ [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg?style=flat-square)](https://opensource.org/licenses/Apache-2.0)
-|           | master                                                                                                                                                                       | dev                                                                                                                                                                       |
+|           | master                                                                                                                                                                       | dev (current)                                                                                                                                                             |
 |:---------:|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |:------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Travis CI | [![Build status](https://img.shields.io/travis/Good-Pudge/okhttp-fork/master.svg?style=flat-square)](https://travis-ci.org/Good-Pudge/okhttp-fork)                           | [![Build status](https://img.shields.io/travis/Good-Pudge/okhttp-fork/dev.svg?style=flat-square)](https://travis-ci.org/Good-Pudge/okhttp-fork)                           |
 | AppVeyor  | [![Build status](https://img.shields.io/appveyor/ci/Good-Pudge/okhttp-fork/master.svg?style=flat-square)](https://ci.appveyor.com/project/Good-Pudge/okhttp-fork)            | [![Build status](https://img.shields.io/appveyor/ci/Good-Pudge/okhttp-fork/dev.svg?style=flat-square)](https://ci.appveyor.com/project/Good-Pudge/okhttp-fork)            |
@@ -15,7 +15,7 @@
 
 ## <a name="used_libs"></a> Used libraries
 * [OpenSSL](https://github.com/openssl/openssl)
-* [Catch2](https://github.com/catchorg/Catch2) (submodule in `tests`)
+* [Catch2](https://github.com/catchorg/Catch2) (submodule in repo root)
 
 ## <a name="compilers"></a> Compilers
 You can use any compiler that support full C++11 standard. These were tested by me and CI:

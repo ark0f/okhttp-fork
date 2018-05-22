@@ -7,18 +7,24 @@
 
 namespace ohf {
     namespace tcp {
-        SSLSocket::SSLSocket(const ssl::Context &context, StreamBuf *buffer) :
-                ohf::Socket(Type::TCP),
-                tcp::Socket(buffer),
-                ssl::Socket(Type::TCP, context)
+        SSLSocket::SSLSocket(Family family, const ssl::Context &context, StreamBuf *buffer) :
+                ohf::Socket(Type::TCP, family),
+                tcp::Socket(family, buffer),
+                ssl::Socket(Type::TCP, family, context)
         {}
 
-        SSLSocket::SSLSocket(SSLSocket &&socket) noexcept : ssl::Socket(Type::TCP, socket.context) {
+        SSLSocket::SSLSocket(SSLSocket &&socket) noexcept :
+                tcp::Socket(socket.mFamily),
+                ssl::Socket(Type::TCP, socket.mFamily, socket.context)
+        {
             mFD = socket.mFD;
             socket.mFD = SocketImpl::invalidSocket();
 
             mBlocking = socket.mBlocking;
             socket.mBlocking = true;
+
+            mFamily = socket.mFamily;
+            socket.mFamily = Family::UNKNOWN;
 
             ((StreamBuf *) mIOS->rdbuf())->socket(this);
 

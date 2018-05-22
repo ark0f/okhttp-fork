@@ -25,7 +25,13 @@ namespace ohf {
             UDP
         };
 
-        explicit Socket(const Type &type);
+        enum class Family {
+            UNKNOWN,
+            IPv4,
+            IPv6
+        };
+
+        Socket(Type type, Family family);
 
         virtual ~Socket();
 
@@ -47,12 +53,15 @@ namespace ohf {
 
         Type type() const;
 
+        Family family() const;
+
     protected:
         Socket() = default;
 
         Handle mFD;
         bool mBlocking;
         Type mType;
+        Family mFamily;
     };
 }
 

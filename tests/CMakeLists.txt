@@ -37,8 +37,8 @@ add_custom_target(coverage
 		COMMAND lcov -d . -i -c -o coverage.info
 		COMMAND gdb -ex 'set confirm off' -ex run -ex quit ctest
 		COMMAND lcov -d . -c -o coverage.info
-		COMMAND lcov --list coverage.info
 		COMMAND lcov -r coverage.info '/usr/*' 'tests/*'
+		COMMAND lcov --list coverage.info
 		COMMAND curl -s https://codecov.io/bash | bash -s
 		WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
 		DEPENDS ohf ohf_tests

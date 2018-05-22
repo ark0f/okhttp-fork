@@ -8,84 +8,79 @@
 #include "util/util.hpp"
 #include "SocketImpl.hpp"
 
-namespace {
-    using namespace ohf;
-
-    std::string ip2s(const std::vector<Uint8> &ip) {
-        std::string readyIP;
-        for (auto it = ip.begin(); it != ip.end() - 1; it++) {
-            readyIP += std::to_string(*it);
-            readyIP.push_back('.');
-        }
-        readyIP += std::to_string(*(ip.end() - 1));
-
-        return readyIP;
-    }
-
-    std::vector<Uint8> uint32tov(Uint32 address) {
-        return {
-                (Uint8) ((address & 0xFF) >> 0),
-                (Uint8) ((address & 0xFF00) >> 8),
-                (Uint8) ((address & 0xFF0000) >> 16),
-                (Uint8) ((address & 0xFF000000) >> 24)
-        };
-    }
-}
-
 namespace ohf {
     static SocketImpl::Initializer socket_init;
 
-    InetAddress InetAddress::BROADCAST = InetAddress(INADDR_BROADCAST);
-    InetAddress InetAddress::ANY = InetAddress((Uint32) INADDR_ANY);
+    InetAddress::InetAddress() : mFamily(Socket::Family::UNKNOWN) {}
 
-    InetAddress::InetAddress(const char *x) : InetAddress(std::string(x)) {}
+    InetAddress::InetAddress(const char *host) : InetAddress(std::string(host)) {}
 
-    InetAddress::InetAddress(Uint32 address) : mIP(uint32tov(address)) {}
+    InetAddress::InetAddress(const std::string &host, ohf::Int32 af) : InetAddress(getAllByName(host, af)[0]) {}
 
-    InetAddress::InetAddress(const std::string &x) : InetAddress(getAllByName(x)[0]) {}
+    InetAddress::InetAddress(const std::string &host, Socket::Family type) : InetAddress(getAllByName(host, type)[0]) {}
 
-    InetAddress::InetAddress(const std::vector<Uint8> &ip) :
-            InetAddress(ip.size() == 4
-                        ? ip2s(ip)
-                        : throw ohf::Exception(ohf::Exception::Code::INVALID_IP, "Invalid IP: "))
+    InetAddress::InetAddress(const std::string &host) : InetAddress(getAllByName(host)[0]) {}
+
+    InetAddress::InetAddress(Uint8 b1, Uint8 b2, Uint8 b3, Uint8 b4) :
+            mFamily(Socket::Family::IPv4),
+            mOriginalType(AF_INET),
+            mIP {b1, b2, b3, b4}
     {}
 
-    std::vector<InetAddress> InetAddress::getAllByName(const std::string &host) {
+    InetAddress::InetAddress(Uint8 b1, Uint8 b2,  Uint8 b3,  Uint8 b4,  Uint8 b5,  Uint8 b6,  Uint8 b7,  Uint8 b8,
+                             Uint8 b9, Uint8 b10, Uint8 b11, Uint8 b12, Uint8 b13, Uint8 b14, Uint8 b15, Uint8 b16) :
+            mFamily(Socket::Family::IPv6),
+            mOriginalType(AF_INET6),
+            mIP {b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, b12, b13, b14, b15, b16}
+    {}
+
+    std::vector<InetAddress> InetAddress::getAllByName(const std::string &host, Int32 af) {
         std::vector<InetAddress> ias;
 
-        hostent *hostent = gethostbyname(host.c_str());
-        if(hostent) {
-            if(hostent->h_addrtype == AF_INET) {
-                Uint32 *address;
-                for(int i = 0; (address = (Uint32 *) hostent->h_addr_list[i]) != nullptr; i++) {
-                    InetAddress inet(*address);
-                    inet.mHostName = host;
-                    inet.mCanonName = hostent->h_name;
+        addrinfo *info;
 
-                    char *alias;
-                    for(int j = 0; (alias = hostent->h_aliases[j]) != nullptr; j++) {
-                        inet.mAliases.emplace_back(alias);
-                    }
+        addrinfo hints;
+        std::memset(&hints, 0, sizeof(hints));
+        hints.ai_flags = AI_CANONNAME;
+        hints.ai_family = af;
 
-                    ias.push_back(inet);
-                }
-            } else {
-                throw Exception(Exception::Code::INVALID_ADDRESS_TYPE, "Invalid address type: "
-                                                                       + std::to_string(hostent->h_addrtype));
+        if(getaddrinfo(host.c_str(), nullptr, &hints, &info) == 0) {
+            for(addrinfo *address = info; address != nullptr; address = address->ai_next) {
+                InetAddress inet = SocketImpl::createInetAddress((sockaddr_storage *) address->ai_addr);
+
+                inet.mHostName = host;
+
+                char *canonname = address->ai_canonname;
+                if(canonname) inet.mCanonName = canonname;
+
+                ias.push_back(inet);
             }
         } else {
             throw Exception(Exception::Code::UNKNOWN_HOST, "Unknown host: " + host);
         }
 
+        freeaddrinfo(info);
+
         return ias;
     }
 
-    std::vector<Uint8> InetAddress::address() const {
+    std::vector<InetAddress> InetAddress::getAllByName(const std::string &host, Socket::Family type) {
+        return getAllByName(host, type == Socket::Family::IPv4 ? AF_INET : AF_INET6);
+    }
+
+    std::vector<InetAddress> InetAddress::getAllByName(const std::string &host) {
+        return getAllByName(host, AF_UNSPEC);
+    }
+
+    std::array<Uint8, 16> InetAddress::address() const {
         return mIP;
     }
 
     std::string InetAddress::hostAddress() const {
-        return ip2s(mIP);
+        std::string address(45, 0);
+        const char *result = inet_ntop(mOriginalType, (void *) mIP.data(), &address[0], address.size());
+        address.resize(std::strlen(result));
+        return address;
     }
 
     std::string InetAddress::hostName() const {
@@ -100,8 +95,12 @@ namespace ohf {
         return mAliases;
     }
 
-    Uint32 InetAddress::toUint32() const {
-        return mIP[0] << 24 | mIP[1] << 16 | mIP[2] << 8 | mIP[3];
+    Socket::Family InetAddress::family() const {
+        return mFamily;
+    }
+
+    Int32 InetAddress::originalType() const {
+        return mOriginalType;
     }
 
     std::ostream& operator <<(std::ostream &stream, const InetAddress &address) {

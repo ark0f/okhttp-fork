@@ -62,11 +62,11 @@ namespace ohf {
                 const Server *server;
             };
 
-            Server();
+            explicit Server(Family family);
 
-            Server(const InetAddress &address, Uint16 port);
+            Server(Family family, const InetAddress &address, Uint16 port);
 
-            explicit Server(const HttpURL &url);
+            Server(Family family, const HttpURL &url);
 
             Server(Server&& server) noexcept;
 

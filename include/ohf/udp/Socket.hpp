@@ -22,7 +22,7 @@ namespace ohf {
     namespace udp {
         class Socket : public ohf::Socket {
         public:
-            Socket();
+            Socket(Family family);
 
             Socket(Socket &&socket) noexcept;
 
@@ -38,7 +38,7 @@ namespace ohf {
 
             Int32 receive(InetAddress &address, Uint16 &port, char *data, Int32 size);
 
-            Int32 receive(InetAddress &address, Uint16 &port, std::vector<Int8> &data);
+            Int32 receive(InetAddress &address, Uint16 &port, std::vector<Int8> &data, Int32 size);
 
             Int32 receive(InetAddress &address, Uint16 &port, std::string &data, Int32 size);
 

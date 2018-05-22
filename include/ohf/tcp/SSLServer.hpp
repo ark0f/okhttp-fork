@@ -22,12 +22,11 @@ namespace ohf {
     namespace tcp {
         class SSLServer : public Server, public ssl::Socket {
         public:
-            explicit SSLServer(const ssl::Context &context);
+            SSLServer(Family family, const ssl::Context &context);
 
             SSLServer(SSLServer&& server) noexcept;
 
             using Server::bind;
-            void bind(const InetAddress &address, Uint16 port) override;
 
             Connection accept() const override;
 

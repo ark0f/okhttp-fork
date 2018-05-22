@@ -6,28 +6,36 @@
 #define OKHTTPFORK_INETADDRESS_HPP
 
 #include <string>
+#include <array>
 #include <vector>
 #include "Config.hpp"
+#include "Socket.hpp"
 
 namespace ohf {
     class InetAddress {
     public:
-        static InetAddress BROADCAST;
-        static InetAddress ANY;
+        InetAddress();
 
-        InetAddress() = default;
+        InetAddress(const char *host);
 
-        InetAddress(const char *x);
+        InetAddress(const std::string &host, Int32 af);
 
-        explicit InetAddress(Uint32 address);
+        InetAddress(const std::string &host, Socket::Family type);
 
-        explicit InetAddress(const std::string &x);
+        explicit InetAddress(const std::string &host);
 
-        explicit InetAddress(const std::vector<Uint8> &ip);
+        InetAddress(Uint8 b1, Uint8 b2, Uint8 b3, Uint8 b4);
+
+        InetAddress(Uint8 b1, Uint8 b2,  Uint8 b3,  Uint8 b4,  Uint8 b5,  Uint8 b6,  Uint8 b7,  Uint8 b8,
+                    Uint8 b9, Uint8 b10, Uint8 b11, Uint8 b12, Uint8 b13, Uint8 b14, Uint8 b15, Uint8 b16);
+
+        static std::vector<InetAddress> getAllByName(const std::string &host, Int32 af);
+
+        static std::vector<InetAddress> getAllByName(const std::string &host, Socket::Family type);
 
         static std::vector<InetAddress> getAllByName(const std::string &host);
 
-        std::vector<Uint8> address() const;
+        std::array<Uint8, 16> address() const;
 
         std::string hostAddress() const;
 
@@ -37,16 +45,34 @@ namespace ohf {
 
         std::vector<std::string> aliases() const;
 
-        Uint32 toUint32() const;
+        Socket::Family family() const;
+
+        Int32 originalType() const;
 
         friend std::ostream& operator <<(std::ostream &stream, const InetAddress &address);
 
     private:
         std::string mHostName;
         std::string mCanonName;
-        std::vector<Uint8> mIP;
+        std::array<Uint8, 16> mIP;
         std::vector<std::string> mAliases;
+
+        Socket::Family mFamily;
+        Int32 mOriginalType;
     };
+
+    namespace ipv4 {
+        static InetAddress BROADCAST = {255, 255, 255, 255};
+        static InetAddress ANY = {0, 0, 0, 0};
+        static InetAddress LOCALHOST = {127, 0, 0, 1};
+    }
+
+    namespace ipv6 {
+        static InetAddress BROADCAST = {255, 255, 255, 255, 255, 255, 255, 255,
+                                        255, 255, 255, 255, 255, 255, 255, 255};
+        static InetAddress ANY = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+        static InetAddress LOCALHOST = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1};
+    }
 }
 
 #endif //OKHTTPFORK_INETADDRESS_HPP

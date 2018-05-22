@@ -2,17 +2,18 @@
 // Created by Good_Pudge.
 //
 
-#ifndef OKHTTPFORK_SOCKETIMPL_HPP
-#define OKHTTPFORK_SOCKETIMPL_HPP
+#ifndef OKHTTPFORK_WIN_SOCKETIMPL_HPP
+#define OKHTTPFORK_WIN_SOCKETIMPL_HPP
 
 #include <ohf/Socket.hpp>
 #include <ohf/Config.hpp>
 
+#define _WIN32_WINNT 0x600
 #include <winsock2.h>
+#include <ws2tcpip.h>
 
 namespace ohf {
-    class SocketImpl {
-    public:
+    namespace SocketImpl {
         typedef int SocketLength;
 
         struct Initializer {
@@ -21,16 +22,14 @@ namespace ohf {
             ~Initializer();
         };
 
-        static sockaddr_in createAddress(Uint32 address, Uint16 port);
+        void close(Socket::Handle sock);
 
-        static void close(Socket::Handle sock);
+        std::string getError();
 
-        static std::string getError();
+        void setBlocking(Socket::Handle sock, bool blocking);
 
-        static void setBlocking(Socket::Handle sock, bool blocking);
-
-        static Socket::Handle invalidSocket();
+        Socket::Handle invalidSocket();
     };
 }
 
-#endif //OKHTTPFORK_SOCKETIMPL_HPP
+#endif // OKHTTPFORK_WIN_SOCKETIMPL_HPP

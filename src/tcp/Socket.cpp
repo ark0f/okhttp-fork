@@ -4,7 +4,6 @@
 
 #include "../SocketImpl.hpp"
 #include <ohf/tcp/Socket.hpp>
-#include <ohf/Exception.hpp>
 
 #ifdef OKHTTPFORK_UNIX
     #define OHF_FLAGS MSG_NOSIGNAL
@@ -14,20 +13,23 @@
 
 namespace ohf {
     namespace tcp {
-        Socket::Socket(StreamBuf *buffer) :
-                ohf::Socket(Type::TCP),
+        Socket::Socket(Family family, StreamBuf *buffer) :
+                ohf::Socket(Type::TCP, family),
                 mIOS(std::make_shared<std::iostream>(buffer))
         {
             buffer->socket(this);
             mIOS->exceptions(std::ios::badbit); // rethrow exceptions
         }
 
-        Socket::Socket(tcp::Socket&& socket) noexcept : tcp::Socket() {
+        Socket::Socket(tcp::Socket&& socket) noexcept : tcp::Socket(socket.mFamily) {
             mFD = socket.mFD;
             socket.mFD = SocketImpl::invalidSocket();
 
             mBlocking = socket.mBlocking;
             socket.mBlocking = true;
+
+            mFamily = socket.mFamily;
+            socket.mFamily = Family::UNKNOWN;
 
             ((StreamBuf *) mIOS->rdbuf())->socket(this);
         }
@@ -38,17 +40,18 @@ namespace ohf {
             bool is_blocking = isBlocking();
             if (!is_blocking) blocking(true);
 
-            sockaddr_in socket_address = SocketImpl::createAddress(address.toUint32(), port);
-            if (::connect(mFD, (sockaddr *) &socket_address, sizeof(sockaddr_in)) == -1) {
+            SocketImpl::SocketLength length;
+            sockaddr_storage socket_address = SocketImpl::createAddress(address, port, length);
+            if (::connect(mFD, (sockaddr *) &socket_address, length) == -1) {
                 throw Exception(Exception::Code::FAILED_TO_CREATE_CONNECTION,
-                        "Failed to create connection: " + SocketImpl::getError());
+                                "Failed to create connection: " + SocketImpl::getError());
             }
 
             blocking(is_blocking);
         }
 
         void Socket::connect(const HttpURL &url) {
-            connect(InetAddress(url.host()), url.port());
+            connect(InetAddress(url.host(), mFamily), url.port());
         }
 
         std::iostream& Socket::stream() const {
@@ -113,6 +116,9 @@ namespace ohf {
             mBlocking = right.mBlocking;
             right.mBlocking = true;
 
+            mFamily = right.mFamily;
+            right.mFamily = Family::UNKNOWN;
+
             ((StreamBuf *) mIOS->rdbuf())->socket(this);
 
             return *this;
@@ -126,5 +132,6 @@ namespace std {
     void swap(tcp::Socket& a, tcp::Socket& b) {
         std::swap(a.mFD, b.mFD);
         std::swap(a.mBlocking, b.mBlocking);
+        std::swap(a.mFamily, b.mFamily);
     }
 }

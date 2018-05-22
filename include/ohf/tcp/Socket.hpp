@@ -44,7 +44,7 @@ namespace ohf {
                 Int32 read(char *data, Int32 length) override;
             };
 
-            explicit Socket(StreamBuf *buffer = new StreamBuf(1024, 1024));
+            Socket(Family family, StreamBuf *buffer = new StreamBuf(1024, 1024));
 
             Socket(Socket &&socket) noexcept;
 

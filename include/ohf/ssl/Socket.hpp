@@ -14,7 +14,7 @@ namespace ohf {
     namespace ssl {
         class Socket : public virtual ohf::Socket {
         public:
-            Socket(Type type, const Context &context);
+            Socket(Type type, Family family, const Context &context);
 
             using ohf::Socket::create;
             void create(Handle fd) override;

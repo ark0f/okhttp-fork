@@ -4,26 +4,29 @@
 
 #include "../SocketImpl.hpp"
 #include <ohf/udp/Socket.hpp>
-#include <ohf/Exception.hpp>
 #include <ohf/HttpURL.hpp>
 
 namespace ohf {
     namespace udp {
-        Socket::Socket() : ohf::Socket(Type::UDP) {}
+        Socket::Socket(Family family) : ohf::Socket(Type::UDP, family) {}
 
-        Socket::Socket(udp::Socket&& socket) noexcept : udp::Socket() {
+        Socket::Socket(udp::Socket&& socket) noexcept : udp::Socket(socket.mFamily) {
             mFD = socket.mFD;
             socket.mFD = SocketImpl::invalidSocket();
 
             mBlocking = socket.mBlocking;
             socket.mBlocking = true;
+
+            mFamily = socket.mFamily;
+            socket.mFamily = Family::UNKNOWN;
         }
 
         void Socket::bind(const InetAddress &address, Uint16 port) {
             create();
 
-            sockaddr_in socket_address = SocketImpl::createAddress(address.toUint32(), port);
-            if (::bind(mFD, (sockaddr *) &socket_address, sizeof(sockaddr_in)) == -1) {
+            SocketImpl::SocketLength length;
+            sockaddr_storage socket_address = SocketImpl::createAddress(address, port, length);
+            if (::bind(mFD, (sockaddr *) &socket_address, length) == -1) {
                 throw Exception(Exception::Code::FAILED_TO_BIND_SOCKET,
                                 "Failed to bind socket: " + SocketImpl::getError());
             }
@@ -40,8 +43,9 @@ namespace ohf {
                                 "Datagram packet is too big: " + std::to_string(size));
             }
 
-            sockaddr_in socket_address = SocketImpl::createAddress(address.toUint32(), port);
-            if (::sendto(mFD, data, size, 0, (sockaddr *) &socket_address, sizeof(sockaddr_in)) < 0) {
+            SocketImpl::SocketLength length;
+            sockaddr_storage socket_address = SocketImpl::createAddress(address, port, length);
+            if (::sendto(mFD, data, size, 0, (sockaddr *) &socket_address, length) < 0) {
                 throw Exception(Exception::Code::FAILED_TO_SEND_DATA, "Failed to send data: " + SocketImpl::getError());
             }
         }
@@ -55,29 +59,46 @@ namespace ohf {
         }
 
         Int32 Socket::receive(InetAddress &address, Uint16 &port, char *data, Int32 size) {
-            sockaddr_in socket_address = SocketImpl::createAddress(INADDR_ANY, 0);
-            SocketImpl::SocketLength addressSize = sizeof(sockaddr_in);
-            Int32 dataReceived = recvfrom(mFD, data, size, 0, (sockaddr *) &socket_address, &addressSize);
+            SocketImpl::SocketLength length;
+
+            InetAddress inet;
+            switch(mFamily) {
+                case Family::IPv4: inet = ipv4::ANY; break;
+                case Family::IPv6: inet = ipv6::ANY; break;
+                default:
+                    throw Exception(Exception::Code::INVALID_ADDRESS_TYPE,
+                                    "Invalid address type: " + std::to_string((int) mFamily));
+            }
+
+            sockaddr_storage socket_address = SocketImpl::createAddress(inet, 0, length);
+
+            Int32 dataReceived = recvfrom(mFD, data, size, 0, (sockaddr *) &socket_address, &length);
             if (dataReceived < 0) {
                 throw Exception(Exception::Code::FAILED_TO_RECEIVE_DATA,
                                 "Failed to receive data: " + SocketImpl::getError());
             }
 
-            address = InetAddress(*(Uint32 *) &socket_address.sin_addr);
-            port = ntohs(socket_address.sin_port);
+            address = SocketImpl::createInetAddress(&socket_address);
+            port = SocketImpl::port(&socket_address);
 
             return dataReceived;
         }
 
-        Int32 Socket::receive(InetAddress &address, Uint16 &port, std::vector<Int8> &data) {
-            return receive(address, port, data.data(), data.size());
+        Int32 Socket::receive(InetAddress &address, Uint16 &port, std::vector<Int8> &data, Int32 size) {
+            data.clear();
+            data.resize(size);
+            Int32 received = receive(address, port, data.data(), size);
+            data.resize(received);
+            data.shrink_to_fit();
+            return received;
         }
 
         Int32 Socket::receive(InetAddress &address, Uint16 &port, std::string &data, Int32 size) {
-            std::vector<Int8> buffer(size);
-            Int32 received = receive(address, port, buffer.data(), size);
             data.clear();
-            data.insert(0, buffer.data(), received);
+            data.resize(size);
+            Int32 received = receive(address, port, &data[0], size);
+            data.resize(received);
+            data.shrink_to_fit();
             return received;
         }
 
@@ -88,6 +109,9 @@ namespace ohf {
             mBlocking = right.mBlocking;
             right.mBlocking = true;
 
+            mFamily = right.mFamily;
+            right.mFamily = Family::UNKNOWN;
+
             return *this;
         }
     }
@@ -97,7 +121,8 @@ namespace std {
     using namespace ohf;
 
     void swap(ohf::udp::Socket& a, ohf::udp::Socket& b) {
-        std::swap(a.mFD, b.mFD);
-        std::swap(a.mBlocking, b.mBlocking);
+        swap(a.mFD, b.mFD);
+        swap(a.mBlocking, b.mBlocking);
+        swap(a.mFamily, b.mFamily);
     }
 }

@@ -10,24 +10,30 @@
 
 namespace ohf {
     namespace tcp {
-        SSLServer::SSLServer(const ssl::Context &context) :
-                ohf::Socket(Type::TCP),
-                ssl::Socket(Type::TCP, context)
+        SSLServer::SSLServer(Family family, const ssl::Context &context) :
+                Server(family),
+                ssl::Socket(Type::TCP, family, context)
         {}
 
-        SSLServer::SSLServer(ohf::tcp::SSLServer&& server) noexcept : ssl::Socket(Type::TCP, server.context) {
+        SSLServer::SSLServer(SSLServer&& server) noexcept :
+                Server(server.mFamily),
+                ssl::Socket(Type::TCP, server.mFamily, server.context)
+        {
             mFD = server.mFD;
             server.mFD = SocketImpl::invalidSocket();
 
             mBlocking = server.mBlocking;
             server.mBlocking = true;
 
+            mFamily = server.mFamily;
+            server.mFamily = Family::UNKNOWN;
+
             mSSL = std::move(server.mSSL);
         }
 
         SSLServer::Connection SSLServer::accept() const {
-            sockaddr_in addr;
-            SocketImpl::SocketLength length = sizeof(addr);
+            sockaddr_storage addr;
+            SocketImpl::SocketLength length = SocketImpl::addressLength(mFamily);
 
             auto fd = ::accept(ssl::Socket::mFD, (sockaddr *) &addr, &length);
             if (fd == SocketImpl::invalidSocket()) {
@@ -35,25 +41,22 @@ namespace ohf {
                         "Failed to accept socket: " + SocketImpl::getError());
             }
 
-            auto *client = new tcp::SSLSocket(context);
+            auto *client = new tcp::SSLSocket(mFamily, context);
             client->create(fd);
             client->accept();
 
-            return {client, InetAddress(*(Uint32 *) &addr.sin_addr), addr.sin_port};
+            return {client, SocketImpl::createInetAddress(&addr), SocketImpl::port(&addr)};
         }
 
-        void SSLServer::bind(const InetAddress &address, Uint16 port) {
-            ssl::Socket::create();
-
-            Server::bind(address, port);
-        }
-
-        SSLServer& SSLServer::operator =(ohf::tcp::SSLServer&& right) noexcept {
+        SSLServer& SSLServer::operator =(SSLServer&& right) noexcept {
             mFD = right.mFD;
             right.mFD = SocketImpl::invalidSocket();
 
             mBlocking = right.mBlocking;
             right.mBlocking = true;
+
+            mFamily = right.mFamily;
+            right.mFamily = Family::UNKNOWN;
 
             mSSL = std::move(right.mSSL);
 
