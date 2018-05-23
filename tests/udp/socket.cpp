@@ -9,11 +9,8 @@ using namespace ohf;
 #define B_PORT 50002
 #define INVALID_FD Socket::Handle(-1)
 
-#define IPV4 Socket::Family::IPv4
-#define IPV6 Socket::Family::IPv6
-
 void a_func(Socket::Family family) {
-    udp::Socket a(family);
+    udp::Socket a;
     a.bind({"localhost", family}, A_PORT);
 
     InetAddress address;
@@ -22,7 +19,7 @@ void a_func(Socket::Family family) {
     a.receive(address, port, data, 128);
     REQUIRE(data == "B_HELLO");
     REQUIRE(port == B_PORT);
-    if(family == IPV4)
+    if(family == ohf::IPv4)
         REQUIRE(address.hostAddress() == "127.0.0.1");
     else
         REQUIRE(address.hostAddress() == "::1");
@@ -37,7 +34,7 @@ void a_func(Socket::Family family) {
 }
 
 void b_func(Socket::Family family) {
-    udp::Socket b(family);
+    udp::Socket b;
     b.bind({"localhost", family}, B_PORT);
 
     b.send({"localhost", family}, A_PORT, "B_HELLO");
@@ -48,7 +45,7 @@ void b_func(Socket::Family family) {
     b.receive(address, port, data, 128);
     REQUIRE(data == "A_WORLD");
     REQUIRE(port == A_PORT);
-    if(family == IPV4)
+    if(family == ohf::IPv4)
         REQUIRE(address.hostAddress() == "127.0.0.1");
     else
         REQUIRE(address.hostAddress() == "::1");
@@ -58,29 +55,29 @@ void b_func(Socket::Family family) {
 }
 
 TEST_CASE("udp::Socket", "[socket]") {
-    udp::Socket a(IPV4);
-    udp::Socket b(IPV4);
+    udp::Socket a;
+    udp::Socket b;
 
     // create and close
-    a.create();
+    a.create(ohf::IPv4);
     REQUIRE(a.fd() != INVALID_FD);
     a.close();
     REQUIRE(a.fd() == INVALID_FD);
 
-    a.create();
+    a.create(ohf::IPv4);
     REQUIRE(a.fd() != INVALID_FD);
     a.unbind();
     REQUIRE(a.fd() == INVALID_FD);
 
     // exceptions
-    b.bind({"localhost", IPV4}, B_PORT);
-    REQUIRE_THROWS_CODE(a.bind({"localhost", IPV4}, B_PORT), Exception::Code::FAILED_TO_BIND_SOCKET);
+    b.bind({"localhost", ohf::IPv4}, B_PORT);
+    REQUIRE_THROWS_CODE(a.bind({"localhost", ohf::IPv4}, B_PORT), Exception::Code::FAILED_TO_BIND_SOCKET);
     b.close();
-    REQUIRE_THROWS_CODE(a.send({"localhost", IPV4}, 0, nullptr, 128), Exception::Code::NO_DATA_TO_SEND);
-    REQUIRE_THROWS_CODE(a.send({"localhost", IPV4}, 0, "some data", 0), Exception::Code::NO_DATA_TO_SEND);
-    REQUIRE_THROWS_CODE(a.send({"localhost", IPV4}, 0, "some_data", std::numeric_limits<Int32>::max()), Exception::Code::DATAGRAM_PACKET_IS_TOO_BIG);
+    REQUIRE_THROWS_CODE(a.send({"localhost", ohf::IPv4}, 0, nullptr, 128), Exception::Code::NO_DATA_TO_SEND);
+    REQUIRE_THROWS_CODE(a.send({"localhost", ohf::IPv4}, 0, "some data", 0), Exception::Code::NO_DATA_TO_SEND);
+    REQUIRE_THROWS_CODE(a.send({"localhost", ohf::IPv4}, 0, "some_data", std::numeric_limits<Int32>::max()), Exception::Code::DATAGRAM_PACKET_IS_TOO_BIG);
     a.close();
-    REQUIRE_THROWS_CODE(a.send({"localhost", IPV4}, 0, "abcde", 5), Exception::Code::FAILED_TO_SEND_DATA);
+    REQUIRE_THROWS_CODE(a.send({"localhost", ohf::IPv4}, 0, "abcde", 5), Exception::Code::FAILED_TO_SEND_DATA);
     std::string data;
     InetAddress address;
     Uint16 port;
@@ -89,7 +86,7 @@ TEST_CASE("udp::Socket", "[socket]") {
     b.close();
 
     // send / receive
-    std::vector<Socket::Family> families = {IPV4, IPV6};
+    std::vector<Socket::Family> families = {ohf::IPv4, ohf::IPv6};
     for(const auto& family : families) {
         std::thread a_thread(a_func, family);
         std::thread b_thread(b_func, family);
@@ -100,8 +97,8 @@ TEST_CASE("udp::Socket", "[socket]") {
     }
 
     // swap
-    a.create();
-    b.create();
+    a.create(ohf::IPv4);
+    b.create(ohf::IPv4);
 
     a.blocking(false);
 

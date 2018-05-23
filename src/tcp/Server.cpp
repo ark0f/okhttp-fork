@@ -9,13 +9,13 @@
 
 namespace ohf {
     namespace tcp {
-        Server::Server(Family family) : ohf::Socket(Type::TCP, family) {}
+        Server::Server() : ohf::Socket(Type::TCP) {}
 
-        Server::Server(Family family, const InetAddress &address, Uint16 port) : Server(family) {
+        Server::Server(const InetAddress &address, Uint16 port) : Server() {
             bind(address, port);
         }
 
-        Server::Server(Family family, const HttpURL &url) : Server(family) {
+        Server::Server(Family family, const HttpURL &url) : Server() {
             bind(InetAddress(url.host(), family), url.port());
         }
 
@@ -25,15 +25,13 @@ namespace ohf {
 
             mBlocking = server.mBlocking;
             server.mBlocking = true;
-
-            mFamily = server.mFamily;
-            server.mFamily = Family::UNKNOWN;
         }
 
         void Server::bind(const InetAddress &address, Uint16 port) {
-            create();
+            create(address.family());
+            mFamily = address.family();
 
-            int option = 1;
+            Int32 option = 1;
             if(setsockopt(mFD, SOL_SOCKET, SO_REUSEADDR, (const char *) &option, sizeof(option)) < 0) {
                 throw Exception(Exception::Code::FAILED_TO_SET_SOCKET_OPTION,
                                 "Failed to set socket option: " + std::to_string(SO_REUSEADDR));
@@ -45,8 +43,6 @@ namespace ohf {
                 throw Exception(Exception::Code::FAILED_TO_BIND_SOCKET,
                         "Failed to bind socket: " + SocketImpl::getError());
             }
-
-            mFamily = address.family();
         }
 
         void Server::bind(const HttpURL &url) {
@@ -74,7 +70,7 @@ namespace ohf {
                         "Failed to accept socket: " + SocketImpl::getError());
             }
 
-            auto client = new tcp::Socket(mFamily);
+            auto client = new tcp::Socket;
             client->create(fd);
 
             return {client, SocketImpl::createInetAddress(&addr), SocketImpl::port(&addr)};
@@ -103,9 +99,6 @@ namespace ohf {
             mBlocking = right.mBlocking;
             right.mBlocking = true;
 
-            mFamily = right.mFamily;
-            right.mFamily = Socket::Family::UNKNOWN;
-
             return *this;
         }
     }
@@ -117,6 +110,5 @@ namespace std {
     void swap(tcp::Server& a, tcp::Server& b) {
         swap(a.mFD, b.mFD);
         swap(a.mBlocking, b.mBlocking);
-        swap(a.mFamily, b.mFamily);
     }
 }

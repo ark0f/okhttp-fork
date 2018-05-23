@@ -24,7 +24,7 @@ int main() {
 
         ohf::ssl::Context context(ohf::TLSVersion::SSLv23);
         ohf::tcp::SSLSocket sslSocket(context);
-        sslSocket.connect(url); // port specified by protocol `https`
+        sslSocket.connect(ohf::IPv4, url); // port specified by protocol `https`
         sslSocket.sni(ohf::InetAddress(url.host()));
 
         std::iostream &ios = sslSocket.stream();

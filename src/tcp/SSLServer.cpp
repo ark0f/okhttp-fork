@@ -10,23 +10,20 @@
 
 namespace ohf {
     namespace tcp {
-        SSLServer::SSLServer(Family family, const ssl::Context &context) :
-                Server(family),
-                ssl::Socket(Type::TCP, family, context)
+        SSLServer::SSLServer(const ssl::Context &context) :
+                Server(),
+                ssl::Socket(Type::TCP, context)
         {}
 
         SSLServer::SSLServer(SSLServer&& server) noexcept :
-                Server(server.mFamily),
-                ssl::Socket(Type::TCP, server.mFamily, server.context)
+                Server(),
+                ssl::Socket(Type::TCP, server.context)
         {
             mFD = server.mFD;
             server.mFD = SocketImpl::invalidSocket();
 
             mBlocking = server.mBlocking;
             server.mBlocking = true;
-
-            mFamily = server.mFamily;
-            server.mFamily = Family::UNKNOWN;
 
             mSSL = std::move(server.mSSL);
         }
@@ -41,7 +38,7 @@ namespace ohf {
                         "Failed to accept socket: " + SocketImpl::getError());
             }
 
-            auto *client = new tcp::SSLSocket(mFamily, context);
+            auto *client = new tcp::SSLSocket(context);
             client->create(fd);
             client->accept();
 
@@ -54,9 +51,6 @@ namespace ohf {
 
             mBlocking = right.mBlocking;
             right.mBlocking = true;
-
-            mFamily = right.mFamily;
-            right.mFamily = Family::UNKNOWN;
 
             mSSL = std::move(right.mSSL);
 

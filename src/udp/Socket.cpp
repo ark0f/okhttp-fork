@@ -8,21 +8,19 @@
 
 namespace ohf {
     namespace udp {
-        Socket::Socket(Family family) : ohf::Socket(Type::UDP, family) {}
+        Socket::Socket() : ohf::Socket(Type::UDP) {}
 
-        Socket::Socket(udp::Socket&& socket) noexcept : udp::Socket(socket.mFamily) {
+        Socket::Socket(udp::Socket&& socket) noexcept : udp::Socket() {
             mFD = socket.mFD;
             socket.mFD = SocketImpl::invalidSocket();
 
             mBlocking = socket.mBlocking;
             socket.mBlocking = true;
-
-            mFamily = socket.mFamily;
-            socket.mFamily = Family::UNKNOWN;
         }
 
         void Socket::bind(const InetAddress &address, Uint16 port) {
-            create();
+            create(address.family());
+            mFamily = address.family();
 
             SocketImpl::SocketLength length;
             sockaddr_storage socket_address = SocketImpl::createAddress(address, port, length);
@@ -36,7 +34,7 @@ namespace ohf {
             close();
         }
 
-        void Socket::send(const InetAddress &address, Uint16 port, const char *data, size_t size) {
+        void Socket::send(const InetAddress &address, Uint16 port, const char *data, Int32 size) {
             if (!data || size == 0) throw Exception(Exception::Code::NO_DATA_TO_SEND, "No data to send: ");
             if (size > 65507) {
                 throw Exception(Exception::Code::DATAGRAM_PACKET_IS_TOO_BIG,
@@ -109,9 +107,6 @@ namespace ohf {
             mBlocking = right.mBlocking;
             right.mBlocking = true;
 
-            mFamily = right.mFamily;
-            right.mFamily = Family::UNKNOWN;
-
             return *this;
         }
     }
@@ -123,6 +118,5 @@ namespace std {
     void swap(ohf::udp::Socket& a, ohf::udp::Socket& b) {
         swap(a.mFD, b.mFD);
         swap(a.mBlocking, b.mBlocking);
-        swap(a.mFamily, b.mFamily);
     }
 }

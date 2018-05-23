@@ -44,13 +44,13 @@ namespace ohf {
                 Int32 read(char *data, Int32 length) override;
             };
 
-            Socket(Family family, StreamBuf *buffer = new StreamBuf(1024, 1024));
+            explicit Socket(StreamBuf *buffer = new StreamBuf(1024, 1024));
 
             Socket(Socket &&socket) noexcept;
 
             virtual void connect(const InetAddress &address, Uint16 port);
 
-            void connect(const HttpURL &url);
+            void connect(Family family, const HttpURL &url);
 
             std::iostream &stream() const;
 

@@ -22,7 +22,7 @@ namespace ohf {
     namespace udp {
         class Socket : public ohf::Socket {
         public:
-            Socket(Family family);
+            Socket();
 
             Socket(Socket &&socket) noexcept;
 
@@ -30,7 +30,7 @@ namespace ohf {
 
             void unbind();
 
-            void send(const InetAddress &address, Uint16 port, const char *data, size_t size);
+            void send(const InetAddress &address, Uint16 port, const char *data, Int32 size);
 
             void send(const InetAddress &address, Uint16 port, const std::vector<Int8> &data);
 
@@ -46,6 +46,9 @@ namespace ohf {
 
         private:
             friend void ::std::swap(Socket& a, Socket& b);
+
+        protected:
+            Family mFamily;
         };
     }
 }

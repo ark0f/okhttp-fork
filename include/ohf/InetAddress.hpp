@@ -43,8 +43,6 @@ namespace ohf {
 
         std::string canonicalName() const;
 
-        std::vector<std::string> aliases() const;
-
         Socket::Family family() const;
 
         Int32 originalType() const;
@@ -55,7 +53,6 @@ namespace ohf {
         std::string mHostName;
         std::string mCanonName;
         std::array<Uint8, 16> mIP;
-        std::vector<std::string> mAliases;
 
         Socket::Family mFamily;
         Int32 mOriginalType;

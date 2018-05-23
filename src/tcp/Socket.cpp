@@ -13,29 +13,27 @@
 
 namespace ohf {
     namespace tcp {
-        Socket::Socket(Family family, StreamBuf *buffer) :
-                ohf::Socket(Type::TCP, family),
+        Socket::Socket(StreamBuf *buffer) :
+                ohf::Socket(Type::TCP),
                 mIOS(std::make_shared<std::iostream>(buffer))
         {
             buffer->socket(this);
             mIOS->exceptions(std::ios::badbit); // rethrow exceptions
         }
 
-        Socket::Socket(tcp::Socket&& socket) noexcept : tcp::Socket(socket.mFamily) {
+        Socket::Socket(tcp::Socket&& socket) noexcept : tcp::Socket() {
             mFD = socket.mFD;
             socket.mFD = SocketImpl::invalidSocket();
 
             mBlocking = socket.mBlocking;
             socket.mBlocking = true;
 
-            mFamily = socket.mFamily;
-            socket.mFamily = Family::UNKNOWN;
 
             ((StreamBuf *) mIOS->rdbuf())->socket(this);
         }
 
         void Socket::connect(const InetAddress &address, Uint16 port) {
-            create();
+            create(address.family());
 
             bool is_blocking = isBlocking();
             if (!is_blocking) blocking(true);
@@ -50,8 +48,8 @@ namespace ohf {
             blocking(is_blocking);
         }
 
-        void Socket::connect(const HttpURL &url) {
-            connect(InetAddress(url.host(), mFamily), url.port());
+        void Socket::connect(Family family, const HttpURL &url) {
+            connect(InetAddress(url.host(), family), url.port());
         }
 
         std::iostream& Socket::stream() const {
@@ -116,9 +114,6 @@ namespace ohf {
             mBlocking = right.mBlocking;
             right.mBlocking = true;
 
-            mFamily = right.mFamily;
-            right.mFamily = Family::UNKNOWN;
-
             ((StreamBuf *) mIOS->rdbuf())->socket(this);
 
             return *this;
@@ -132,6 +127,5 @@ namespace std {
     void swap(tcp::Socket& a, tcp::Socket& b) {
         std::swap(a.mFD, b.mFD);
         std::swap(a.mBlocking, b.mBlocking);
-        std::swap(a.mFamily, b.mFamily);
     }
 }

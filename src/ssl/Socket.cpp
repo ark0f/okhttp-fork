@@ -7,8 +7,8 @@
 
 namespace ohf {
     namespace ssl {
-        Socket::Socket(Type type, Family family, const Context &context) :
-                ohf::Socket(type, family),
+        Socket::Socket(Type type, const Context &context) :
+                ohf::Socket(type),
                 context(context),
                 SNICalled(true)
         {}

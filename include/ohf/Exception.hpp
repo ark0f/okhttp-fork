@@ -12,7 +12,6 @@ namespace ohf {
     public:
         enum class Code {
             OK,
-            INVALID_HEADER_LINE,
             INVALID_MIME_TYPE,
             FAILED_TO_READ_STREAM,
             FAILED_TO_CREATE_SOCKET,
@@ -27,6 +26,7 @@ namespace ohf {
             FAILED_TO_ACCEPT_SOCKET,
             FAILED_TO_LISTEN_SOCKET,
             FAILED_TO_SET_SOCKET_OPTION,
+            FAILED_TO_GET_SOCKET_NAME,
             DATAGRAM_PACKET_IS_TOO_BIG,
             SSL_CREATE_ERROR,
             SSL_CREATE_CONTEXT_ERROR,
@@ -47,7 +47,6 @@ namespace ohf {
             INVALID_COOKIE_NAME_VALUE,
             INVALID_MAX_AGE,
             INVALID_S_MAX_AGE,
-            INVALID_IP,
             INVALID_MAX_STALE,
             INVALID_MIN_FRESH,
             UNEXPECTED_HEADER,

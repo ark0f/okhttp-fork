@@ -31,13 +31,13 @@ namespace ohf {
             IPv6
         };
 
-        Socket(Type type, Family family);
+        Socket(Type type);
 
         virtual ~Socket();
 
         Handle fd() const;
 
-        virtual void create();
+        virtual void create(Family af);
 
         virtual void create(Handle fd);
 
@@ -61,8 +61,10 @@ namespace ohf {
         Handle mFD;
         bool mBlocking;
         Type mType;
-        Family mFamily;
     };
+
+    constexpr Socket::Family IPv4 = Socket::Family::IPv4;
+    constexpr Socket::Family IPv6 = Socket::Family::IPv6;
 }
 
 #endif //OKHTTPFORK_SOCKET_HPP

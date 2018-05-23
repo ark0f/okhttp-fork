@@ -8,13 +8,10 @@
 
 int main() {
     try {
-        ohf::InetAddress address = "www.google.com";
+        ohf::InetAddress address("www.google.com", ohf::IPv4);
         std::cout << "Official host name:   " << address.hostName() << std::endl;
         std::cout << "IP address as string: " << address.hostAddress() << std::endl;
 
-        std::vector<unsigned char> ip = address.address();
-
-        std::vector<ohf::InetAddress> addresses = ohf::InetAddress::getAllByName("www.yandex.ru");
     } catch (const ohf::Exception &e) {
         std::cerr << e.message() << std::endl;
     }

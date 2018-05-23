@@ -18,6 +18,29 @@
 
 namespace ohf {
     namespace SocketImpl {
+        static Socket::Family family(Socket::Handle fd) {
+            SocketLength length = sizeof(sockaddr);
+            sockaddr addr;
+            std::memset(&addr, 0, length);
+
+            if(getsockname(fd, &addr, &length) == -1) {
+                throw Exception(Exception::Code::FAILED_TO_GET_SOCKET_NAME,
+                                "Failed to get socket name: " + getError());
+            }
+
+            Int32 af = addr.sa_family;
+            Socket::Family family;
+            switch(af) {
+                case AF_INET: family = Socket::Family::IPv4;
+                case AF_INET6: family = Socket::Family::IPv6;
+                default:
+                    throw Exception(Exception::Code::INVALID_ADDRESS_TYPE,
+                                    "Invalid address type: " + std::to_string(af));
+            }
+
+            return family;
+        }
+
         static sockaddr_storage createAddress(const InetAddress &address, Uint16 port, SocketLength &length) {
             sockaddr_storage sock_addr;
 

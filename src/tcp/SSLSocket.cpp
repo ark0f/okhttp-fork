@@ -7,15 +7,15 @@
 
 namespace ohf {
     namespace tcp {
-        SSLSocket::SSLSocket(Family family, const ssl::Context &context, StreamBuf *buffer) :
-                ohf::Socket(Type::TCP, family),
-                tcp::Socket(family, buffer),
-                ssl::Socket(Type::TCP, family, context)
+        SSLSocket::SSLSocket(const ssl::Context &context, StreamBuf *buffer) :
+                ohf::Socket(Type::TCP),
+                tcp::Socket(buffer),
+                ssl::Socket(Type::TCP, context)
         {}
 
         SSLSocket::SSLSocket(SSLSocket &&socket) noexcept :
-                tcp::Socket(socket.mFamily),
-                ssl::Socket(Type::TCP, socket.mFamily, socket.context)
+                tcp::Socket(),
+                ssl::Socket(Type::TCP, socket.context)
         {
             mFD = socket.mFD;
             socket.mFD = SocketImpl::invalidSocket();
@@ -23,16 +23,13 @@ namespace ohf {
             mBlocking = socket.mBlocking;
             socket.mBlocking = true;
 
-            mFamily = socket.mFamily;
-            socket.mFamily = Family::UNKNOWN;
-
             ((StreamBuf *) mIOS->rdbuf())->socket(this);
 
             mSSL = std::move(socket.mSSL);
         }
 
         void SSLSocket::connect(const InetAddress &address, Uint16 port) {
-            ssl::Socket::create();
+            create(address.family());
 
             if(SNICalled) mSSL->setTLSExtHostName(address.hostName());
 

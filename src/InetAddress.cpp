@@ -77,7 +77,7 @@ namespace ohf {
     }
 
     std::string InetAddress::hostAddress() const {
-        std::string address(45, 0);
+        std::string address(INET6_ADDRSTRLEN, 0);
         const char *result = inet_ntop(mOriginalType, (void *) mIP.data(), &address[0], address.size());
         address.resize(std::strlen(result));
         return address;
@@ -89,10 +89,6 @@ namespace ohf {
 
     std::string InetAddress::canonicalName() const {
         return mCanonName;
-    }
-
-    std::vector<std::string> InetAddress::aliases() const {
-        return mAliases;
     }
 
     Socket::Family InetAddress::family() const {

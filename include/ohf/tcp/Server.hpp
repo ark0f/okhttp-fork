@@ -62,9 +62,9 @@ namespace ohf {
                 const Server *server;
             };
 
-            explicit Server(Family family);
+            Server();
 
-            Server(Family family, const InetAddress &address, Uint16 port);
+            Server(const InetAddress &address, Uint16 port);
 
             Server(Family family, const HttpURL &url);
 
@@ -92,6 +92,9 @@ namespace ohf {
 
         private:
             friend void ::std::swap(Server& a, Server& b);
+
+        protected:
+            Family mFamily;
         };
     }
 }

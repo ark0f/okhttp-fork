@@ -24,7 +24,7 @@ namespace ohf {
 
         class SSLSocket : public tcp::Socket, public ssl::Socket {
         public:
-            SSLSocket(Family family, const ssl::Context &context, StreamBuf *buffer = new StreamBuf(1024, 1024));
+            SSLSocket(const ssl::Context &context, StreamBuf *buffer = new StreamBuf(1024, 1024));
 
             SSLSocket(SSLSocket&& socket) noexcept;
 

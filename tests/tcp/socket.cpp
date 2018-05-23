@@ -6,18 +6,15 @@
 
 #define SERVER_PORT 50000
 
-#define IPV4 Socket::Family::IPv4
-#define IPV6 Socket::Family::IPv6
-
 using namespace ohf;
 
 void server_func(Socket::Family family) {
-    tcp::Server server(family);
+    tcp::Server server;
     server.bind({"localhost", family}, SERVER_PORT);
     server.listen();
 
     for(const auto& connection : server) {
-        if(family == IPV4)
+        if(family == ohf::IPv4)
             REQUIRE(connection.address().hostAddress() == "127.0.0.1");
         else
             REQUIRE(connection.address().hostAddress() == "::1");
@@ -36,7 +33,7 @@ void server_func(Socket::Family family) {
 }
 
 void socket_func(Socket::Family family) {
-    tcp::Socket socket(family);
+    tcp::Socket socket;
     socket.connect({"localhost", family}, SERVER_PORT);
     std::iostream& ios = socket.stream();
 
@@ -50,8 +47,8 @@ void socket_func(Socket::Family family) {
 }
 
 TEST_CASE("tcp::Socket", "[socket]") {
-    tcp::Socket socket(IPV4);
-    tcp::Server server(IPV4);
+    tcp::Socket socket;
+    tcp::Server server;
 
     // exceptions
     REQUIRE_THROWS_CODE(socket.connect("localhost", 0), Exception::Code::FAILED_TO_CREATE_CONNECTION);
@@ -60,8 +57,8 @@ TEST_CASE("tcp::Socket", "[socket]") {
     REQUIRE_THROWS_CODE(socket.send("some_data", 9), Exception::Code::FAILED_TO_SEND_DATA);
     REQUIRE_THROWS_CODE(socket.receive(nullptr, 128), Exception::Code::FAILED_TO_RECEIVE_DATA);
 
-    server.bind({"localhost", IPV4}, SERVER_PORT);
-    REQUIRE_THROWS_CODE(server.bind({"localhost", IPV4}, SERVER_PORT), Exception::Code::FAILED_TO_BIND_SOCKET);
+    server.bind({"localhost", ohf::IPv4}, SERVER_PORT);
+    REQUIRE_THROWS_CODE(server.bind({"localhost", ohf::IPv4}, SERVER_PORT), Exception::Code::FAILED_TO_BIND_SOCKET);
     server.close();
     REQUIRE_THROWS_CODE(server.listen(), Exception::Code::FAILED_TO_LISTEN_SOCKET);
     REQUIRE_THROWS_CODE(server.accept(), Exception::Code::FAILED_TO_ACCEPT_SOCKET);
@@ -69,7 +66,7 @@ TEST_CASE("tcp::Socket", "[socket]") {
     server.close();
 
     // send / receive
-    std::vector<Socket::Family> families = {IPV4, IPV6};
+    std::vector<Socket::Family> families = {ohf::IPv4, ohf::IPv4};
     for(const auto& family : families) {
         std::thread server_thread(server_func, family);
         std::thread socket_thread(socket_func, family);
@@ -80,11 +77,11 @@ TEST_CASE("tcp::Socket", "[socket]") {
     }
 
     // swap
-    socket.create();
-    server.create();
+    socket.create(ohf::IPv4);
+    server.create(ohf::IPv4);
 
-    tcp::Socket b(IPV4);
-    b.create();
+    tcp::Socket b;
+    b.create(ohf::IPv4);
     b.blocking(false);
 
     auto socket_fd = socket.fd();
