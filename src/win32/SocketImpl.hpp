@@ -8,7 +8,7 @@
 #include <ohf/Socket.hpp>
 #include <ohf/Config.hpp>
 
-#define _WIN32_WINNT 0x600
+#define _WIN32_WINNT 0x600 // activate inet_pton
 #include <winsock2.h>
 #include <ws2tcpip.h>
 

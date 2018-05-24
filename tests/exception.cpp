@@ -4,14 +4,27 @@
 
 using namespace ohf;
 
-TEST_CASE("Exception") {
-    Exception exception(Exception::Code::OK, "All right");
-    REQUIRE(exception.code() == Exception::Code::OK);
-    REQUIRE(exception.message() == "All right");
-    REQUIRE(strcmp(exception.what(), "All right") == 0);
+SCENARIO("Exception") {
+    WHEN("Create simple exception") {
+        Exception exception(Exception::Code::OK, "All right");
+        GIVEN("Code: Exception::Code::OK and message: All right") {
+            THEN("Getters should return these data too") {
+                REQUIRE(exception.code() == Exception::Code::OK);
+                REQUIRE(exception.message() == "All right");
+                REQUIRE(strcmp(exception.what(), "All right") == 0);
+            }
+        }
+    }
 
-    Exception last = *Exception::last();
-    REQUIRE(last.code() == exception.code());
-    REQUIRE(last.message() == exception.message());
-    REQUIRE(std::strcmp(last.what(), exception.what()) == 0);
+    WHEN("Get last exception") {
+        const Exception *latest;
+        GIVEN("Last exception") {
+            latest = Exception::latest();
+            THEN("Getters should return data of latest exception") {
+                REQUIRE(latest->code() == Exception::Code::OK);
+                REQUIRE(latest->message() == "All right");
+                REQUIRE(strcmp(latest->what(), "All right") == 0);
+            }
+        }
+    }
 }

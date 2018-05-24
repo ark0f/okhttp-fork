@@ -63,6 +63,7 @@ namespace ohf {
         Type mType;
     };
 
+    constexpr Socket::Family IP_UNKNOWN = Socket::Family::UNKNOWN;
     constexpr Socket::Family IPv4 = Socket::Family::IPv4;
     constexpr Socket::Family IPv6 = Socket::Family::IPv6;
 }

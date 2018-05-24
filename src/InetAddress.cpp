@@ -64,8 +64,8 @@ namespace ohf {
         return ias;
     }
 
-    std::vector<InetAddress> InetAddress::getAllByName(const std::string &host, Socket::Family type) {
-        return getAllByName(host, type == Socket::Family::IPv4 ? AF_INET : AF_INET6);
+    std::vector<InetAddress> InetAddress::getAllByName(const std::string &host, Socket::Family family) {
+        return getAllByName(host, SocketImpl::saf2af(family));
     }
 
     std::vector<InetAddress> InetAddress::getAllByName(const std::string &host) {

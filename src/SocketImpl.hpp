@@ -41,6 +41,16 @@ namespace ohf {
             return family;
         }
 
+        static Int32 saf2af(Socket::Family family) {
+            Int32 af;
+            switch(family) {
+                case Socket::Family::IPv4: af = AF_INET; break;
+                case Socket::Family::IPv6: af = AF_INET6; break;
+                case Socket::Family::UNKNOWN: af = AF_UNSPEC; break;
+            }
+            return af;
+        }
+
         static sockaddr_storage createAddress(const InetAddress &address, Uint16 port, SocketLength &length) {
             sockaddr_storage sock_addr;
 

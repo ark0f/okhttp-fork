@@ -31,7 +31,7 @@ namespace ohf {
 
         static std::vector<InetAddress> getAllByName(const std::string &host, Int32 af);
 
-        static std::vector<InetAddress> getAllByName(const std::string &host, Socket::Family type);
+        static std::vector<InetAddress> getAllByName(const std::string &host, Socket::Family family);
 
         static std::vector<InetAddress> getAllByName(const std::string &host);
 
