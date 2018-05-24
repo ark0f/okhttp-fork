@@ -15,16 +15,4 @@ SCENARIO("Exception") {
             }
         }
     }
-
-    WHEN("Get last exception") {
-        const Exception *latest;
-        GIVEN("Last exception") {
-            latest = Exception::latest();
-            THEN("Getters should return data of latest exception") {
-                REQUIRE(latest->code() == Exception::Code::OK);
-                REQUIRE(latest->message() == "All right");
-                REQUIRE(strcmp(latest->what(), "All right") == 0);
-            }
-        }
-    }
 }

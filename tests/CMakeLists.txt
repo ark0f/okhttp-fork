@@ -35,7 +35,7 @@ target_link_libraries(ohf_tests ${CMAKE_THREAD_LIBS_INIT})
 add_custom_target(coverage
 		COMMAND lcov -d . -z
 		COMMAND lcov -d . -i -c -o coverage.info
-		COMMAND gdb -ex 'set confirm off' -ex run -ex quit ctest
+		COMMAND gdb -ex 'set confirm off' -ex run -ex quit --args env CTEST_OUTPUT_ON_FAILURE=1 ctest
 		COMMAND lcov -d . -c -o coverage.info
 		COMMAND lcov -r coverage.info '/usr/*' 'tests/*'
 		COMMAND lcov --list coverage.info

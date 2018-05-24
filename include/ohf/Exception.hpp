@@ -69,11 +69,6 @@ namespace ohf {
 
         const char *what() const noexcept override;
 
-        static const Exception *latest() noexcept;
-
-    private:
-        static Exception *m_latest;
-
     protected:
         Code m_code;
         std::string m_what;
