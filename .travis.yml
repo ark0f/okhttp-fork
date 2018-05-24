@@ -50,6 +50,7 @@ env:
         - BUILD_TYPE=Release SHARED=OFF
 
 script:
+    - echo 0 | sudo tee /proc/sys/net/ipv6/conf/all/disable_ipv6
     - |
       if [ "$CC" == "gcc" ];
       then
