@@ -1,4 +1,4 @@
 [submodule "Catch2"]
 	path = Catch2
-	url = git://github.com/Good-Pudge/Catch2
+	url = https://github.com/Good-Pudge/Catch2
 	branch = fix-compilation
