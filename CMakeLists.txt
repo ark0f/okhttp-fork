@@ -27,7 +27,7 @@ if(BUILD_TESTING)
     # Coverage
     if(CMAKE_BUILD_TYPE STREQUAL "Coverage")
         if(NOT CMAKE_COMPILER_IS_GNUCXX)
-            message(FATAL_ERROR "Sorry, your compiler does not supported yet")
+            message(FATAL_ERROR "Sorry, your compiler does not supported")
         endif()
 
         set(CMAKE_BUILD_TYPE "Debug")

@@ -12,6 +12,10 @@ shallow_clone: true
 build:
     parallel: true
 
+platform:
+    - x86
+    - x64
+
 image:
     - Visual Studio 2017
     - Visual Studio 2015
@@ -21,7 +25,6 @@ configuration:
     - Release
 
 environment:
-    OPENSSL_ROOT_DIR: C:\OpenSSL-Win64
     matrix:
         - SHARED: OFF
         - SHARED: ON
@@ -36,7 +39,3 @@ build_script:
     - cd build
     - cmake .. -DCMAKE_BUILD_TYPE=%CONFIGURATION% -DBUILD_SHARED_LIBS=%SHARED% -DENABLE_DTLS=ON -DBUILD_TESTING=ON
     - cmake --build .
-
-test_script:
-    - cd %APPVEYOR_BUILD_FOLDER%\build\tests\Debug
-    - .\ohf_tests.exe

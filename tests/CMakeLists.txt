@@ -32,14 +32,22 @@ target_link_libraries(ohf_tests ohf)
 target_link_libraries(ohf_tests ${CMAKE_THREAD_LIBS_INIT})
 
 # Reporter
+if(WIN32)
+	set(LCOV perl lcov/lcov.perl)
+	set(CODECOV codecov -f coverage.info)
+elseif(UNIX)
+	set(LCOV lcov)
+	set(CODECOV curl -s https://codecov.io/bash | bash -s)
+endif()
+
 add_custom_target(coverage
-		COMMAND lcov -d . -z
-		COMMAND lcov -d . -i -c -o coverage.info
+		COMMAND ${LCOV} -d . -z
+		COMMAND ${LCOV} -d . -i -c -o coverage.info
 		COMMAND gdb -ex 'set confirm off' -ex run -ex quit --args env CTEST_OUTPUT_ON_FAILURE=1 ctest
-		COMMAND lcov -d . -c -o coverage.info
-		COMMAND lcov -r coverage.info '/usr/*' 'tests/*'
-		COMMAND lcov --list coverage.info
-		COMMAND curl -s https://codecov.io/bash | bash -s
+		COMMAND ${LCOV} -d . -c -o coverage.info
+		COMMAND ${LCOV} -r coverage.info '/usr/*' 'tests/*'
+		COMMAND ${LCOV} --list coverage.info
+		COMMAND ${CODECOV}
 		WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
 		DEPENDS ohf ohf_tests
 		COMMENT "Make Codecov report"
