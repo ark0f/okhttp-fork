@@ -40,7 +40,7 @@ namespace ohf {
 
             auto *client = new tcp::SSLSocket(context);
             client->create(fd);
-            client->accept();
+            client->ssl().accept();
 
             return {client, SocketImpl::createInetAddress(&addr), SocketImpl::port(&addr)};
         }

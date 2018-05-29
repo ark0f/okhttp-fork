@@ -44,15 +44,20 @@ namespace ohf {
                 Int32 read(char *data, Int32 length) override;
             };
 
-            explicit Socket(StreamBuf *buffer = new StreamBuf(1024, 1024));
+            class Stream : public std::iostream {
+            public:
+                explicit Stream(tcp::Socket &socket, StreamBuf *buffer = new StreamBuf(1024, 1024));
+
+                void socket(tcp::Socket &socket);
+            };
+
+            explicit Socket();
 
             Socket(Socket &&socket) noexcept;
 
             virtual void connect(const InetAddress &address, Uint16 port);
 
             void connect(Family family, const HttpURL &url);
-
-            std::iostream &stream() const;
 
             void disconnect();
 
@@ -69,9 +74,6 @@ namespace ohf {
             Int32 receive(std::string &data, Int32 size) const;
 
             Socket& operator =(Socket &&right) noexcept;
-
-        protected:
-            std::shared_ptr<std::iostream> mIOS;
 
         private:
             friend void ::std::swap(Socket& a, Socket& b);

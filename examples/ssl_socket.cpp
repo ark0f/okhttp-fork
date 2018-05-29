@@ -27,14 +27,14 @@ int main() {
         sslSocket.connect(ohf::IPv4, url); // port specified by protocol `https`
         sslSocket.sni(ohf::InetAddress(url.host()));
 
-        std::iostream &ios = sslSocket.stream();
-        ios << "GET / HTTP/1.1\r\n"
+        ohf::tcp::Socket::Stream stream(sslSocket);
+        stream << "GET / HTTP/1.1\r\n"
             << "Host: " << url.host() << "\r\n"
             << "Connection: close\r\n"
             << "\r\n";
-        ios.flush();
+        stream.flush();
 
-        std::cout << ios.rdbuf() << std::endl;
+        std::cout << stream.rdbuf() << std::endl;
     } catch (ohf::Exception &e) {
         std::cout << e.what() << std::endl;
         return 1;

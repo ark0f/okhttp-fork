@@ -13,13 +13,7 @@
 
 namespace ohf {
     namespace tcp {
-        Socket::Socket(StreamBuf *buffer) :
-                ohf::Socket(Type::TCP),
-                mIOS(std::make_shared<std::iostream>(buffer))
-        {
-            buffer->socket(this);
-            mIOS->exceptions(std::ios::badbit); // rethrow exceptions
-        }
+        Socket::Socket() : ohf::Socket(Type::TCP) {}
 
         Socket::Socket(tcp::Socket&& socket) noexcept : tcp::Socket() {
             mFD = socket.mFD;
@@ -27,9 +21,6 @@ namespace ohf {
 
             mBlocking = socket.mBlocking;
             socket.mBlocking = true;
-
-
-            ((StreamBuf *) mIOS->rdbuf())->socket(this);
         }
 
         void Socket::connect(const InetAddress &address, Uint16 port) {
@@ -50,10 +41,6 @@ namespace ohf {
 
         void Socket::connect(Family family, const HttpURL &url) {
             connect(InetAddress(url.host(), family), url.port());
-        }
-
-        std::iostream& Socket::stream() const {
-            return *mIOS;
         }
 
         void Socket::disconnect() {
@@ -113,8 +100,6 @@ namespace ohf {
 
             mBlocking = right.mBlocking;
             right.mBlocking = true;
-
-            ((StreamBuf *) mIOS->rdbuf())->socket(this);
 
             return *this;
         }

@@ -24,7 +24,7 @@ namespace ohf {
 
         class SSLSocket : public tcp::Socket, public ssl::Socket {
         public:
-            SSLSocket(const ssl::Context &context, StreamBuf *buffer = new StreamBuf(1024, 1024));
+            SSLSocket(const ssl::Context &context);
 
             SSLSocket(SSLSocket&& socket) noexcept;
 
@@ -44,8 +44,6 @@ namespace ohf {
             SSLSocket& operator =(SSLSocket &&right) noexcept;
 
         private:
-            void accept() const;
-
             friend void ::std::swap(SSLSocket& a, SSLSocket& b);
 
             friend class ohf::tcp::SSLServer;

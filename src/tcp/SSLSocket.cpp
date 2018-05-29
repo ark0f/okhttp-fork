@@ -7,9 +7,8 @@
 
 namespace ohf {
     namespace tcp {
-        SSLSocket::SSLSocket(const ssl::Context &context, StreamBuf *buffer) :
+        SSLSocket::SSLSocket(const ssl::Context &context) :
                 ohf::Socket(Type::TCP),
-                tcp::Socket(buffer),
                 ssl::Socket(Type::TCP, context)
         {}
 
@@ -22,8 +21,6 @@ namespace ohf {
 
             mBlocking = socket.mBlocking;
             socket.mBlocking = true;
-
-            ((StreamBuf *) mIOS->rdbuf())->socket(this);
 
             mSSL = std::move(socket.mSSL);
         }
@@ -45,18 +42,12 @@ namespace ohf {
             return mSSL->read(data, size);
         }
 
-        void SSLSocket::accept() const {
-            mSSL->accept();
-        }
-
         SSLSocket& SSLSocket::operator =(SSLSocket &&right) noexcept {
             mFD = right.mFD;
             right.mFD = SocketImpl::invalidSocket();
 
             mBlocking = right.mBlocking;
             right.mBlocking = true;
-
-            ((StreamBuf *) mIOS->rdbuf())->socket(this);
 
             mSSL = std::move(right.mSSL);
 

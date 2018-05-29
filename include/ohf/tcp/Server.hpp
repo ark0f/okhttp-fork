@@ -34,8 +34,6 @@ namespace ohf {
 
                 Uint16 port() const;
 
-                std::iostream& stream() const;
-
                 void close() const;
 
             private:

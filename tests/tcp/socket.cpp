@@ -19,12 +19,12 @@ void server_func(Socket::Family family) {
         else
             REQUIRE(connection.address().hostAddress() == "::1");
 
-        std::iostream& ios = connection.stream();
+        tcp::Socket::Stream stream(connection.socket());
 
-        ios << "SERVER_DATA" << std::flush;
+        stream << "SERVER_DATA" << std::flush;
 
-        std::string response;
-        connection.socket().receive(response, 128);
+        std::string response(11, 0);
+        stream.read(&response[0], 11);
         REQUIRE(response == "SOCKET_DATA");
 
         connection.close();
@@ -35,13 +35,13 @@ void server_func(Socket::Family family) {
 void socket_func(Socket::Family family) {
     tcp::Socket socket;
     socket.connect({"localhost", family}, SERVER_PORT);
-    std::iostream& ios = socket.stream();
+    tcp::Socket::Stream stream(socket);
 
-    std::string response;
-    socket.receive(response, 128);
+    std::string response(11, 0);
+    stream.read(&response[0], 11);
     REQUIRE(response == "SERVER_DATA");
 
-    ios << "SOCKET_DATA" << std::flush;
+    stream << "SOCKET_DATA" << std::flush;
 
     socket.close();
 }
