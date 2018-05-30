@@ -1,6 +1,6 @@
 #include <catch.hpp>
-#include "exception_matcher.hpp"
-#include "time_unit_matcher.hpp"
+#include <util/ExceptionCatch.hpp>
+#include <util/TimeUnitCatch.hpp>
 #include <ohf/CacheControl.hpp>
 
 using namespace ohf;
@@ -39,7 +39,7 @@ TEST_CASE("CacheControl") {
                                   "min-fresh=3")
             .build();
     CacheControl cc(headers);
-    TIMEUNIT_EQUAL(cc.sMaxAge(), 7.0_s);
+    REQUIRE_THAT(cc.sMaxAge(), TimeUnitMatcher(7.0_s));
     REQUIRE(cc.mustRevalidate());
     REQUIRE(cc.isPublic());
     REQUIRE(cc.isPrivate());

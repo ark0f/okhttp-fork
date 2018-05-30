@@ -1,5 +1,5 @@
 #include <catch.hpp>
-#include "exception_matcher.hpp"
+#include "util/ExceptionCatch.hpp"
 #include <ohf/HttpURL.hpp>
 
 using namespace ohf;

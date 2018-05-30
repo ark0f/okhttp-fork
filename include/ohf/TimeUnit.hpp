@@ -26,6 +26,7 @@ namespace ohf {
         static TimeUnit microseconds(Int64 time);
 
         TimeUnit(Int64 count, Type type);
+        TimeUnit(float seconds);
 
         std::time_t std_time() const;
 
@@ -81,8 +82,6 @@ namespace ohf {
         TimeUnit& operator >>=(const TimeUnit &right);
 
     private:
-        TimeUnit(float seconds);
-
         Type mType;
         std::time_t mTime; // 2038
         Int64 mMicroseconds;
