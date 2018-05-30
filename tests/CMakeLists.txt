@@ -43,7 +43,7 @@ endif()
 add_custom_target(coverage
 		COMMAND ${LCOV} -d . -z
 		COMMAND ${LCOV} -d . -i -c -o coverage.info
-		COMMAND gdb -ex 'set confirm off' -ex run -ex quit --args env CTEST_OUTPUT_ON_FAILURE=1 ctest
+		COMMAND gdb -ex 'set confirm off' -ex run -ex quit ctest
 		COMMAND ${LCOV} -d . -c -o coverage.info
 		COMMAND ${LCOV} -r coverage.info '/usr/*' 'tests/*'
 		COMMAND ${LCOV} --list coverage.info

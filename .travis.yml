@@ -43,6 +43,7 @@ env:
         - TESTS=OFF
         - EXAMPLES=OFF
         - TARGET=ohf
+        - CTEST_OUTPUT_ON_FAILURE=ON
     matrix:
         - BUILD_TYPE=Debug SHARED=ON
         - BUILD_TYPE=Debug SHARED=OFF
