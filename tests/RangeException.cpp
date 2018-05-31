@@ -12,6 +12,7 @@ SCENARIO("RangeException") {
                 REQUIRE(exception.code() == Exception::Code::OUT_OF_RANGE);
                 REQUIRE(exception.message() == "Out of range: 534");
                 REQUIRE(strcmp(exception.what(), "Out of range: 534") == 0);
+                REQUIRE(exception.index() == 534);
             }
         }
     }
