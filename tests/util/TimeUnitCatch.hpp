@@ -17,11 +17,29 @@ namespace Catch {
     template<>
     struct StringMaker<TimeUnit> {
         static std::string convert(TimeUnit const& tu) {
-            std::string str = std::to_string(tu.floatValue()) + " ";
+            std::string str;
             switch(tu.type()) {
-                case TimeUnit::Type::SECONDS:      str += "seconds";
-                case TimeUnit::Type::MILLISECONDS: str += " milliseconds";
-                case TimeUnit::Type::MICROSECONDS: str += " microseconds";
+                case TimeUnit::Type::SECONDS: {
+                    float integer;
+                    float fraction = std::modf(tu.floatValue(), &integer);
+                    if(fraction == 0) {
+                        str += std::to_string((ohf::Int64) integer);
+                    } else {
+                        str += std::to_string(integer + fraction);
+                    }
+                    str += " seconds";
+                    break;
+                }
+                case TimeUnit::Type::MILLISECONDS: {
+                    str += std::to_string(tu.value())
+                        + " milliseconds";
+                    break;
+                }
+                case TimeUnit::Type::MICROSECONDS: {
+                    str += std::to_string(tu.value())
+                        + " microseconds";
+                    break;
+                }
             }
             return str;
         }

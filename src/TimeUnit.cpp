@@ -153,26 +153,6 @@ namespace ohf {
         return {mMicroseconds % right.mMicroseconds, TimeUnit::Type::MICROSECONDS};
     }
 
-    TimeUnit TimeUnit::operator &(const TimeUnit &right) const {
-        return {mMicroseconds & right.mMicroseconds, TimeUnit::Type::MICROSECONDS};
-    }
-
-    TimeUnit TimeUnit::operator |(const TimeUnit &right) const {
-        return {mMicroseconds | right.mMicroseconds, TimeUnit::Type::MICROSECONDS};
-    }
-
-    TimeUnit TimeUnit::operator ^(const TimeUnit &right) const {
-        return {mMicroseconds ^ right.mMicroseconds, TimeUnit::Type::MICROSECONDS};
-    }
-
-    TimeUnit TimeUnit::operator <<(const TimeUnit &right) const {
-        return {mMicroseconds << right.mMicroseconds, TimeUnit::Type::MICROSECONDS};
-    }
-
-    TimeUnit TimeUnit::operator >>(const TimeUnit &right) const {
-        return {mMicroseconds >> right.mMicroseconds, TimeUnit::Type::MICROSECONDS};
-    }
-
     TimeUnit& TimeUnit::operator +=(const TimeUnit &right) {
         mMicroseconds += right.mMicroseconds;
         return *this;
@@ -195,31 +175,6 @@ namespace ohf {
 
     TimeUnit& TimeUnit::operator %=(const TimeUnit &right) {
         mMicroseconds %= right.mMicroseconds;
-        return *this;
-    }
-
-    TimeUnit& TimeUnit::operator &=(const TimeUnit &right) {
-        mMicroseconds &= right.mMicroseconds;
-        return *this;
-    }
-
-    TimeUnit& TimeUnit::operator |=(const TimeUnit &right) {
-        mMicroseconds |= right.mMicroseconds;
-        return *this;
-    }
-
-    TimeUnit& TimeUnit::operator ^=(const TimeUnit &right) {
-        mMicroseconds ^= right.mMicroseconds;
-        return *this;
-    }
-
-    TimeUnit& TimeUnit::operator <<=(const TimeUnit &right) {
-        mMicroseconds <<= right.mMicroseconds;
-        return *this;
-    }
-
-    TimeUnit& TimeUnit::operator >>=(const TimeUnit &right) {
-        mMicroseconds >>= right.mMicroseconds;
         return *this;
     }
 

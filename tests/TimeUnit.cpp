@@ -35,23 +35,126 @@ SCENARIO("TimeUnit") {
         }
     }
 
-    WHEN("Create using literal operator _s") {
-        GIVEN("Count: 1.125, type: SECONDS") {
+    WHEN("Check literal operators") {
+        GIVEN("Operator _s") {
             REQUIRE_THAT(1.125_s, TimeUnitMatcher(TimeUnit(1.125f)));
         }
-    }
 
-    WHEN("Create using literal operator _ms") {
-        GIVEN("Count: 1125, type: MILLISECONDS") {
+        GIVEN("Operator _ms") {
             REQUIRE_THAT(1125_ms, TimeUnitMatcher({1125, TimeUnit::Type::MILLISECONDS}));
         }
-    }
 
-    WHEN("Create using literal operator _us") {
-        GIVEN("Count: 1125521, type: MICROSECONDS") {
+        GIVEN("Operator _us") {
             REQUIRE_THAT(1125521_us, TimeUnitMatcher({1125521, TimeUnit::Type::MICROSECONDS}));
         }
     }
 
-    // TODO: Operators check
+    WHEN("Check bool operators") {
+        GIVEN("Operator ==") {
+            TimeUnit i = 10.125_s;
+            REQUIRE(i == i);
+            REQUIRE_FALSE(i == 521_ms);
+        }
+
+        GIVEN("Operator !=") {
+            TimeUnit i = 10.125_s;
+            REQUIRE(i != 10._s);
+            REQUIRE_FALSE(i != i);
+        }
+
+        GIVEN("Operator >=") {
+            TimeUnit i = 10.125_s;
+            REQUIRE(i >= i);
+            REQUIRE(i >= 9._s);
+            REQUIRE_FALSE(i >= 11._s);
+        }
+
+        GIVEN("Operator <=") {
+            TimeUnit i = 10.125_s;
+            REQUIRE(i <= i);
+            REQUIRE(i <= 11._s);
+            REQUIRE_FALSE(i <= 9._s);
+        }
+
+        GIVEN("Operator >") {
+            TimeUnit i = 10.125_s;
+            REQUIRE_FALSE(i > i);
+            REQUIRE_FALSE(i > 11._s);
+            REQUIRE(i > 9._s);
+        }
+
+        GIVEN("Operator <") {
+            TimeUnit i = 10.125_s;
+            REQUIRE_FALSE(i < i);
+            REQUIRE_FALSE(i < 9._s);
+            REQUIRE(i < 11._s);
+        }
+    }
+
+    WHEN("Check math operators") {
+        GIVEN("Operator +") {
+            TimeUnit i = 10.125_s;
+            TimeUnit j = 521_ms;
+            REQUIRE(i + j == 10.646_s);
+        }
+
+        GIVEN("Operator -") {
+            TimeUnit i = 10.125_s;
+            TimeUnit j = 521_ms;
+            REQUIRE(i - j == 9.604_s);
+        }
+
+        GIVEN("Operator *") {
+            TimeUnit i = 10.125_s;
+            TimeUnit j = 521_ms;
+            REQUIRE(i * j == 5275125000000_us);
+        }
+
+        GIVEN("Operator /") {
+            TimeUnit i = 10.125_s;
+            TimeUnit j = 521_ms;
+            REQUIRE(i / j == 0.000019_s);
+        }
+
+        GIVEN("Operator %") {
+            TimeUnit i = 10.125_s;
+            TimeUnit j = 521_ms;
+            REQUIRE(i % j == 226_ms);
+        }
+
+        GIVEN("Operator +=") {
+            TimeUnit i = 10.125_s;
+            TimeUnit j = 521_ms;
+            i += j;
+            REQUIRE(i == 10.646_s);
+        }
+
+        GIVEN("Operator -=") {
+            TimeUnit i = 10.125_s;
+            TimeUnit j = 521_ms;
+            i -= j;
+            REQUIRE(i == 9.604_s);
+        }
+
+        GIVEN("Operator *=") {
+            TimeUnit i = 10.125_s;
+            TimeUnit j = 521_ms;
+            i *= j;
+            REQUIRE(i == 5275125000000_us);
+        }
+
+        GIVEN("Operator /=") {
+            TimeUnit i = 10.125_s;
+            TimeUnit j = 521_ms;
+            i /= j;
+            REQUIRE(i == 0.000019_s);
+        }
+
+        GIVEN("Operator %=") {
+            TimeUnit i = 10.125_s;
+            TimeUnit j = 521_ms;
+            i %= j;
+            REQUIRE(i == 226_ms);
+        }
+    }
 }

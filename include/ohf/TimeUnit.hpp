@@ -59,13 +59,6 @@ namespace ohf {
 
         TimeUnit operator %(const TimeUnit &right) const;
 
-        // bit
-        TimeUnit operator &(const TimeUnit &right) const;
-        TimeUnit operator |(const TimeUnit &right) const;
-        TimeUnit operator ^(const TimeUnit &right) const;
-        TimeUnit operator <<(const TimeUnit &right) const;
-        TimeUnit operator >>(const TimeUnit &right) const;
-
         // self math
         TimeUnit& operator +=(const TimeUnit &right);
         TimeUnit& operator -=(const TimeUnit &right);
@@ -73,13 +66,6 @@ namespace ohf {
         TimeUnit& operator /=(const TimeUnit &right);
 
         TimeUnit& operator %=(const TimeUnit &right);
-
-        // self bit
-        TimeUnit& operator &=(const TimeUnit &right);
-        TimeUnit& operator |=(const TimeUnit &right);
-        TimeUnit& operator ^=(const TimeUnit &right);
-        TimeUnit& operator <<=(const TimeUnit &right);
-        TimeUnit& operator >>=(const TimeUnit &right);
 
     private:
         Type mType;
